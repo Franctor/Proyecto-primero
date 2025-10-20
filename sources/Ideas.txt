@@ -1,0 +1,17 @@
+Nombre del dominio: Emplyon
+Paleta de colores:
+/* Colores */
+  --color-primario: #2A73CC;
+  --color-primario-oscuro: #1E4E8C;
+  --color-secundario: #3BB273;
+  --color-fondo: #FFFFFF;
+  --color-fondo-claro: #F5F6FA;
+  --color-texto: #333333;
+  --color-gris: #888888;
+
+  /* Tipografía */
+  --fuente-principal: 'Open Sans', sans-serif;
+  --fuente-titulos: 'Poppins', sans-serif;
+
+  /* Espaciado base */
+  --separacion: 1.5em;

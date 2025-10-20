@@ -1,0 +1,314 @@
+/* =========================================================
+   🌐 PORTAL DE EMPLEO - CSS BASE (unidades en em)
+   Autor: Francisco Castillo Torres
+   ========================================================= */
+
+/* ================= VARIABLES ================= */
+:root {
+  /* Colores */
+  --color-primario: #2A73CC;
+  --color-primario-oscuro: #1E4E8C;
+  --color-secundario: #3BB273;
+  --color-fondo: #FFFFFF;
+  --color-fondo-claro: #F5F6FA;
+  --color-texto: #333333;
+  --color-gris: #888888;
+
+  /* Tipografía */
+  --fuente-principal: 'Open Sans', sans-serif;
+  --fuente-titulos: 'Poppins', sans-serif;
+
+  /* Espaciado base */
+  --separacion: 1.5em;
+}
+
+/* ================= RESETEO BÁSICO ================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px; /* base del 1em */
+}
+
+body {
+  font-family: var(--fuente-principal);
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  line-height: 1.6;
+}
+
+/* ================= ELEMENTOS GLOBALES ================= */
+h1, h2, h3 {
+  font-family: var(--fuente-titulos);
+  color: var(--color-primario-oscuro);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.button {
+  background-color: var(--color-primario);
+  color: #fff;
+  padding: 0.75em 1.5em;
+  border-radius: 0.5em;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+  text-align: center;
+}
+
+.button:hover {
+  background-color: var(--color-primario-oscuro);
+}
+
+/* ================= HEADER ================= */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1em 2em;
+  background-color: var(--color-fondo-claro);
+  border-bottom: 0.15em solid var(--color-primario);
+}
+
+.header-logo img {
+  width: 3.75em; /* 60px */
+}
+
+.header-menu {
+  display: flex;
+  list-style: none;
+  gap: 2em;
+}
+
+.header-link {
+  font-weight: 600;
+  color: var(--color-primario-oscuro);
+}
+
+.header-link:hover {
+  color: var(--color-primario);
+}
+
+/* ================= HERO ================= */
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3em 2em;
+  background-color: var(--color-fondo);
+  min-height: 80vh;
+}
+
+.hero-content {
+  flex: 1;
+}
+
+.hero-title {
+  font-size: 2.5em;
+  margin-bottom: 0.5em;
+}
+
+.hero-subtitle {
+  font-size: 1.1em;
+  color: var(--color-gris);
+  margin-bottom: 2em;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1em;
+}
+
+.hero-image {
+  flex: 1;
+  max-width: 31.25em; /* 500px */
+}
+
+/* ================= SECCIONES GENERALES ================= */
+section {
+  padding: 4em 2em;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2em;
+  margin-bottom: 2em;
+}
+
+/* ================= EMPRESAS ================= */
+.empresas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15.6em, 1fr));
+  gap: 2em;
+}
+
+.empresa-card {
+  background-color: var(--color-fondo-claro);
+  padding: 1.5em;
+  text-align: center;
+  border-radius: 0.8em;
+  transition: transform 0.3s ease;
+}
+
+.empresa-card:hover {
+  transform: translateY(-0.3em);
+}
+
+/* ================= FUNCIONAMIENTO ================= */
+.pasos {
+  display: flex;
+  justify-content: center;
+  gap: 2em;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+.paso {
+  flex: 1 1 15.6em;
+  background-color: var(--color-fondo-claro);
+  padding: 2em;
+  border-radius: 0.8em;
+}
+
+.paso-numero {
+  font-size: 2em;
+  font-weight: bold;
+  color: var(--color-primario);
+}
+
+/* ================= VENTAJAS ================= */
+.ventajas-grid {
+  display: flex;
+  gap: 2em;
+  flex-wrap: wrap;
+}
+
+.ventaja-card {
+  flex: 1 1 18.75em;
+  background-color: var(--color-fondo-claro);
+  padding: 2em;
+  border-radius: 0.8em;
+}
+
+.ventaja-card ul {
+  list-style: disc;
+  padding-left: 1.5em;
+}
+
+/* ================= CIFRAS ================= */
+.cifras {
+  display: flex;
+  justify-content: center;
+  gap: 3em;
+  background-color: var(--color-fondo-claro);
+  padding: 3em 1em;
+}
+
+.cifra strong {
+  font-size: 2em;
+  color: var(--color-primario);
+  display: block;
+}
+
+/* ================= CONTACTO ================= */
+.contact {
+  text-align: center;
+}
+
+/* ================= FOOTER ================= */
+footer {
+  background-color: var(--color-primario-oscuro);
+  color: #fff;
+  text-align: center;
+  padding: 2em 1em;
+}
+
+.footer-links {
+  margin-bottom: 1em;
+}
+
+.footer-menu {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-link {
+  color: #fff;
+  display: block;
+  margin: 0.25em 0;
+}
+
+.footer-copy {
+  margin-top: 1em;
+  font-size: 0.9em;
+}
+
+/* =========================================================
+   📱 MEDIA QUERIES
+   ========================================================= */
+
+/* 🖥️ PC grande */
+@media (width >= 1024) {
+  .hero-title {
+    font-size: 1em;
+  }
+}
+
+/* 💻 Tablets */
+@media (600px <= width < 1023px) {
+  header {
+    flex-direction: column;
+    gap: 1em;
+  }
+
+  .hero {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero-image {
+    max-width: 25em; /* 400px */
+    margin-top: 2em;
+  }
+
+  .pasos {
+    flex-direction: column;
+  }
+}
+
+/* 📱 Móviles */
+@media (width < 600px) {
+  header {
+    flex-direction: column;
+  }
+
+  .header-menu {
+    display: none;
+  }
+
+  .hero-title {
+    font-size: 1.8em;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+
+  .ventajas-grid,
+  .cifras {
+    flex-direction: column;
+    align-items: center;
+  }
+}

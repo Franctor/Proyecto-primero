@@ -1,0 +1,51 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+.header-menu {
+    list-style: none;
+}
+
+.header-item a{
+    text-decoration: none;
+}
+
+.header-logo {
+    height: 3em;
+    width: 3em;
+}
+
+
+/* =========================================================
+   📱 MEDIA QUERIES - SOLO POSICIONAMIENTO / LAYOUT
+   ========================================================= */
+
+/* 🖥️ Escritorio grande */
+@media (min-width: 1024px) {
+    header {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .header-menu {
+        display: flex;
+        gap: 2em;
+    }
+}
+
+/* 💻 Tablets */
+@media (min-width: 600px) and (max-width: 1023px) {
+  
+}
+
+/* 📱 Móviles */
+@media (max-width: 599px) {
+
+}

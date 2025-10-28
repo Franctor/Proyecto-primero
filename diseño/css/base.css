@@ -1,28 +1,51 @@
-/* =========================================================
-   🌐 PORTAL DE EMPLEO - CSS BASE (unidades en em)
-   Autor: Francisco Castillo Torres
-   ========================================================= */
+/* =============================================
+   VARIABLES Y ESTILOS BASE
+   ============================================= */
 
-/* ================= VARIABLES ================= */
 :root {
   /* Colores */
-  --color-primario: #2A73CC;
-  --color-primario-oscuro: #1E4E8C;
-  --color-secundario: #3BB273;
-  --color-fondo: #FFFFFF;
-  --color-fondo-claro: #F5F6FA;
-  --color-texto: #333333;
-  --color-gris: #888888;
-
+  --primary-color: #2A73CC;
+  --primary-dark: #1E5AA3;
+  --primary-light: #4A8FD9;
+  --secondary-color: #F5F7FA;
+  --accent-color: #FF6B6B;
+  --text-color: #333333;
+  --text-light: #666666;
+  --text-lighter: #999999;
+  --white: #FFFFFF;
+  --border-color: #E1E5E9;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 8px 15px rgba(0, 0, 0, 0.15);
+  
   /* Tipografía */
-  --fuente-principal: 'Open Sans', sans-serif;
-  --fuente-titulos: 'Poppins', sans-serif;
-
-  /* Espaciado base */
-  --separacion: 1.5em;
+  --font-primary: 'Open Sans', sans-serif;
+  --font-secondary: 'Poppins', sans-serif;
+  
+  /* Tamaños de fuente */
+  --fs-xs: 0.75em;    /* 12px */
+  --fs-sm: 0.875em;   /* 14px */
+  --fs-base: 1em;     /* 16px */
+  --fs-md: 1.125em;   /* 18px */
+  --fs-lg: 1.25em;    /* 20px */
+  --fs-xl: 1.5em;     /* 24px */
+  --fs-2xl: 2em;      /* 32px */
+  --fs-3xl: 2.5em;    /* 40px */
+  
+  /* Espaciado */
+  --space-xs: 0.5em;
+  --space-sm: 0.75em;
+  --space-md: 1em;
+  --space-lg: 1.5em;
+  --space-xl: 2em;
+  --space-2xl: 3em;
+  --space-3xl: 4em;
+  
+  /* Bordes */
+  --border-radius: 0.5em;
+  --border-radius-lg: 1em;
 }
 
-/* ================= RESETEO BÁSICO ================= */
+/* Reset y estilos base */
 * {
   margin: 0;
   padding: 0;
@@ -31,20 +54,48 @@
 
 html {
   scroll-behavior: smooth;
-  font-size: 16px; /* base del 1em */
 }
 
 body {
-  font-family: var(--fuente-principal);
-  background-color: var(--color-fondo);
-  color: var(--color-texto);
+  font-family: var(--font-primary);
+  font-size: var(--fs-base);
   line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--white);
 }
 
-/* ================= ELEMENTOS GLOBALES ================= */
-h1, h2, h3 {
-  font-family: var(--fuente-titulos);
-  color: var(--color-primario-oscuro);
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: var(--space-md);
+}
+
+h1 {
+  font-size: var(--fs-3xl);
+}
+
+h2 {
+  font-size: var(--fs-2xl);
+}
+
+h3 {
+  font-size: var(--fs-xl);
+}
+
+p {
+  margin-bottom: var(--space-md);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+ul, ol {
+  list-style-position: inside;
+  margin-bottom: var(--space-md);
 }
 
 img {
@@ -53,262 +104,585 @@ img {
   display: block;
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
+/* Estilos para botones */
 .button {
-  background-color: var(--color-primario);
-  color: #fff;
-  padding: 0.75em 1.5em;
-  border-radius: 0.5em;
   display: inline-block;
-  transition: background-color 0.3s ease;
+  padding: var(--space-sm) var(--space-lg);
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: var(--border-radius);
+  font-family: var(--font-secondary);
+  font-weight: 500;
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  transition: all 0.3s ease;
   text-align: center;
 }
 
 .button:hover {
-  background-color: var(--color-primario-oscuro);
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
 }
 
-/* ================= HEADER ================= */
+.button-login {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+
+.button-login:hover {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+.hero-button-alumno {
+  background-color: var(--primary-color);
+}
+
+.hero-button-empresa {
+  background-color: var(--white);
+  color: var(--primary-color);
+}
+
+.hero-button-empresa:hover {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+/* =============================================
+   POSICIONAMIENTO Y LAYOUT
+   ============================================= */
+
+/* Header */
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1em 2em;
-  background-color: var(--color-fondo-claro);
-  border-bottom: 0.15em solid var(--color-primario);
+  padding: var(--space-md) var(--space-xl);
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  background-color: var(--white);
+  z-index: 100;
 }
 
 .header-logo img {
-  width: 3.75em; /* 60px */
+  height: 6em;
+}
+
+.header-nav {
+  display: block;
 }
 
 .header-menu {
   display: flex;
+  gap: var(--space-lg);
+}
+
+.header-item {
   list-style: none;
-  gap: 2em;
 }
 
 .header-link {
-  font-weight: 600;
-  color: var(--color-primario-oscuro);
+  font-weight: 500;
+  color: var(--text-color);
+  position: relative;
 }
 
 .header-link:hover {
-  color: var(--color-primario);
+  color: var(--primary-color);
 }
 
-/* ================= HERO ================= */
-.hero {
-  display: flex;
+.header-link::after {
+  content: '';
+  position: absolute;
+  bottom: -0.25em;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--primary-color);
+  transition: width 0.3s ease;
+}
+
+.header-link:hover::after {
+  width: 100%;
+}
+
+/* Menú Hamburguesa - Solo para móvil */
+.menu-toggle {
+  display: none;
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
   justify-content: space-between;
+  width: 1.5em;
+  height: 1.25em;
+  cursor: pointer;
+  z-index: 100;
+}
+
+.hamburger span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background-color: var(--text-color);
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+/* Main */
+main {
+  overflow-x: hidden;
+}
+
+/* Sección Hero */
+.hero {
+  position: relative;
+  height: 80vh;
+  display: flex;
   align-items: center;
-  padding: 3em 2em;
-  background-color: var(--color-fondo);
-  min-height: 80vh;
+  justify-content: center;
+  text-align: center;
+  color: var(--white);
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+              url('../sources/imagenes/Equipo.jpg') center/cover no-repeat;
+  padding: 0 var(--space-xl);
 }
 
 .hero-content {
-  flex: 1;
+  max-width: 800px;
+  z-index: 1;
 }
 
 .hero-title {
-  font-size: 2.5em;
-  margin-bottom: 0.5em;
+  font-size: var(--fs-3xl);
+  margin-bottom: var(--space-md);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .hero-subtitle {
-  font-size: 1.1em;
-  color: var(--color-gris);
-  margin-bottom: 2em;
+  font-size: var(--fs-md);
+  margin-bottom: var(--space-xl);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .hero-buttons {
   display: flex;
-  gap: 1em;
+  gap: var(--space-md);
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-.hero-image {
-  flex: 1;
-  max-width: 31.25em; /* 500px */
-}
-
-/* ================= SECCIONES GENERALES ================= */
-section {
-  padding: 4em 2em;
+/* Sección Empresas */
+.empresas {
+  padding: var(--space-3xl) var(--space-xl);
+  background-color: var(--secondary-color);
 }
 
 .section-title {
   text-align: center;
-  font-size: 2em;
-  margin-bottom: 2em;
+  margin-bottom: var(--space-2xl);
+  color: var(--text-color);
+  position: relative;
 }
 
-/* ================= EMPRESAS ================= */
+.section-title::after {
+  content: '';
+  display: block;
+  width: 3em;
+  height: 0.25em;
+  background-color: var(--primary-color);
+  margin: var(--space-sm) auto 0;
+  border-radius: 0.125em;
+}
+
 .empresas-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15.6em, 1fr));
-  gap: 2em;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-xl);
+  margin-bottom: var(--space-2xl);
 }
 
 .empresa-card {
-  background-color: var(--color-fondo-claro);
-  padding: 1.5em;
+  background-color: var(--white);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-align: center;
-  border-radius: 0.8em;
-  transition: transform 0.3s ease;
 }
 
 .empresa-card:hover {
-  transform: translateY(-0.3em);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
 }
 
-/* ================= FUNCIONAMIENTO ================= */
+.empresa-card img {
+  height: 4em;
+  margin: 0 auto var(--space-md);
+  object-fit: contain;
+}
+
+.empresa-card h3 {
+  color: var(--primary-color);
+  margin-bottom: var(--space-sm);
+}
+
+.empresas-button {
+  text-align: center;
+}
+
+/* Sección Funcionamiento */
+.funcionamiento {
+  padding: var(--space-3xl) var(--space-xl);
+  background-color: var(--white);
+}
+
 .pasos {
   display: flex;
-  justify-content: center;
-  gap: 2em;
-  flex-wrap: wrap;
-  text-align: center;
+  justify-content: space-between;
+  gap: var(--space-xl);
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 .paso {
-  flex: 1 1 15.6em;
-  background-color: var(--color-fondo-claro);
-  padding: 2em;
-  border-radius: 0.8em;
+  flex: 1;
+  text-align: center;
+  position: relative;
+}
+
+.paso:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 2.5em;
+  right: -1.5em;
+  width: 3em;
+  height: 2px;
+  background-color: var(--primary-color);
 }
 
 .paso-numero {
-  font-size: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 5em;
+  height: 5em;
+  background-color: var(--primary-color);
+  color: var(--white);
+  border-radius: 50%;
+  font-size: var(--fs-xl);
   font-weight: bold;
-  color: var(--color-primario);
+  margin: 0 auto var(--space-lg);
+  box-shadow: var(--shadow);
 }
 
-/* ================= VENTAJAS ================= */
+.paso h3 {
+  color: var(--primary-color);
+}
+
+/* Sección Ventajas */
+.ventajas {
+  padding: var(--space-3xl) var(--space-xl);
+  background-color: var(--secondary-color);
+}
+
 .ventajas-grid {
-  display: flex;
-  gap: 2em;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-xl);
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 .ventaja-card {
-  flex: 1 1 18.75em;
-  background-color: var(--color-fondo-claro);
-  padding: 2em;
-  border-radius: 0.8em;
+  background-color: var(--white);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ventaja-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+}
+
+.ventaja-card h3 {
+  color: var(--primary-color);
+  margin-bottom: var(--space-lg);
+  text-align: center;
 }
 
 .ventaja-card ul {
-  list-style: disc;
-  padding-left: 1.5em;
+  list-style-type: none;
 }
 
-/* ================= CIFRAS ================= */
-.cifras {
-  display: flex;
-  justify-content: center;
-  gap: 3em;
-  background-color: var(--color-fondo-claro);
-  padding: 3em 1em;
+.ventaja-card li {
+  margin-bottom: var(--space-sm);
+  padding-left: var(--space-lg);
+  position: relative;
 }
 
-.cifra strong {
-  font-size: 2em;
-  color: var(--color-primario);
-  display: block;
+.ventaja-card li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--primary-color);
+  font-weight: bold;
 }
 
-/* ================= CONTACTO ================= */
+/* Sección Contacto */
 .contact {
+  padding: var(--space-3xl) var(--space-xl);
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: var(--white);
   text-align: center;
 }
 
-/* ================= FOOTER ================= */
+.contact-title {
+  color: var(--white);
+}
+
+.contact-text {
+  max-width: 600px;
+  margin: 0 auto var(--space-xl);
+}
+
+.contact-button {
+  background-color: var(--white);
+  color: var(--primary-color);
+}
+
+.contact-button:hover {
+  background-color: var(--secondary-color);
+}
+
+/* =============================================
+   FOOTER CORREGIDO (SOLO PARTE NEGRA)
+   ============================================= */
+
 footer {
-  background-color: var(--color-primario-oscuro);
-  color: #fff;
-  text-align: center;
-  padding: 2em 1em;
+  background-color: #1a1a1a;
+  color: var(--white);
+  padding: var(--space-2xl) var(--space-xl) var(--space-md);
 }
 
-.footer-links {
-  margin-bottom: 1em;
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-xl);
+}
+
+.footer-logo img {
+  height: 10em; /* Logo más grande */
+}
+
+.footer-links h3 {
+  color: var(--white);
+  font-size: var(--fs-lg);
+  margin-bottom: var(--space-md);
+  position: relative;
+}
+
+.footer-links h3::after {
+  content: '';
+  position: absolute;
+  bottom: -0.5em;
+  left: 0;
+  width: 2em;
+  height: 2px;
+  background-color: var(--primary-color);
 }
 
 .footer-menu {
   list-style: none;
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
 }
 
 .footer-link {
-  color: #fff;
-  display: block;
-  margin: 0.25em 0;
+  color: var(--text-lighter);
+  transition: all 0.3s ease;
+  position: relative;
+  padding-left: var(--space-md);
+}
+
+.footer-link::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--primary-color);
+}
+
+.footer-link:hover {
+  color: var(--white);
+  padding-left: var(--space-lg);
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: var(--space-md);
+  text-align: center;
 }
 
 .footer-copy {
-  margin-top: 1em;
-  font-size: 0.9em;
+  color: var(--text-lighter);
+  font-size: var(--fs-sm);
 }
 
-/* =========================================================
-   📱 MEDIA QUERIES
-   ========================================================= */
+/* =============================================
+   MEDIA QUERIES - RESPONSIVE DESIGN
+   ============================================= */
 
-/* 🖥️ PC grande */
-@media (width >= 1024) {
-  .hero-title {
-    font-size: 1em;
+/* Tablet */
+@media (max-width: 768px) {
+  :root {
+    --fs-3xl: 2em;
+    --fs-2xl: 1.75em;
   }
-}
-
-/* 💻 Tablets */
-@media (600px <= width < 1023px) {
+  
   header {
-    flex-direction: column;
-    gap: 1em;
+    padding: var(--space-md);
   }
-
+  
   .hero {
-    flex-direction: column;
-    text-align: center;
+    height: 70vh;
+    padding: 0 var(--space-lg);
   }
-
-  .hero-image {
-    max-width: 25em; /* 400px */
-    margin-top: 2em;
-  }
-
-  .pasos {
-    flex-direction: column;
-  }
-}
-
-/* 📱 Móviles */
-@media (width < 600px) {
-  header {
-    flex-direction: column;
-  }
-
-  .header-menu {
-    display: none;
-  }
-
-  .hero-title {
-    font-size: 1.8em;
-  }
-
+  
   .hero-buttons {
     flex-direction: column;
-  }
-
-  .ventajas-grid,
-  .cifras {
-    flex-direction: column;
     align-items: center;
+  }
+  
+  .pasos {
+    flex-direction: column;
+    gap: var(--space-2xl);
+  }
+  
+  .paso:not(:last-child)::after {
+    display: none;
+  }
+  
+  /* Footer responsive para tablet */
+  .footer-content {
+    flex-direction: column;
+    gap: var(--space-xl);
+    text-align: center;
+  }
+  
+  .footer-links h3::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+/* Móvil */
+@media (max-width: 480px) {
+  :root {
+    --fs-3xl: 1.75em;
+    --fs-2xl: 1.5em;
+    --fs-xl: 1.25em;
+  }
+  
+  /* Header con menú hamburguesa */
+  header {
+    padding: var(--space-md);
+    position: relative;
+  }
+  
+  .hamburger {
+    display: flex;
+  }
+  
+  .header-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--white);
+    box-shadow: var(--shadow-hover);
+    padding: var(--space-lg);
+    transform: translateY(-10px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .header-menu {
+    flex-direction: column;
+    gap: var(--space-md);
+    text-align: center;
+  }
+  
+  .header-link {
+    display: block;
+    padding: var(--space-sm) 0;
+  }
+  
+  .header-link::after {
+    bottom: 0.5em;
+  }
+  
+  .header-login {
+    margin-top: var(--space-md);
+    text-align: center;
+  }
+  
+  /* Mostrar menú cuando el checkbox está checked */
+  .menu-toggle:checked ~ .header-nav {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  /* Animación del icono hamburguesa */
+  .menu-toggle:checked ~ .hamburger span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+  }
+  
+  .menu-toggle:checked ~ .hamburger span:nth-child(2) {
+    opacity: 0;
+  }
+  
+  .menu-toggle:checked ~ .hamburger span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+  }
+  
+  .hero {
+    height: 60vh;
+    padding: 0 var(--space-md);
+  }
+  
+  .empresas, .funcionamiento, .ventajas, .contact {
+    padding: var(--space-2xl) var(--space-md);
+  }
+  
+  .empresas-grid, .ventajas-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Footer responsive para móvil */
+  footer {
+    padding: var(--space-xl) var(--space-md) var(--space-md);
+  }
+  
+  .footer-link {
+    padding-left: 0;
+  }
+  
+  .footer-link::before {
+    display: none;
+  }
+  
+  .footer-link:hover {
+    padding-left: 0;
   }
 }

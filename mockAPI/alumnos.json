@@ -1,0 +1,44 @@
+[
+    {
+        "id": 1,
+        "nombre": "Aparicio",
+        "apellidos": "García López",
+        "email": "agarlop428@gmail.com"
+    },
+    {
+        "id": 2,
+        "nombre": "Lucía",
+        "apellidos": "Martínez Pérez",
+        "email": "lucia.martinezp@gmail.com"
+    },
+    {
+        "id": 3,
+        "nombre": "Carlos",
+        "apellidos": "Sánchez Torres",
+        "email": "carlossan.torres@gmail.com"
+    },
+    {
+        "id": 4,
+        "nombre": "Elena",
+        "apellidos": "Ruiz Fernández",
+        "email": "elenaruizf98@gmail.com"
+    },
+    {
+        "id": 5,
+        "nombre": "Javier",
+        "apellidos": "Moreno Díaz",
+        "email": "jmoreno.diaz@gmail.com"
+    },
+    {
+        "id": 6,
+        "nombre": "María",
+        "apellidos": "López Serrano",
+        "email": "mlopez.serrano@gmail.com"
+    },
+    {
+        "id": 7,
+        "nombre": "Diego",
+        "apellidos": "Castro Gómez",
+        "email": "diegocastro97@gmail.com"
+    }
+]

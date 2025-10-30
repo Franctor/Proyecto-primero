@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sitio web de ejemplo creado por Francisco Castillo Torres.">
+    <meta name="author" content="Francisco Castillo Torres">
+    <link rel="stylesheet" href="css/base.css">
+    <script src="js/logica.js"></script>
+    <script src="js/datatable.js" defer></script>
+    <script src="js/modal.js" defer></script>
+    <title>LandingPage</title>
+    <style>
+        .velo {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(200, 200, 200, 0.7);
+            z-index: 9998;
+            /* oculto por defecto */
+            display: none;
+        }
+
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 1px solid black;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+            z-index: 9999;
+            /* encima del velo */
+            width: fit-content;
+            height: fit-content;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow: auto;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Logo, nav y inicio de sesión -->
+    <header>
+        <a href="#" class="header-logo"><img src="../../diseño/sources/logos/svg- sin fondo/principal.svg"
+                alt="logo de la empresa"></a>
+
+        <!-- Checkbox para controlar el menú hamburguesa -->
+        <input type="checkbox" id="menu-toggle" class="menu-toggle">
+
+        <!-- Icono hamburguesa -->
+        <label for="menu-toggle" class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </label>
+
+        <nav class="header-nav">
+            <ul class="header-menu">
+                <li class="header-item"><a href="#" class="header-link">Solicitudes</a></li>
+                <li class="header-item"><a href="#" class="header-link">Ofertas</a></li>
+                <li class="header-item"><a href="#" class="header-link">Notificaciones</a></li>
+            </ul>
+        </nav>
+        <div class="header-login">
+            <a href="#" class="button button-login">Login</a>
+        </div>
+    </header>
+    <main>
+        <section id="listado">
+            <h2>Listado de alumnos</h2>
+            <div id="botones">
+                <button id="add">Añadir un alumno</button>
+                <button id="adds">Añadir alumnos</button>
+            </div>
+            <table id="tablaAlumno" class="editable ordenable">
+
+            </table>
+        </section>   
+    </main>
+    <footer>
+        <div class="footer-content">
+            <a href="#" class="footer-logo"><img src="../../diseño/sources/logos/svg- sin fondo/principal.svg""
+                    alt=" logo de la empresa"></a>
+
+            <section class="footer-links">
+                <h3>Enlaces de interés</h3>
+                <ul class="footer-menu">
+                    <li><a href="#" class="footer-link">Mapa del sitio</a></li>
+                    <li><a href="#" class="footer-link">Política de privacidad</a></li>
+                    <li><a href="#" class="footer-link">Política de cookies</a></li>
+                </ul>
+            </section>
+        </div>
+
+        <div class="footer-bottom">
+            <p class="footer-copy">Sitio web realizado por Francisco Castillo Torres</p>
+        </div>
+    </footer>
+</body>
+
+</html>

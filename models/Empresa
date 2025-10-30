@@ -1,0 +1,25 @@
+<?php
+class Empresa {
+    private $id;
+    private $nombre;
+    private $telefono;
+    private $direccion;
+    private $nombre_persona;
+    private $telefono_persona;
+    private $logo;
+    private $verificada;
+    private $descripcion;
+
+    public function __construct($nombre, $telefono, $direccion, $nombre_persona, $telefono_persona, $logo, $descripcion) {
+        $this->id = null;
+        $this->nombre = $nombre;
+        $this->telefono = $telefono;
+        $this->direccion = $direccion;
+        $this->nombre_persona = $nombre_persona;
+        $this->telefono_persona = $telefono_persona;
+        $this->logo = $logo;
+        $this->verificada = 0;
+        $this->descripcion = $descripcion;
+    }
+
+}

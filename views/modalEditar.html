@@ -1,0 +1,67 @@
+<style>
+    #marco {
+        display: flex;
+        flex-direction: row;
+    }
+
+    #input-datos {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #foto{
+        background-image: url('../diseño/sources/imagenes/sin-foto.webp');
+        width: 3em;
+        height: 3em;
+        background-repeat: no-repeat;
+        background-size:cover;
+    }
+</style>
+<div class="contenido-modal-editar">
+  <span id="cerrarEditar">x</span>
+  <form id="form-editar-alumno">
+    <div id="marco">
+      <div id="manejo-foto">
+        <div id="foto" style="background-image: url('{{foto}}');"></div>
+        <input type="file" id="foto-perfil" name="foto-perfil">
+        <button id="tomar-foto">Tomar foto</button>
+      </div>
+      <div id="input-datos">
+        <div>
+          <label for="nombre"><span class="obligatorio">*</span>Nombre</label>
+          <input type="text" name="nombre" id="nombre" value="{{nombre}}">
+        </div>
+        <div>
+          <label for="apellido"><span class="obligatorio">*</span>Apellido</label>
+          <input type="text" name="apellido" id="apellido" value="{{apellido}}">
+        </div>
+        <div>
+            <label for="email"><span class="obligatorio">*</span>Email</label>
+            <input type="text" name="email" id="email" value="{{email}}">
+        </div>
+        <div>
+          <label for="telefono"><span class="obligatorio">*</span>Teléfono</label>
+          <input type="number" name="telefono" id="telefono" value="{{telefono}}">
+        </div>
+        <div>
+          <label for="provincia">Provincia</label>
+          <select name="provincia" id="provincia">
+            <option selected>{{provincia}}</option>
+          </select>
+        </div>
+        <div>
+          <label for="localidad">Localidad</label>
+          <select name="localidad" id="localidad">
+            <option selected>{{localidad}}</option>
+          </select>
+        </div>
+        <div>
+          <label for="direccion">Dirección</label>
+          <input type="text" name="direccion" id="direccion" value="{{direccion}}">
+        </div>
+        <input type="file" id="cv" name="cv">
+      </div>
+    </div>
+    <button type="button" id="guardarEditar">Guardar datos</button>
+  </form>
+</div>

@@ -3,42 +3,56 @@
         "id": 1,
         "nombre": "Aparicio",
         "apellidos": "García López",
-        "email": "agarlop428@gmail.com"
+        "email": "agarlop428@gmail.com",
+        "telefono": "612345678"
     },
     {
         "id": 2,
         "nombre": "Lucía",
         "apellidos": "Martínez Pérez",
-        "email": "lucia.martinezp@gmail.com"
+        "email": "lucia.martinezp@gmail.com",
+        "telefono": "623456789"
     },
     {
         "id": 3,
         "nombre": "Carlos",
         "apellidos": "Sánchez Torres",
-        "email": "carlossan.torres@gmail.com"
+        "email": "carlossan.torres@gmail.com",
+        "telefono": "634567890"
     },
     {
         "id": 4,
         "nombre": "Elena",
         "apellidos": "Ruiz Fernández",
-        "email": "elenaruizf98@gmail.com"
+        "email": "elenaruizf98@gmail.com",
+        "telefono": "645678901"
     },
     {
         "id": 5,
         "nombre": "Javier",
         "apellidos": "Moreno Díaz",
-        "email": "jmoreno.diaz@gmail.com"
+        "email": "jmoreno.diaz@gmail.com",
+        "telefono": "656789012"
     },
     {
         "id": 6,
         "nombre": "María",
         "apellidos": "López Serrano",
-        "email": "mlopez.serrano@gmail.com"
+        "email": "mlopez.serrano@gmail.com",
+        "telefono": "667890123"
     },
     {
         "id": 7,
         "nombre": "Diego",
         "apellidos": "Castro Gómez",
-        "email": "diegocastro97@gmail.com"
+        "email": "diegocastro97@gmail.com",
+        "telefono": "678901234"
+    },
+    {
+        "id": 8,
+        "nombre": "Diego",
+        "apellidos": "Castro Gómez",
+        "email": "diegocastro97@gmail.com",
+        "telefono": "678901234"
     }
 ]

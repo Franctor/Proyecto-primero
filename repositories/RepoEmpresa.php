@@ -143,9 +143,8 @@ class RepoEmpresa
     private function mapRowToEmpresa($row, $repoUsuario = null, $repoOferta = null)
     {
         $usuario = null;
-        if ($repoUsuario && !empty($row['usuario_id'])) {
-            // Evitamos recursividad: no cargamos los tokens del usuario aquí
-            $usuario = $repoUsuario->findById($row['usuario_id'], false);
+        if ($repoUsuario ) {
+            $usuario = $repoUsuario->findById($row['usuario_id']);
         }
 
         $empresa = new Empresa(

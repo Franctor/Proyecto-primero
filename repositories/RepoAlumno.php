@@ -1,9 +1,18 @@
 <?php
 namespace repositories;
-use models\Alumno;
-class RepoAlumno {
 
-    public function save(Alumno $alumno) {
+use PDO;
+use Exception;
+use models\Alumno;
+use repositories\RepoUsuario;
+use repositories\RepoSolicitud;
+use repositories\RepoCiclo;
+use repositories\Connection;
+
+class RepoAlumno
+{
+    public function save($alumno)
+    {
         try {
             $conn = Connection::getConnection();
             $stmt = $conn->prepare("
@@ -18,11 +27,10 @@ class RepoAlumno {
             $stmt->bindValue(':foto', $alumno->getFoto());
             $stmt->bindValue(':cv', $alumno->getCv());
             $stmt->bindValue(':activo', $alumno->getActivo(), PDO::PARAM_INT);
-            $stmt->bindValue(':usuario_id', $alumno->getUsuario()->getId(), PDO::PARAM_INT);
+            $stmt->bindValue(':usuario_id', $alumno->getUsuario() ? $alumno->getUsuario()->getId() : null, PDO::PARAM_INT);
 
             $stmt->execute();
             $alumno->setId($conn->lastInsertId());
-
         } catch (Exception $e) {
             error_log("Error al guardar alumno: " . $e->getMessage());
             $alumno = null;
@@ -31,7 +39,8 @@ class RepoAlumno {
         return $alumno;
     }
 
-    public function findById($id) {
+    public function findById($id, $loadUsuario = false, $loadSolicitudes = false, $loadCiclos = false)
+    {
         $alumno = null;
 
         try {
@@ -43,21 +52,11 @@ class RepoAlumno {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($row) {
-                // Se asume que RepoUsuario existe y tiene findById
-                $repoUsuario = new RepoUsuario();
-                $usuario = $repoUsuario->findById($row['usuario_id']);
+                $repoUsuario = $loadUsuario ? new RepoUsuario() : null;
+                $repoSolicitud = $loadSolicitudes ? new RepoSolicitud() : null;
+                $repoCiclo = $loadCiclos ? new RepoCiclo() : null;
 
-                $alumno = new Alumno(
-                    $row['nombre'],
-                    $row['apellido'],
-                    $row['telefono'],
-                    $row['direccion'],
-                    $row['foto'],
-                    $row['cv'],
-                    $row['activo'],
-                    $usuario
-                );
-                $alumno->setId($row['id']);
+                $alumno = $this->mapRowToAlumno($row, $repoUsuario, $repoSolicitud, $repoCiclo);
             }
         } catch (Exception $e) {
             error_log("Error al buscar alumno por ID: " . $e->getMessage());
@@ -65,31 +64,51 @@ class RepoAlumno {
 
         return $alumno;
     }
+    public function findByCicloId($cicloId, $loadUsuario = false, $loadSolicitudes = false, $loadCiclos = false)
+    {
+        $alumnos = [];
 
-    public function findAll() {
+        try {
+            $conn = Connection::getConnection();
+            $stmt = $conn->prepare("
+            SELECT a.*
+            FROM alumno a
+            INNER JOIN alumnos_ciclos ac ON a.id = ac.alumno_id
+            WHERE ac.ciclo_id = :cicloId
+        ");
+            $stmt->bindValue(':cicloId', $cicloId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $repoUsuario = $loadUsuario ? new RepoUsuario() : null;
+            $repoSolicitud = $loadSolicitudes ? new RepoSolicitud() : null;
+            $repoCiclo = $loadCiclos ? new RepoCiclo() : null;
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $alumnos[] = $this->mapRowToAlumno($row, $repoUsuario, $repoSolicitud, $repoCiclo);
+            }
+        } catch (Exception $e) {
+            error_log("Error al obtener alumnos por ciclo ID: " . $e->getMessage());
+        }
+
+        return $alumnos;
+    }
+
+
+    public function findAll($loadUsuario = false, $loadSolicitudes = false, $loadCiclos = false)
+    {
         $alumnos = [];
 
         try {
             $conn = Connection::getConnection();
             $stmt = $conn->query("SELECT * FROM alumno ORDER BY id DESC");
 
-            $repoUsuario = new RepoUsuario();
+            // Solo se crean una vez los repos que se necesiten
+            $repoUsuario = $loadUsuario ? new RepoUsuario() : null;
+            $repoSolicitud = $loadSolicitudes ? new RepoSolicitud() : null;
+            $repoCiclo = $loadCiclos ? new RepoCiclo() : null;
 
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $usuario = $repoUsuario->findById($row['usuario_id']);
-
-                $alumno = new Alumno(
-                    $row['nombre'],
-                    $row['apellido'],
-                    $row['telefono'],
-                    $row['direccion'],
-                    $row['foto'],
-                    $row['cv'],
-                    $row['activo'],
-                    $usuario
-                );
-                $alumno->setId($row['id']);
-                $alumnos[] = $alumno;
+                $alumnos[] = $this->mapRowToAlumno($row, $repoUsuario, $repoSolicitud, $repoCiclo);
             }
         } catch (Exception $e) {
             error_log("Error al obtener todos los alumnos: " . $e->getMessage());
@@ -98,7 +117,8 @@ class RepoAlumno {
         return $alumnos;
     }
 
-    public function update(Alumno $alumno) {
+    public function update($alumno)
+    {
         try {
             $conn = Connection::getConnection();
             $stmt = $conn->prepare("
@@ -131,7 +151,8 @@ class RepoAlumno {
         return $alumno;
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $result = false;
 
         try {
@@ -144,6 +165,39 @@ class RepoAlumno {
         }
 
         return $result;
+    }
+
+    /**
+     * Mapea una fila de la base de datos a un objeto Alumno.
+     */
+    private function mapRowToAlumno($row, $repoUsuario = null, $repoSolicitud = null, $repoCiclo = null)
+    {
+        $usuario = null;
+        if ($repoUsuario) {
+            $usuario = $repoUsuario->findById($row['usuario_id']);
+        }
+
+        $alumno = new Alumno(
+            $row['nombre'],
+            $row['apellido'],
+            $row['telefono'],
+            $row['direccion'],
+            $row['foto'],
+            $row['cv'],
+            $row['activo'],
+            $usuario
+        );
+        $alumno->setId($row['id']);
+
+        if ($repoSolicitud) {
+            $alumno->setSolicitudes($repoSolicitud->findByAlumnoId($row['id']));
+        }
+
+        if ($repoCiclo) {
+            $alumno->setCiclos($repoCiclo->findByAlumnoId($row['id']));
+        }
+
+        return $alumno;
     }
 }
 ?>

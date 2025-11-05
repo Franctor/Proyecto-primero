@@ -44,15 +44,9 @@ class RepoUsuario
             $stmt->execute();
 
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
+            $repoToken = $loadTokens ? new RepoToken() : null;
             if ($row) {
-                $usuario = $this->mapRowToUsuario($row);
-
-                if ($loadTokens) {
-                    $repoToken = new RepoToken();
-                    $tokens = $repoToken->findByIdUsuario($usuario->getId());
-                    $usuario->setTokens($tokens);
-                }
+                $usuario = $this->mapRowToUsuario($row,$repoToken);
             }
         } catch (Exception $e) {
             error_log("Error al buscar usuario por ID: " . $e->getMessage());
@@ -72,13 +66,7 @@ class RepoUsuario
             $repoToken = $loadTokens ? new RepoToken() : null;
 
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $usuario = $this->mapRowToUsuario($row);
-
-                if ($loadTokens) {
-                    $tokens = $repoToken->findByIdUsuario($usuario->getId());
-                    $usuario->setTokens($tokens);
-                }
-
+                $usuario = $this->mapRowToUsuario($row, $repoToken);
                 $usuarios[] = $usuario;
             }
         } catch (Exception $e) {
@@ -99,15 +87,9 @@ class RepoUsuario
             $stmt->execute();
 
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
+            $repoToken = $loadTokens ? new RepoToken() : null;
             if ($row) {
-                $usuario = $this->mapRowToUsuario($row);
-
-                if ($loadTokens) {
-                    $repoToken = new RepoToken();
-                    $tokens = $repoToken->findByIdUsuario($usuario->getId());
-                    $usuario->setTokens($tokens);
-                }
+                $usuario = $this->mapRowToUsuario($row, $repoToken);
             }
         } catch (Exception $e) {
             error_log("Error al buscar usuario por nombre_usuario: " . $e->getMessage());
@@ -161,10 +143,11 @@ class RepoUsuario
     }
 
     /** 
-     * 🔒 Método privado para mapear un array (fila SQL) a un objeto Usuario
+     * Método privado para mapear un array a un objeto Usuario
      */
-    private function mapRowToUsuario($row)
+    private function mapRowToUsuario($row, $repoToken = null)
     {
+
         $usuario = new Usuario(
             $row['nombre_usuario'],
             $row['password'],
@@ -172,7 +155,10 @@ class RepoUsuario
             $row['localidad_id']
         );
         $usuario->setId($row['id']);
-
+        if ($repoToken) {
+            $tokens = $repoToken->findByIdUsuario($usuario->getId());
+            $usuario->setTokens($tokens);
+        }
         return $usuario;
     }
 }

@@ -142,6 +142,36 @@ class RepoOferta
 
         return $ofertas;
     }
+    public function findByCicloId($cicloId, $loadEmpresa = false, $loadSolicitudes = false, $loadCiclos = false)
+    {
+        $ofertas = [];
+
+        try {
+            $conn = Connection::getConnection();
+            $stmt = $conn->prepare("
+            SELECT o.*, oc.required
+            FROM oferta o
+            INNER JOIN ofertas_ciclos oc ON o.id = oc.oferta_id
+            WHERE oc.ciclo_id = :cicloId
+        ");
+            $stmt->bindValue(':cicloId', $cicloId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $repoEmpresa = $loadEmpresa ? new RepoEmpresa() : null;
+            $repoSolicitud = $loadSolicitudes ? new RepoSolicitud() : null;
+            $repoCiclo = $loadCiclos ? new RepoCiclo() : null;
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $oferta = $this->mapRowToOferta($row, $repoEmpresa, $repoSolicitud, $repoCiclo);
+
+                $ofertas[] = $oferta;
+            }
+        } catch (Exception $e) {
+            error_log("Error al obtener ofertas por ciclo ID: " . $e->getMessage());
+        }
+
+        return $ofertas;
+    }
 
     /**
      * Mapea una fila de la base de datos a un objeto Oferta.
@@ -149,8 +179,8 @@ class RepoOferta
     private function mapRowToOferta($row, $repoEmpresa = null, $repoSolicitud = null, $repoCiclo = null)
     {
         $empresa = null;
-        if ($repoEmpresa && !empty($row['empresa_id'])) {
-            $empresa = $repoEmpresa->findById($row['empresa_id'], false, false);
+        if ($repoEmpresa ) {
+            $empresa = $repoEmpresa->findById($row['empresa_id']);
         }
 
         $oferta = new Oferta(

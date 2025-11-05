@@ -1,7 +1,14 @@
 <?php
 namespace repositories;
-class RepoFamilia {
-    public function save(Familia $familia) {
+
+use PDO;
+use Exception;
+use models\Familia;
+
+class RepoFamilia
+{
+    public function save($familia)
+    {
         try {
             $conn = Connection::getConnection();
             $stmt = $conn->prepare("
@@ -10,8 +17,8 @@ class RepoFamilia {
             ");
 
             $stmt->bindValue(':nombre', $familia->getNombre());
-
             $stmt->execute();
+
             $familia->setId($conn->lastInsertId());
         } catch (Exception $e) {
             error_log("Error al guardar familia: " . $e->getMessage());
@@ -21,7 +28,8 @@ class RepoFamilia {
         return $familia;
     }
 
-    public function findById($id) {
+    public function findById($id, $loadCiclos = false)
+    {
         $familia = null;
 
         try {
@@ -32,9 +40,10 @@ class RepoFamilia {
 
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
+            $repoCiclo = $loadCiclos ? new RepoCiclo() : null;
+
             if ($row) {
-                $familia = new Familia($row['nombre']);
-                $familia->setId($row['id']);
+                $familia = $this->mapRowToFamilia($row, $repoCiclo);
             }
         } catch (Exception $e) {
             error_log("Error al buscar familia por ID: " . $e->getMessage());
@@ -43,17 +52,18 @@ class RepoFamilia {
         return $familia;
     }
 
-    public function findAll() {
+    public function findAll($loadCiclos = false)
+    {
         $familias = [];
 
         try {
             $conn = Connection::getConnection();
             $stmt = $conn->query("SELECT * FROM familia ORDER BY id DESC");
 
+            $repoCiclo = $loadCiclos ? new RepoCiclo() : null;
+
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $familia = new Familia($row['nombre']);
-                $familia->setId($row['id']);
-                $familias[] = $familia;
+                $familias[] = $this->mapRowToFamilia($row, $repoCiclo);
             }
         } catch (Exception $e) {
             error_log("Error al obtener todas las familias: " . $e->getMessage());
@@ -62,7 +72,8 @@ class RepoFamilia {
         return $familias;
     }
 
-    public function update(Familia $familia) {
+    public function update($familia)
+    {
         try {
             $conn = Connection::getConnection();
             $stmt = $conn->prepare("
@@ -73,7 +84,6 @@ class RepoFamilia {
 
             $stmt->bindValue(':nombre', $familia->getNombre());
             $stmt->bindValue(':id', $familia->getId(), PDO::PARAM_INT);
-
             $stmt->execute();
         } catch (Exception $e) {
             error_log("Error al actualizar familia: " . $e->getMessage());
@@ -83,7 +93,8 @@ class RepoFamilia {
         return $familia;
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $result = false;
 
         try {
@@ -96,6 +107,18 @@ class RepoFamilia {
         }
 
         return $result;
+    }
+
+    private function mapRowToFamilia($row, $repoCiclo = null)
+    {
+        $familia = new Familia($row['nombre']);
+        $familia->setId($row['id']);
+
+        if ($repoCiclo) {
+            $familia->setCiclos($repoCiclo->findByFamiliaId($familia->getId()));
+        }
+
+        return $familia;
     }
 }
 ?>

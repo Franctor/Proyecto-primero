@@ -70,6 +70,10 @@ class Alumno
     {
         return $this->solicitudes;
     }
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
 
     // --- Setters ---
     public function setId($id)
@@ -103,6 +107,14 @@ class Alumno
     public function setActivo($activo)
     {
         $this->activo = $activo;
+    }
+    public function setSolicitudes($solicitudes)
+    {
+        $this->solicitudes = $solicitudes;
+    }
+    public function setCiclos($ciclos)
+    {
+        $this->ciclos = $ciclos;
     }
     public function addCiclo($ciclo)
     {

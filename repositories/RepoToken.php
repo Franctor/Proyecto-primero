@@ -46,9 +46,9 @@ class RepoToken
             $stmt->execute();
 
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
+            $repoUsuario = $loadUsuario ? new RepoUsuario() : null;
             if ($row) {
-                $token = $this->mapRowToToken($row, $loadUsuario);
+                $token = $this->mapRowToToken($row, $repoUsuario);
             }
         } catch (Exception $e) {
             error_log("Error al buscar token por ID: " . $e->getMessage());
@@ -68,7 +68,7 @@ class RepoToken
             $repoUsuario = $loadUsuario ? new RepoUsuario() : null;
 
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $tokens[] = $this->mapRowToToken($row, $loadUsuario, $repoUsuario);
+                $tokens[] = $this->mapRowToToken($row, $repoUsuario);
             }
         } catch (Exception $e) {
             error_log("Error al obtener todos los tokens: " . $e->getMessage());
@@ -90,7 +90,7 @@ class RepoToken
             $repoUsuario = $loadUsuario ? new RepoUsuario() : null;
 
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $tokens[] = $this->mapRowToToken($row, $loadUsuario, $repoUsuario);
+                $tokens[] = $this->mapRowToToken($row, $repoUsuario);
             }
         } catch (Exception $e) {
             error_log("Error al buscar tokens por ID de usuario: " . $e->getMessage());
@@ -118,14 +118,11 @@ class RepoToken
     /**
      * Mapea una fila SQL a un objeto Token
      */
-    private function mapRowToToken($row, $loadUsuario = false, $repoUsuario = null)
+    private function mapRowToToken($row, $repoUsuario = null)
     {
         $usuario = null;
 
-        if ($loadUsuario && $row['usuario_id']) {
-            if (!$repoUsuario) {
-                $repoUsuario = new RepoUsuario();
-            }
+        if($repoUsuario){
             $usuario = $repoUsuario->findById($row['usuario_id']);
         }
 

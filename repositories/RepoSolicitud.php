@@ -146,6 +146,22 @@ class RepoSolicitud
         return $result;
     }
 
+    public function deleteByAlumnoId($alumnoId)
+    {
+        $result = false;
+
+        try {
+            $conn = Connection::getConnection();
+            $stmt = $conn->prepare("DELETE FROM solicitud WHERE alumno_id = :alumno_id");
+            $stmt->bindValue(':alumno_id', $alumnoId, PDO::PARAM_INT);
+            $result = $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Error al eliminar solicitudes por ID de alumno: " . $e->getMessage());
+        }
+
+        return $result;
+    }
+
     /**
      * Mapea una fila de la base de datos a un objeto Solicitud.
      */

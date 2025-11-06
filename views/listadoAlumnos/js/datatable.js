@@ -60,8 +60,6 @@ HTMLTableElement.prototype.cargarJSON = function (datos) {
     keys.forEach(key => {
         const th = document.createElement("th");
         th.textContent = key;
-        // opcional: añadir clase tipo (texto por defecto)
-        th.classList.add('texto');
         filaHead.appendChild(th);
     });
     thead.appendChild(filaHead);
@@ -77,7 +75,7 @@ HTMLTableElement.prototype.cargarJSON = function (datos) {
         tbody.appendChild(fila);
     });
 
-    // 👇 AÑADIMOS AQUÍ EL EVENTO DE ORDENAR
+    // AÑADIMOS AQUÍ EL EVENTO DE ORDENAR
     const self = this;
     const cabeceras = this.querySelectorAll("thead th");
 
@@ -125,7 +123,7 @@ HTMLTableElement.prototype.ordenar = function (columna, clase = 'texto', tipo = 
                         const [d, m, y] = partes.map(Number);
                         return new Date(y, m - 1, d);
                     }
-                    return new Date(str); // fallback
+                    return new Date(str);
                 };
                 return tipo * (parseFecha(valorA) - parseFecha(valorB));
 
@@ -145,7 +143,7 @@ HTMLTableElement.prototype.ordenar = function (columna, clase = 'texto', tipo = 
 //Método para borrar una fila
 HTMLTableRowElement.prototype.borrar = function () {
     const modalBorrar = new Modal();
-    modalBorrar.cargarPlantilla("../modalEliminar.html").then(() => {
+    modalBorrar.cargarPlantilla("modalEliminar.html").then(() => {
         modalBorrar.mostrar();
         let borrar = document.getElementById("delete");
         let cancelar = document.getElementById("cancel");
@@ -159,7 +157,7 @@ HTMLTableRowElement.prototype.borrar = function () {
                         self.remove();
                     }
                 });
-            borrar.removeEventListener("click", a); // evita duplicados
+            borrar.removeEventListener("click", a);
         });
 
         cancelar.addEventListener("click", function a() {
@@ -172,22 +170,56 @@ HTMLTableRowElement.prototype.borrar = function () {
 
 
 HTMLTableRowElement.prototype.editar = function () {
-    /** Pasos a seguir: Cuando damos a editar, se abre una ventana modal,
-     * en esta ventana modal tenemos los campos editables con los valores actuales,
-     * hay un boton de guardar, y otro botón que es para cerrar la ventana modal sin guardar
-     * Al guardar, se actualizan los valores en la tabla
-     * Al cerrar sin guardar, se mantienen los valores anteriores
-     */
     const modalEditar = new Modal();
-    modalEditar.cargarPlantillaConDatos("../modalEditar.html", "../../mockAPI/alumno12.json",rellenar).then(() => {
-        const btnCerrar = document.getElementById("cerrarEditar");
-        modalEditar.mostrar();
-        btnCerrar.addEventListener("click",function a (){
-            modalEditar.destruir();
-            btnCerrar.removeEventListener("click",a);
-        })
-    });
-}
+
+    modalEditar.cargarPlantillaConDatos("modalEditar.html", "../../mockAPI/alumno12.json", rellenar)
+        .then(() => {
+            const btnCerrar = document.getElementById("cerrarEditar");
+            const btnTomarFoto = document.getElementById("tomar-foto");
+            const btnGuardar = document.getElementById("guardarEditar");
+            const fileFoto = document.getElementById("foto-perfil");
+            const fileCV = document.getElementById("cv");
+
+            inicializarValidacionesEditar();
+
+            modalEditar.mostrar();
+
+            // --- Botón Cerrar ---
+            btnCerrar.addEventListener("click", function a() {
+                modalEditar.destruir();
+                btnCerrar.removeEventListener("click", a);
+                btnTomarFoto.removeEventListener("click", b);
+                fileFoto.removeEventListener("change", d);
+                btnGuardar.removeEventListener("click", e);
+            });
+
+            // --- Botón Tomar foto ---
+            btnTomarFoto.addEventListener("click", function b() {
+                gestionFoto(modalEditar); // función definida en foto.js
+            });
+
+            // --- Previsualizar imagen seleccionada ---
+            fileFoto.addEventListener("change", function d() {
+                const fotoDiv = document.getElementById("foto");
+                const file = fileFoto.files[0];
+                if (file) {
+                    const url = URL.createObjectURL(file);
+                    fotoDiv.style.backgroundImage = `url(${url})`;
+                }
+            });
+
+            // --- Guardar cambios ---
+            btnGuardar.addEventListener("click", function e() {
+                const formulario = document.getElementById("form-editar-alumno");
+                if (validarFormularioEditar(formulario)) {
+                    console.log("Formulario válido, enviando datos...");
+                } else {
+                    console.warn("Formulario inválido, revisa los campos.");
+                }
+            });
+        });
+};
+
 
 function rellenar(plantilla, datos) {
     let html = plantilla;
@@ -197,3 +229,4 @@ function rellenar(plantilla, datos) {
     }
     return html;
 }
+

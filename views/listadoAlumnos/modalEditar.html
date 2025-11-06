@@ -1,21 +1,32 @@
 <style>
-    #marco {
-        display: flex;
-        flex-direction: row;
-    }
+  #marco {
+    display: flex;
+    flex-direction: row;
+  }
 
-    #input-datos {
-        display: flex;
-        flex-direction: column;
-    }
+  #input-datos {
+    display: flex;
+    flex-direction: column;
+  }
 
-    #foto{
-        background-image: url('../diseño/sources/imagenes/sin-foto.webp');
-        width: 3em;
-        height: 3em;
-        background-repeat: no-repeat;
-        background-size:cover;
-    }
+  #foto {
+    background-image: url('../diseño/sources/imagenes/sin-foto.webp');
+    width: 3em;
+    height: 3em;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .obligatorio {
+    color: red;
+    font-weight: bold;
+  }
+
+  .error {
+    color: red;
+    font-size: 0.8em;
+    margin-left: 5px;
+  }
 </style>
 <div class="contenido-modal-editar">
   <span id="cerrarEditar">x</span>
@@ -23,8 +34,8 @@
     <div id="marco">
       <div id="manejo-foto">
         <div id="foto" style="background-image: url('{{foto}}');"></div>
-        <input type="file" id="foto-perfil" name="foto-perfil">
-        <button id="tomar-foto">Tomar foto</button>
+        <input type="file" id="foto-perfil" name="foto-perfil" accept="image/png, image/jpeg, image/webp">
+        <button type="button" id="tomar-foto">Tomar foto</button>
       </div>
       <div id="input-datos">
         <div>
@@ -36,12 +47,12 @@
           <input type="text" name="apellido" id="apellido" value="{{apellido}}">
         </div>
         <div>
-            <label for="email"><span class="obligatorio">*</span>Email</label>
-            <input type="text" name="email" id="email" value="{{email}}">
+          <label for="email"><span class="obligatorio">*</span>Email</label>
+          <input type="text" name="email" id="email" value="{{email}}">
         </div>
         <div>
           <label for="telefono"><span class="obligatorio">*</span>Teléfono</label>
-          <input type="number" name="telefono" id="telefono" value="{{telefono}}">
+          <input type="text" name="telefono" id="telefono" value="{{telefono}}">
         </div>
         <div>
           <label for="provincia">Provincia</label>
@@ -56,10 +67,10 @@
           </select>
         </div>
         <div>
-          <label for="direccion">Dirección</label>
+          <label for="direccion"><span class="obligatorio">*</span>Dirección</label>
           <input type="text" name="direccion" id="direccion" value="{{direccion}}">
         </div>
-        <input type="file" id="cv" name="cv">
+        <input type="file" id="cv" name="cv" accept="application/pdf">
       </div>
     </div>
     <button type="button" id="guardarEditar">Guardar datos</button>

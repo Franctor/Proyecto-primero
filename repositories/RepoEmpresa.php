@@ -40,6 +40,35 @@ class RepoEmpresa
         return $empresa;
     }
 
+    public function saveConConexion($empresa, $conn)
+    {
+        try {
+            $stmt = $conn->prepare("
+                INSERT INTO empresa 
+                (nombre, telefono, direccion, nombre_persona, telefono_persona, logo, verificada, descripcion, usuario_id)
+                VALUES (:nombre, :telefono, :direccion, :nombre_persona, :telefono_persona, :logo, :verificada, :descripcion, :usuario_id)
+            ");
+
+            $stmt->bindValue(':nombre', $empresa->getNombre());
+            $stmt->bindValue(':telefono', $empresa->getTelefono());
+            $stmt->bindValue(':direccion', $empresa->getDireccion());
+            $stmt->bindValue(':nombre_persona', $empresa->getNombrePersona());
+            $stmt->bindValue(':telefono_persona', $empresa->getTelefonoPersona());
+            $stmt->bindValue(':logo', $empresa->getLogo());
+            $stmt->bindValue(':verificada', $empresa->getVerificada(), PDO::PARAM_INT);
+            $stmt->bindValue(':descripcion', $empresa->getDescripcion());
+            $stmt->bindValue(':usuario_id', $empresa->getUsuario() ? $empresa->getUsuario()->getId() : null, PDO::PARAM_INT);
+
+            $stmt->execute();
+            $empresa->setId($conn->lastInsertId());
+        } catch (Exception $e) {
+            error_log("Error al guardar empresa: " . $e->getMessage());
+            $empresa = null;
+        }
+
+        return $empresa;
+    }
+    
     public function findById($id, $loadUsuario = false, $loadOfertas = false)
     {
         $empresa = null;

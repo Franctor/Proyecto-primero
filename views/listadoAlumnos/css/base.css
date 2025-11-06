@@ -463,7 +463,7 @@ main {
 }
 
 /* =============================================
-   FOOTER CORREGIDO (SOLO PARTE NEGRA)
+   FOOTER 
    ============================================= */
 
 footer {
@@ -515,7 +515,6 @@ footer {
 }
 
 .footer-link::before {
-  content: '•';
   position: absolute;
   left: 0;
   color: var(--primary-color);

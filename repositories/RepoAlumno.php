@@ -39,6 +39,33 @@ class RepoAlumno
         return $alumno;
     }
 
+    public function saveConConexion($alumno, $conn)
+    {
+        try {
+            $stmt = $conn->prepare("
+                INSERT INTO alumno (nombre, apellido, telefono, direccion, foto, cv, activo, usuario_id)
+                VALUES (:nombre, :apellido, :telefono, :direccion, :foto, :cv, :activo, :usuario_id)
+            ");
+
+            $stmt->bindValue(':nombre', $alumno->getNombre());
+            $stmt->bindValue(':apellido', $alumno->getApellido());
+            $stmt->bindValue(':telefono', $alumno->getTelefono());
+            $stmt->bindValue(':direccion', $alumno->getDireccion());
+            $stmt->bindValue(':foto', $alumno->getFoto());
+            $stmt->bindValue(':cv', $alumno->getCv());
+            $stmt->bindValue(':activo', $alumno->getActivo(), PDO::PARAM_INT);
+            $stmt->bindValue(':usuario_id', $alumno->getUsuario() ? $alumno->getUsuario()->getId() : null, PDO::PARAM_INT);
+
+            $stmt->execute();
+            $alumno->setId($conn->lastInsertId());
+        } catch (Exception $e) {
+            error_log("Error al guardar alumno con conexión: " . $e->getMessage());
+            $alumno = null;
+        }
+
+        return $alumno;
+    }
+
     public function findById($id, $loadUsuario = false, $loadSolicitudes = false, $loadCiclos = false)
     {
         $alumno = null;
@@ -167,6 +194,21 @@ class RepoAlumno
         return $result;
     }
 
+    public function deleteCiclosByAlumnoId($alumnoId)
+    {
+        $result = false;
+
+        try {
+            $conn = Connection::getConnection();
+            $stmt = $conn->prepare("DELETE FROM alumnos_ciclos WHERE alumno_id = :alumno_id");
+            $stmt->bindValue(':alumno_id', $alumnoId, PDO::PARAM_INT);
+            $result = $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Error al eliminar ciclos del alumno: " . $e->getMessage());
+        }
+
+        return $result;
+    }
     /**
      * Mapea una fila de la base de datos a un objeto Alumno.
      */

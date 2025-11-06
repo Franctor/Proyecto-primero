@@ -33,6 +33,29 @@ class RepoUsuario
         return $usuario;
     }
 
+    public function saveConConexion($usuario, $conn)
+    {
+        try {
+            $stmt = $conn->prepare("
+                INSERT INTO usuario (nombre_usuario, password, rol_id, localidad_id)
+                VALUES (:nombre_usuario, :password, :rol_id, :localidad_id)
+            ");
+
+            $stmt->bindValue(':nombre_usuario', $usuario->getNombreUsuario());
+            $stmt->bindValue(':password', $usuario->getPasswordHash());
+            $stmt->bindValue(':rol_id', $usuario->getRolId(), PDO::PARAM_INT);
+            $stmt->bindValue(':localidad_id', $usuario->getLocalidadId(), PDO::PARAM_INT);
+
+            $stmt->execute();
+            $usuario->setId($conn->lastInsertId());
+        } catch (Exception $e) {
+            error_log("Error al guardar usuario: " . $e->getMessage());
+            $usuario = null;
+        }
+
+        return $usuario;
+    }
+
     public function findById($id, $loadTokens = false)
     {
         $usuario = null;

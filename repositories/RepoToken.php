@@ -114,6 +114,21 @@ class RepoToken
 
         return $result;
     }
+    public function deleteByUsuarioId($usuarioId)
+    {
+        $result = false;
+
+        try {
+            $conn = Connection::getConnection();
+            $stmt = $conn->prepare("DELETE FROM token WHERE usuario_id = :usuario_id");
+            $stmt->bindValue(':usuario_id', $usuarioId, PDO::PARAM_INT);
+            $result = $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Error al eliminar tokens por ID de usuario: " . $e->getMessage());
+        }
+
+        return $result;
+    }
 
     /**
      * Mapea una fila SQL a un objeto Token

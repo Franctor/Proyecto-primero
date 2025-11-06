@@ -1,10 +1,11 @@
 class Modal {
   constructor() {
+    const main = document.querySelector("main");
     this.modal = document.createElement("div");
     this.modal.classList.add("modal");
     this.velo = document.createElement("div");
     this.velo.classList.add("velo");
-    document.body.append(this.velo, this.modal);
+    main.append(this.velo, this.modal);
   }
 
   async cargarPlantillaConDatos(plantillaURL, datosURL, funcionRellenar) {

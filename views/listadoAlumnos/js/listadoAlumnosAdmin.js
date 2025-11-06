@@ -1,8 +1,5 @@
 window.addEventListener('load', function () {
-    let tablas = document.querySelectorAll("table.editable");
-    if (tablas.length === 0) return;
-
-    let tabla = tablas[0];
+    const tabla = document.getElementById("tablaAlumno");
     let alumnos = [];
 
     fetch('../../mockAPI/alumnos.json')
@@ -35,4 +32,6 @@ window.addEventListener('load', function () {
                 });
             });
         });
+    
 });
+

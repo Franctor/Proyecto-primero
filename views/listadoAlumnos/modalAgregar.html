@@ -1,0 +1,77 @@
+<style>
+  #marco {
+    display: flex;
+    flex-direction: row;
+  }
+
+  #input-datos {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #foto {
+    width: 3em;
+    height: 3em;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .obligatorio {
+    color: red;
+    font-weight: bold;
+  }
+
+  .error {
+    color: red;
+    font-size: 0.8em;
+    margin-left: 5px;
+  }
+</style>
+<div class="contenido-modal-add">
+  <span id="cerrarAdd">x</span>
+  <form id="form-add-alumno">
+    <div id="marco">
+      <div id="manejo-foto">
+        <div id="foto"></div>
+        <input type="file" id="foto-perfil" name="foto-perfil" accept="image/png, image/jpeg, image/webp">
+        <button type="button" id="tomar-foto">Tomar foto</button>
+      </div>
+      <div id="input-datos">
+        <div>
+          <label for="nombre"><span class="obligatorio">*</span>Nombre</label>
+          <input type="text" name="nombre" id="nombre">
+        </div>
+        <div>
+          <label for="apellido"><span class="obligatorio">*</span>Apellido</label>
+          <input type="text" name="apellido" id="apellido">
+        </div>
+        <div>
+          <label for="email"><span class="obligatorio">*</span>Email</label>
+          <input type="text" name="email" id="email">
+        </div>
+        <div>
+          <label for="telefono"><span class="obligatorio">*</span>Teléfono</label>
+          <input type="text" name="telefono" id="telefono">
+        </div>
+        <div>
+          <label for="provincia">Provincia</label>
+          <select name="provincia" id="provincia">
+            <option selected>Seleccione una provincia</option>
+          </select>
+        </div>
+        <div>
+          <label for="localidad">Localidad</label>
+          <select name="localidad" id="localidad">
+            <option selected value="152">Seleccione una localidad</option>
+          </select>
+        </div>
+        <div>
+          <label for="direccion"><span class="obligatorio">*</span>Dirección</label>
+          <input type="text" name="direccion" id="direccion">
+        </div>
+        <input type="file" id="cv" name="cv" accept="application/pdf">
+      </div>
+    </div>
+    <button type="button" id="guardarAdd">Guardar datos</button>
+  </form>
+</div>

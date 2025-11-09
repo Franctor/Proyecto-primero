@@ -124,5 +124,9 @@ class Alumno
     {
         $this->solicitudes[] = $solicitud;
     }
+    public function setUsuario($usuario)
+    {
+        $this->usuario = $usuario;
+    }
 }
 ?>

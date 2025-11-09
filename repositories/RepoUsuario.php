@@ -47,7 +47,12 @@ class RepoUsuario
             $stmt->bindValue(':localidad_id', $usuario->getLocalidadId(), PDO::PARAM_INT);
 
             $stmt->execute();
-            $usuario->setId($conn->lastInsertId());
+            $id = $conn->lastInsertId();
+            if ($id) {
+                $usuario->setId((int) $id);
+            } else {
+                throw new Exception("No se pudo obtener el ID insertado para usuario");
+            }
         } catch (Exception $e) {
             error_log("Error al guardar usuario: " . $e->getMessage());
             $usuario = null;
@@ -69,7 +74,7 @@ class RepoUsuario
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             $repoToken = $loadTokens ? new RepoToken() : null;
             if ($row) {
-                $usuario = $this->mapRowToUsuario($row,$repoToken);
+                $usuario = $this->mapRowToUsuario($row, $repoToken);
             }
         } catch (Exception $e) {
             error_log("Error al buscar usuario por ID: " . $e->getMessage());

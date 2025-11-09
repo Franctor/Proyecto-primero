@@ -57,7 +57,12 @@ class RepoAlumno
             $stmt->bindValue(':usuario_id', $alumno->getUsuario() ? $alumno->getUsuario()->getId() : null, PDO::PARAM_INT);
 
             $stmt->execute();
-            $alumno->setId($conn->lastInsertId());
+            $id = $conn->lastInsertId();
+            if ($id) {
+                $alumno->setId((int) $id);
+            } else {
+                throw new Exception("No se pudo obtener el ID insertado para alumno");
+            }
         } catch (Exception $e) {
             error_log("Error al guardar alumno con conexión: " . $e->getMessage());
             $alumno = null;

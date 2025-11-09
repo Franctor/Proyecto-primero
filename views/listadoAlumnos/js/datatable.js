@@ -1,4 +1,5 @@
 //Métodos tablas
+//Método para activar la edición de una tabla
 HTMLTableElement.prototype.editada = false;
 HTMLTableElement.prototype.editar = function () {
     if (!this.editada) {
@@ -160,9 +161,9 @@ HTMLTableRowElement.prototype.borrar = function () {
             borrar.removeEventListener("click", a);
         });
 
-        cancelar.addEventListener("click", function a() {
+        cancelar.addEventListener("click", function b() {
             modalBorrar.destruir();
-            cancelar.removeEventListener("click", a);
+            cancelar.removeEventListener("click", b);
         });
     });
 
@@ -171,16 +172,15 @@ HTMLTableRowElement.prototype.borrar = function () {
 
 HTMLTableRowElement.prototype.editar = function () {
     const modalEditar = new Modal();
-
+    const fila = this;
     modalEditar.cargarPlantillaConDatos("modalEditar.html", "../../mockAPI/alumno12.json", rellenar)
         .then(() => {
             const btnCerrar = document.getElementById("cerrarEditar");
             const btnTomarFoto = document.getElementById("tomar-foto");
             const btnGuardar = document.getElementById("guardarEditar");
             const fileFoto = document.getElementById("foto-perfil");
-            const fileCV = document.getElementById("cv");
 
-            inicializarValidacionesEditar();
+            inicializarValidaciones("form-editar-alumno");
 
             modalEditar.mostrar();
 
@@ -188,18 +188,15 @@ HTMLTableRowElement.prototype.editar = function () {
             btnCerrar.addEventListener("click", function a() {
                 modalEditar.destruir();
                 btnCerrar.removeEventListener("click", a);
-                btnTomarFoto.removeEventListener("click", b);
-                fileFoto.removeEventListener("change", d);
-                btnGuardar.removeEventListener("click", e);
             });
 
             // --- Botón Tomar foto ---
-            btnTomarFoto.addEventListener("click", function b() {
+            btnTomarFoto.addEventListener("click", function () {
                 gestionFoto(modalEditar); // función definida en foto.js
             });
 
             // --- Previsualizar imagen seleccionada ---
-            fileFoto.addEventListener("change", function d() {
+            fileFoto.addEventListener("change", function () {
                 const fotoDiv = document.getElementById("foto");
                 const file = fileFoto.files[0];
                 if (file) {
@@ -208,11 +205,28 @@ HTMLTableRowElement.prototype.editar = function () {
                 }
             });
 
-            // --- Guardar cambios ---
-            btnGuardar.addEventListener("click", function e() {
+            btnGuardar.addEventListener("click", function () {
                 const formulario = document.getElementById("form-editar-alumno");
-                if (validarFormularioEditar(formulario)) {
-                    console.log("Formulario válido, enviando datos...");
+                if (validarFormulario(formulario)) {
+                    fetch('../../mockAPI/editar.json', {
+                        method: 'POST',
+                        body: new FormData(formulario)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.respuesta) {
+                                modalEditar.destruir();
+                                const celdas = fila.cells;
+                                // Mapeo explícito de columnas
+                                celdas[0].textContent = data.id || celdas[0].textContent;
+                                celdas[1].textContent = data.nombre || celdas[1].textContent;
+                                celdas[2].textContent = data.apellidos || celdas[2].textContent;
+                                celdas[3].textContent = data.email || celdas[3].textContent;
+                                celdas[4].textContent = data.telefono || celdas[4].textContent;
+                            } else {
+                                console.warn("Error al editar el alumno.");
+                            }
+                        });
                 } else {
                     console.warn("Formulario inválido, revisa los campos.");
                 }

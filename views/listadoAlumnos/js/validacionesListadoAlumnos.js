@@ -1,5 +1,5 @@
-function inicializarValidacionesEditar() {
-    const formularioEditar = document.getElementById("form-editar-alumno");
+function inicializarValidaciones(id) {
+    const formularioEditar = document.getElementById(id);
     const inputFoto = formularioEditar.querySelector("#foto-perfil");
     const inputCV = formularioEditar.querySelector("#cv");
     const inputNombre = formularioEditar.querySelector("#nombre");
@@ -86,7 +86,84 @@ function inicializarValidacionesEditar() {
         mostrarError(this, mensajeError);
     });
 
-    /* Funciones de ayuda para mostrar y limpiar errores */
+    
+}
+
+function validarFormulario(formulario) {
+    const inputFoto = formulario.querySelector("#foto-perfil");
+    const inputCV = formulario.querySelector("#cv");
+    const inputNombre = formulario.querySelector("#nombre");
+    const inputApellidos = formulario.querySelector("#apellido");
+    const inputDireccion = formulario.querySelector("#direccion");
+    const inputEmail = formulario.querySelector("#email");
+    const inputTelefono = formulario.querySelector("#telefono");
+    const inputLocalidad = formulario.querySelector("#localidad");
+    const inputProvincia = formulario.querySelector("#provincia");
+    let formularioValido = true;
+    // Validar cada campo utilizando las funciones de validación
+    if (inputFoto) {
+        const mensajeErrorFoto = validarImagen(inputFoto.files[0]);
+        if (mensajeErrorFoto) {
+            mostrarError(inputFoto, mensajeErrorFoto);
+            formularioValido = false;
+        }
+    }
+    if (inputCV) {
+        const mensajeErrorCV = validarCV(inputCV.files[0]);
+        if (mensajeErrorCV) {
+            mostrarError(inputCV, mensajeErrorCV);
+            formularioValido = false;
+        }
+    }
+
+    const mensajeErrorNombre = validarNombre(inputNombre.value);
+    if (mensajeErrorNombre) {
+        mostrarError(inputNombre, mensajeErrorNombre);
+        formularioValido = false;
+    }
+
+    const mensajeErrorApellidos = validarNombre(inputApellidos.value);
+    if (mensajeErrorApellidos) {
+        mostrarError(inputApellidos, mensajeErrorApellidos);
+        formularioValido = false;
+    }
+
+    const mensajeErrorDireccion = validarDireccion(inputDireccion.value);
+    if (mensajeErrorDireccion) {
+        mostrarError(inputDireccion, mensajeErrorDireccion);
+        formularioValido = false;
+    }
+
+    const mensajeErrorEmail = validarCorreoElectronico(inputEmail.value);
+    if (mensajeErrorEmail) {
+        mostrarError(inputEmail, mensajeErrorEmail);
+        formularioValido = false;
+    }
+
+    const mensajeErrorTelefono = validarTelefono(inputTelefono.value);
+    if (mensajeErrorTelefono) {
+        mostrarError(inputTelefono, mensajeErrorTelefono);
+        formularioValido = false;
+    }
+
+    const mensajeErrorLocalidad = validarSelect(inputLocalidad.value, "localidad");
+    if (mensajeErrorLocalidad) {
+        mostrarError(inputLocalidad, mensajeErrorLocalidad);
+        formularioValido = false;
+    }
+
+    const mensajeErrorProvincia = validarSelect(inputProvincia.value, "provincia");
+    if (mensajeErrorProvincia) {
+        mostrarError(inputProvincia, mensajeErrorProvincia);
+        formularioValido = false;
+    }
+
+    return formularioValido;
+}
+
+
+
+/* Funciones de ayuda para mostrar y limpiar errores */
     function mostrarError(input, mensaje) {
         const errorPrevio = input.parentNode.querySelector(".error");
         if (errorPrevio) errorPrevio.remove();
@@ -175,6 +252,8 @@ function inicializarValidacionesEditar() {
             const validTypes = ["image/png", "image/jpeg", "image/webp"];
             if (!validTypes.includes(file.type)) {
                 mensajeError = "El archivo de la foto de perfil debe ser una imagen (PNG, JPEG, WEBP).";
+            } else if (file.size > 1 * 1024 * 1024) { // 1MB
+                mensajeError = "El archivo de la foto de perfil no debe superar los 1MB.";
             }
         } else {
             mensajeError = "Debes seleccionar una foto de perfil.";
@@ -187,13 +266,11 @@ function inicializarValidacionesEditar() {
         if (file != null) {
             if (file.type !== "application/pdf") {
                 mensajeError = "El archivo del CV debe ser un documento PDF.";
+            } else if (file.size > 5 * 1024 * 1024) { // 5MB
+                mensajeError = "El archivo del CV no debe superar los 5MB.";
             }
         } else {
             mensajeError = "Debes seleccionar un CV.";
         }
         return mensajeError;
     }
-}
-
-
-

@@ -16,6 +16,11 @@ $input = $_POST; // datos del formulario
 $files = $_FILES; // archivos subidos
 $alumnoService = new AlumnoService();
 $idAlumno = isset($_GET['id']) ? intval($_GET['id']) : null;
+// Si viene un campo "_method" en el POST, lo usamos para sobrescribir el método real
+if ($method === 'POST' && isset($input['_method'])) {
+    $method = strtoupper($input['_method']);
+    unset($input['_method']); // opcional: lo quitamos para no ensuciar la lógica
+}
 
 try {
     switch ($method) {
@@ -112,8 +117,11 @@ function updateAlumno($idAlumno, $input, $files, $alumnoService)
     $validate = new Validator();
     if ($validate->validarAlumnoEditar($input, $files)) {
         $alumno = $alumnoService->updateAlumno($idAlumno, $input, $files);
+        $converter = new Converter();
+        $alumno = $converter->convertirAlumnoAJson($alumno);
     } else {
-        $alumno = null;
+        http_response_code(404);
+        echo json_encode(['error' => 'Error de validación']);
     }
 
     if ($alumno != null) {

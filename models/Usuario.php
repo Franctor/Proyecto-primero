@@ -52,6 +52,11 @@ class Usuario
         $this->id = $id;
     }
 
+    public function setLocalidadId($localidad_id)
+    {
+        $this->localidad_id = $localidad_id;
+    }
+
     public function setNombreUsuario($nombre_usuario)
     {
         $this->nombre_usuario = $nombre_usuario;

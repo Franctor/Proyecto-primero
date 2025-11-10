@@ -50,6 +50,23 @@ class Alumno
     {
         return $this->direccion;
     }
+
+    //Devolver foto en base
+    public function getFoto64()
+    {
+        $foto = null;
+        // Verificar si el archivo existe
+        if (file_exists(__DIR__ . '/../' . $this->foto)) {
+            // Leer el contenido binario de la imagen
+            $contenidoImagen = file_get_contents(__DIR__ . '/../' . $this->foto);
+
+            // Codificar el contenido a base64
+            $foto = base64_encode($contenidoImagen);
+        }
+
+        return $foto; 
+    }
+
     public function getFoto()
     {
         return $this->foto;

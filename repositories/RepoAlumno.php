@@ -211,17 +211,20 @@ class RepoAlumno
     public function updateConConexion($alumno, $conn)
     {
         try {
+            $usuarioId = $alumno->getUsuario() ? $alumno->getUsuario()->getId() : null;
+
             $stmt = $conn->prepare("
-                UPDATE alumno
-                SET nombre = :nombre,
-                    apellido = :apellido,
-                    telefono = :telefono,
-                    direccion = :direccion,
-                    foto = :foto,
-                    cv = :cv,
-                    activo = :activo
-                WHERE id = :id
-            ");
+            UPDATE alumno
+            SET nombre = :nombre,
+                apellido = :apellido,
+                telefono = :telefono,
+                direccion = :direccion,
+                foto = :foto,
+                cv = :cv,
+                activo = :activo,
+                usuario_id = :usuario_id
+            WHERE id = :id
+        ");
 
             $stmt->bindValue(':nombre', $alumno->getNombre());
             $stmt->bindValue(':apellido', $alumno->getApellido());
@@ -230,12 +233,14 @@ class RepoAlumno
             $stmt->bindValue(':foto', $alumno->getFoto());
             $stmt->bindValue(':cv', $alumno->getCv());
             $stmt->bindValue(':activo', $alumno->getActivo(), PDO::PARAM_INT);
+            $stmt->bindValue(':usuario_id', $usuarioId, PDO::PARAM_INT);
             $stmt->bindValue(':id', $alumno->getId(), PDO::PARAM_INT);
 
             $stmt->execute();
+
         } catch (Exception $e) {
             error_log("Error al actualizar alumno con conexión: " . $e->getMessage());
-            $alumno = null;
+            return null;
         }
 
         return $alumno;

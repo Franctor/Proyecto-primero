@@ -84,10 +84,10 @@ class Validator
         if (!$this->validarNumeroEntero($localidad_id)) {
             $valido = false;
         }
-        if ($foto !== null && !$this->validarFoto($foto)) {
+        if ($foto && $foto['error'] !== UPLOAD_ERR_NO_FILE && !$this->validarFoto($foto)) {
             $valido = false;
         }
-        if ($cv !== null && !$this->validarCV($cv)) {
+        if ($cv && $cv['error'] !== UPLOAD_ERR_NO_FILE && !$this->validarCV($cv)) {
             $valido = false;
         }
         return $valido;

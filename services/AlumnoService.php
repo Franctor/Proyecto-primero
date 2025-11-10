@@ -31,7 +31,7 @@ class AlumnoService
 
         // Guardar foto si viene
         if (isset($files['foto-perfil']) && $files['foto-perfil']['error'] === UPLOAD_ERR_OK) {
-            $nombreArchivo = $nombre_usuario;
+            $nombreArchivo = $nombre_usuario . '.png';
             $destino = $carpetaFotos . $nombreArchivo;
             move_uploaded_file($files['foto-perfil']['tmp_name'], $destino);
             $fotoRuta = 'storage/foto_perfil/' . $nombreArchivo; // ruta relativa
@@ -135,6 +135,15 @@ class AlumnoService
             $conn->commit();
             $ok = true;
 
+            // Eliminar archivos asociados
+            $fotoRuta = $alumno->getFoto();
+            $cvRuta = $alumno->getCv();
+            if ($fotoRuta && file_exists(__DIR__ . '/../' . $fotoRuta)) {
+                unlink(__DIR__ . '/../' . $fotoRuta);
+            }
+            if ($cvRuta && file_exists(__DIR__ . '/../' . $cvRuta)) {
+                unlink(__DIR__ . '/../' . $cvRuta);
+            }
         } catch (Exception $e) {
             $conn->rollBack();
             error_log("Error al eliminar alumno (transacción): " . $e->getMessage());
@@ -169,63 +178,65 @@ class AlumnoService
     {
         $repoAlumno = new RepoAlumno();
         $alumno = $repoAlumno->findById($id, true);
-        if ($alumno) {
-            $nombre = trim($data['nombre']);
-            $apellido = trim($data['apellido']);
-            $telefono = trim($data['telefono']);
-            $direccion = trim($data['direccion']);
-            $nombre_usuario = trim($data['email']);
-            $password = $alumno->getUsuario()->getPasswordHash();
-            $localidad_id = trim($data['localidad']);
-
-            // === Manejo de archivos ===
-            $fotoRuta = $alumno->getFoto();
-            $cvRuta = $alumno->getCv();
-
-            // Carpeta base
-            $carpetaFotos = __DIR__ . '/../storage/foto_perfil/';
-            $carpetaCVs = __DIR__ . '/../storage/cv/';
-
-            // Guardar foto si viene
-            if (isset($files['foto-perfil']) && $files['foto-perfil']['error'] === UPLOAD_ERR_OK) {
-                $nombreArchivo = $nombre_usuario;
-                $destino = $carpetaFotos . $nombreArchivo;
-                move_uploaded_file($files['foto-perfil']['tmp_name'], $destino);
-                $fotoRuta = 'storage/foto_perfil/' . $nombreArchivo; // ruta relativa
-            }
-
-            // Guardar CV si viene
-            if (isset($files['cv']) && $files['cv']['error'] === UPLOAD_ERR_OK) {
-                $extension = pathinfo($files['cv']['name'], PATHINFO_EXTENSION);
-                $nombreArchivo = $nombre_usuario . '.' . strtolower($extension);
-                $destino = $carpetaCVs . $nombreArchivo;
-                move_uploaded_file($files['cv']['tmp_name'], $destino);
-                $cvRuta = 'storage/cv/' . $nombreArchivo; // ruta relativa
-            }
-
-            // Crear objetos
-            $alumnoNuevo = new Alumno(
-                $nombre,
-                $apellido,
-                $telefono,
-                $direccion,
-                $fotoRuta,
-                $cvRuta,
-                0
-            );
-            $alumnoNuevo->setId($alumno->getId());
-
-            $usuarioNuevo = new Usuario(
-                $nombre_usuario,
-                $password,
-                2,
-                $localidad_id
-            );
-            $usuarioNuevo->setId($alumno->getUsuario()->getId());
+        if (!$alumno) {
+            return null; // Alumno no encontrado
         }
 
+        $usuario = $alumno->getUsuario();
+        if (!$usuario) {
+            return null; // Usuario no encontrado
+        }
 
-        return $this->actualizarAlumno($usuarioNuevo, $alumnoNuevo);
+        // === Datos a actualizar ===
+        $nombre = isset($data['nombre']) ? trim($data['nombre']) : $alumno->getNombre();
+        $apellido = isset($data['apellido']) ? trim($data['apellido']) : $alumno->getApellido();
+        $telefono = isset($data['telefono']) ? trim($data['telefono']) : $alumno->getTelefono();
+        $direccion = isset($data['direccion']) ? trim($data['direccion']) : $alumno->getDireccion();
+        $nombre_usuario = isset($data['email']) ? trim($data['email']) : $usuario->getNombreUsuario();
+        $password = isset($data['password']) && $data['password'] !== '' ? $data['password'] : null;
+        $localidad_id = isset($data['localidad']) ? trim($data['localidad']) : $usuario->getLocalidadId();
+
+        // === Manejo de archivos ===
+        $fotoRuta = $alumno->getFoto();
+        $cvRuta = $alumno->getCv();
+
+        $carpetaFotos = __DIR__ . '/../storage/foto_perfil/';
+        $carpetaCVs = __DIR__ . '/../storage/cv/';
+
+        if (isset($files['foto-perfil']) && $files['foto-perfil']['error'] === UPLOAD_ERR_OK) {
+            $ext = pathinfo($files['foto-perfil']['name'], PATHINFO_EXTENSION);
+            $nombreArchivo = $nombre_usuario . '.' . $ext;
+            $destino = $carpetaFotos . $nombreArchivo;
+            move_uploaded_file($files['foto-perfil']['tmp_name'], $destino);
+            $fotoRuta = 'storage/foto_perfil/' . $nombreArchivo;
+        }
+
+        if (isset($files['cv']) && $files['cv']['error'] === UPLOAD_ERR_OK) {
+            $ext = pathinfo($files['cv']['name'], PATHINFO_EXTENSION);
+            $nombreArchivo = $nombre_usuario . '.' . strtolower($ext);
+            $destino = $carpetaCVs . $nombreArchivo;
+            move_uploaded_file($files['cv']['tmp_name'], $destino);
+            $cvRuta = 'storage/cv/' . $nombreArchivo;
+        }
+
+        // === Actualizar objetos ===
+        $alumno->setNombre($nombre);
+        $alumno->setApellido($apellido);
+        $alumno->setTelefono($telefono);
+        $alumno->setDireccion($direccion);
+        $alumno->setFoto($fotoRuta);
+        $alumno->setCv($cvRuta);
+
+        $usuario->setNombreUsuario($nombre_usuario);
+        $usuario->setLocalidadId($localidad_id);
+        if ($password) {
+            $usuario->setPasswordHash(password_hash($password, PASSWORD_BCRYPT));
+        }
+
+        $alumno->setUsuario($usuario);
+
+        // === Guardar cambios ===
+        return $this->actualizarAlumno($usuario, $alumno);
     }
 
     public function actualizarAlumno($usuario, $alumno)

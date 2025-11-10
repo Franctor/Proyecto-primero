@@ -10,7 +10,6 @@
   }
 
   #foto {
-    background-image: url('../diseño/sources/imagenes/sin-foto.webp');
     width: 3em;
     height: 3em;
     background-repeat: no-repeat;
@@ -33,7 +32,7 @@
   <form id="form-editar-alumno">
     <div id="marco">
       <div id="manejo-foto">
-        <div id="foto" style="background-image: url('{{foto}}');"></div>
+        <div id="foto" data-foto="{{foto}}"></div>
         <input type="file" id="foto-perfil" name="foto-perfil" accept="image/png, image/jpeg, image/webp">
         <button type="button" id="tomar-foto">Tomar foto</button>
       </div>
@@ -57,7 +56,6 @@
         <div>
           <label for="provincia">Provincia</label>
           <select name="provincia" id="provincia">
-            <option selected>{{provincia}}</option>
           </select>
         </div>
         <div>

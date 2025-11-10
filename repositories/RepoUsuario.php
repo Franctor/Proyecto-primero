@@ -146,6 +146,7 @@ class RepoUsuario
             $stmt->bindValue(':id', $usuario->getId(), PDO::PARAM_INT);
 
             $stmt->execute();
+            
         } catch (Exception $e) {
             error_log("Error al actualizar usuario: " . $e->getMessage());
             $usuario = null;

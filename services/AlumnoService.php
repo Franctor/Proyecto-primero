@@ -1,5 +1,6 @@
 <?php
 namespace services;
+use helpers\Converter;
 use models\Usuario;
 use repositories\Connection;
 use repositories\RepoAlumno;
@@ -140,5 +141,128 @@ class AlumnoService
         }
 
         return $ok;
+    }
+
+    public function getAlumnos()
+    {
+        $repoAlumno = new RepoAlumno();
+        $alumnos = $repoAlumno->findAll(true);
+        if ($alumnos) {
+            $converter = new Converter();
+            $alumnos = $converter->convertirAlumnosAJson($alumnos);
+        }
+        return $alumnos;
+    }
+
+    public function getAlumno($id)
+    {
+        $repoAlumno = new RepoAlumno();
+        $alumno = $repoAlumno->findById($id, true);
+        if ($alumno) {
+            $converter = new Converter();
+            $alumno = $converter->convertirAlumnoAJson($alumno);
+        }
+        return $alumno;
+    }
+
+    public function updateAlumno($id, $data, $files)
+    {
+        $repoAlumno = new RepoAlumno();
+        $alumno = $repoAlumno->findById($id, true);
+        if ($alumno) {
+            $nombre = trim($data['nombre']);
+            $apellido = trim($data['apellido']);
+            $telefono = trim($data['telefono']);
+            $direccion = trim($data['direccion']);
+            $nombre_usuario = trim($data['email']);
+            $password = $alumno->getUsuario()->getPasswordHash();
+            $localidad_id = trim($data['localidad']);
+
+            // === Manejo de archivos ===
+            $fotoRuta = $alumno->getFoto();
+            $cvRuta = $alumno->getCv();
+
+            // Carpeta base
+            $carpetaFotos = __DIR__ . '/../storage/foto_perfil/';
+            $carpetaCVs = __DIR__ . '/../storage/cv/';
+
+            // Guardar foto si viene
+            if (isset($files['foto-perfil']) && $files['foto-perfil']['error'] === UPLOAD_ERR_OK) {
+                $nombreArchivo = $nombre_usuario;
+                $destino = $carpetaFotos . $nombreArchivo;
+                move_uploaded_file($files['foto-perfil']['tmp_name'], $destino);
+                $fotoRuta = 'storage/foto_perfil/' . $nombreArchivo; // ruta relativa
+            }
+
+            // Guardar CV si viene
+            if (isset($files['cv']) && $files['cv']['error'] === UPLOAD_ERR_OK) {
+                $extension = pathinfo($files['cv']['name'], PATHINFO_EXTENSION);
+                $nombreArchivo = $nombre_usuario . '.' . strtolower($extension);
+                $destino = $carpetaCVs . $nombreArchivo;
+                move_uploaded_file($files['cv']['tmp_name'], $destino);
+                $cvRuta = 'storage/cv/' . $nombreArchivo; // ruta relativa
+            }
+
+            // Crear objetos
+            $alumnoNuevo = new Alumno(
+                $nombre,
+                $apellido,
+                $telefono,
+                $direccion,
+                $fotoRuta,
+                $cvRuta,
+                0
+            );
+            $alumnoNuevo->setId($alumno->getId());
+
+            $usuarioNuevo = new Usuario(
+                $nombre_usuario,
+                $password,
+                2,
+                $localidad_id
+            );
+            $usuarioNuevo->setId($alumno->getUsuario()->getId());
+        }
+
+
+        return $this->actualizarAlumno($usuarioNuevo, $alumnoNuevo);
+    }
+
+    public function actualizarAlumno($usuario, $alumno)
+    {
+        $conn = null;
+        $resultado = null;
+
+        try {
+            $conn = Connection::getConnection();
+            $conn->beginTransaction();
+
+            $repoUsuario = new RepoUsuario();
+            $repoAlumno = new RepoAlumno();
+
+            //Actualizar usuario
+            $usuario = $repoUsuario->updateConConexion($usuario, $conn);
+            if (!$usuario || !$usuario->getId()) {
+                throw new Exception("Error al actualizar usuario");
+            }
+
+            //Asignar usuario al alumno y actualizar
+            $alumno->setUsuario($usuario);
+            $alumno = $repoAlumno->updateConConexion($alumno, $conn);
+            if (!$alumno || !$alumno->getId()) {
+                throw new Exception("Error al actualizar alumno");
+            }
+
+            // Si todo va bien
+            $conn->commit();
+            $resultado = $alumno;
+        } catch (Exception $e) {
+            if ($conn) {
+                $conn->rollBack();
+            }
+            error_log("Error en actualización alumno: " . $e->getMessage());
+        }
+
+        return $resultado;
     }
 }

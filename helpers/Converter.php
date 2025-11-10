@@ -11,10 +11,20 @@ class Converter
             'apellido' => $alumno->getApellido(),
             'telefono' => $alumno->getTelefono(),
             'direccion' => $alumno->getDireccion(),
-            'foto' => $alumno->getFoto(),
-            'cv' => $alumno->getCv(),
             'email' => $alumno->getUsuario() ? $alumno->getUsuario()->getNombreUsuario() : null,
+            'localidad_id' => $alumno->getUsuario() ? $alumno->getUsuario()->getLocalidadId() : null,
+            'foto' => $alumno->getFoto()
         ];
         return $alumnoArray;
+    }
+
+    public function convertirAlumnosAJson($alumnos)
+    {
+        $alumnosArray = [];
+        
+        foreach ($alumnos as $alumno) {
+            $alumnosArray[] = $this->convertirAlumnoAJson($alumno);
+        }
+        return $alumnosArray;
     }
 }

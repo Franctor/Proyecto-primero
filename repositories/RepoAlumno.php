@@ -125,6 +125,31 @@ class RepoAlumno
         return $alumnos;
     }
 
+    public function findByTelefono($telefono, $loadUsuario = false, $loadSolicitudes = false, $loadCiclos = false)
+    {
+        $alumno = null;
+
+        try {
+            $conn = Connection::getConnection();
+            $stmt = $conn->prepare("SELECT * FROM alumno WHERE telefono = :telefono");
+            $stmt->bindValue(':telefono', $telefono);
+            $stmt->execute();
+
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($row) {
+                $repoUsuario = $loadUsuario ? new RepoUsuario() : null;
+                $repoSolicitud = $loadSolicitudes ? new RepoSolicitud() : null;
+                $repoCiclo = $loadCiclos ? new RepoCiclo() : null;
+
+                $alumno = $this->mapRowToAlumno($row, $repoUsuario, $repoSolicitud, $repoCiclo);
+            }
+        } catch (Exception $e) {
+            error_log("Error al buscar alumno por teléfono: " . $e->getMessage());
+        }
+
+        return $alumno;
+    }
 
     public function findAll($loadUsuario = false, $loadSolicitudes = false, $loadCiclos = false)
     {
@@ -177,6 +202,39 @@ class RepoAlumno
             $stmt->execute();
         } catch (Exception $e) {
             error_log("Error al actualizar alumno: " . $e->getMessage());
+            $alumno = null;
+        }
+
+        return $alumno;
+    }
+
+    public function updateConConexion($alumno, $conn)
+    {
+        try {
+            $stmt = $conn->prepare("
+                UPDATE alumno
+                SET nombre = :nombre,
+                    apellido = :apellido,
+                    telefono = :telefono,
+                    direccion = :direccion,
+                    foto = :foto,
+                    cv = :cv,
+                    activo = :activo
+                WHERE id = :id
+            ");
+
+            $stmt->bindValue(':nombre', $alumno->getNombre());
+            $stmt->bindValue(':apellido', $alumno->getApellido());
+            $stmt->bindValue(':telefono', $alumno->getTelefono());
+            $stmt->bindValue(':direccion', $alumno->getDireccion());
+            $stmt->bindValue(':foto', $alumno->getFoto());
+            $stmt->bindValue(':cv', $alumno->getCv());
+            $stmt->bindValue(':activo', $alumno->getActivo(), PDO::PARAM_INT);
+            $stmt->bindValue(':id', $alumno->getId(), PDO::PARAM_INT);
+
+            $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Error al actualizar alumno con conexión: " . $e->getMessage());
             $alumno = null;
         }
 

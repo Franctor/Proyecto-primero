@@ -68,7 +68,7 @@ try {
 function getAlumno($idAlumno, $alumnoService)
 {
     $alumno = $alumnoService->getAlumno($idAlumno);
-    if ($alumno) {
+    if ($alumno != null) {
         echo json_encode($alumno);
     } else {
         http_response_code(404);
@@ -79,11 +79,11 @@ function getAlumno($idAlumno, $alumnoService)
 function getAlumnos($alumnoService)
 {
     $alumnos = $alumnoService->getAlumnos();
-    if ($alumnos) {
+    if (!empty($alumnos)) {
         echo json_encode($alumnos);
     } else {
         http_response_code(404);
-        echo json_encode(['error' => 'No se encontraron alumnos']);
+            echo json_encode(['respuesta' => false]);
     }
 }
 
@@ -110,13 +110,14 @@ function createAlumno($input, $files, $alumnoService)
 function updateAlumno($idAlumno, $input, $files, $alumnoService)
 {
     $validate = new Validator();
-    if ($validate->validarAlumno($input, $files)) {
+    if ($validate->validarAlumnoEditar($input, $files)) {
         $alumno = $alumnoService->updateAlumno($idAlumno, $input, $files);
     } else {
         $alumno = null;
     }
 
     if ($alumno != null) {
+        http_response_code(200);
         echo json_encode($alumno);
     } else {
         http_response_code(404);
@@ -129,7 +130,6 @@ function deleteAlumno($idAlumno, $alumnoService)
     $result = $alumnoService->deleteAlumno($idAlumno);
     if ($result) {
         http_response_code(204);
-        echo json_encode(['message' => 'true']);
     } else {
         http_response_code(404);
         echo json_encode(['error' => 'Alumno no encontrado']);

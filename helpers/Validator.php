@@ -1,5 +1,8 @@
 <?php
 namespace helpers;
+
+use repositories\RepoUsuario;
+use repositories\RepoAlumno;
 class Validator
 {
     public function validarAlumno($input, $files)
@@ -15,6 +18,12 @@ class Validator
         $localidad_id = $input['localidad'];
 
         $valido = true;
+        if ($this->telefonoExiste($telefono)) {
+            $valido = false;
+        }
+        if ($this->correoExiste($nombre_usuario)) {
+            $valido = false;
+        }
         if (!$this->validarNombre($nombre)) {
             $valido = false;
         }
@@ -40,6 +49,45 @@ class Validator
             $valido = false;
         }
         if (!$this->validarCV($cv)) {
+            $valido = false;
+        }
+        return $valido;
+    }
+
+    public function validarAlumnoEditar($input, $files)
+    {
+        $nombre = $input['nombre'];
+        $apellido = $input['apellido'];
+        $telefono = $input['telefono'];
+        $direccion = $input['direccion'];
+        $foto = isset($files['foto-perfil']) ? $files['foto-perfil'] : null;
+        $cv = isset($files['cv']) ? $files['cv'] : null;
+        $nombre_usuario = $input['email'];
+        $localidad_id = $input['localidad'];
+
+        $valido = true;
+        if (!$this->validarNombre($nombre)) {
+            $valido = false;
+        }
+        if (!$this->validarNombre($apellido)) {
+            $valido = false;
+        }
+        if (!$this->validarTelefono($telefono)) {
+            $valido = false;
+        }
+        if (!$this->validarDireccion($direccion)) {
+            $valido = false;
+        }
+        if (!$this->validarCorreoElectronico($nombre_usuario)) {
+            $valido = false;
+        }
+        if (!$this->validarNumeroEntero($localidad_id)) {
+            $valido = false;
+        }
+        if ($foto !== null && !$this->validarFoto($foto)) {
+            $valido = false;
+        }
+        if ($cv !== null && !$this->validarCV($cv)) {
             $valido = false;
         }
         return $valido;
@@ -88,6 +136,7 @@ class Validator
     }
 
     public function validarCorreoElectronico($email)
+    //Validar tambien que el correo electronico no exista en la base de datos
     {
         $email = trim($email);
         $valido = true;
@@ -152,6 +201,26 @@ class Validator
         }
 
         return $valido;
+    }
+
+    public function correoExiste($email)
+    {
+        $existe = false;
+        $repoUsuario = new RepoUsuario();
+        if ($repoUsuario->findByNombreUsuario($email) !== null) {
+            $existe = true;
+        }
+        return $existe;
+    }
+
+    public function telefonoExiste($telefono)
+    {
+        $existe = false;
+        $repoAlumno = new RepoAlumno();
+        if ($repoAlumno->findByTelefono($telefono) !== null) {
+            $existe = true;
+        }
+        return $existe;
     }
 
 }

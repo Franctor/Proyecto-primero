@@ -49,7 +49,6 @@ HTMLTableElement.prototype.noEditar = function () {
 HTMLTableElement.prototype.cargarJSON = function (datos) {
     if (!Array.isArray(datos) || datos.length === 0) return;
 
-    const keys = Object.keys(datos[0]);
     const thead = this.querySelector("thead") || this.createTHead();
     const tbody = this.querySelector("tbody") || this.createTBody();
 
@@ -58,21 +57,46 @@ HTMLTableElement.prototype.cargarJSON = function (datos) {
 
     // Crear cabecera
     const filaHead = document.createElement("tr");
-    keys.forEach(key => {
-        const th = document.createElement("th");
-        th.textContent = key;
-        filaHead.appendChild(th);
-    });
+    const idHead = document.createElement("th");
+    idHead.textContent = "ID";
+    idHead.classList.add("numero", "1");
+    filaHead.appendChild(idHead);
+    const nombreHead = document.createElement("th");
+    nombreHead.textContent = "Nombre";
+    nombreHead.classList.add("texto", "1");
+    filaHead.appendChild(nombreHead);
+    const apellidoHead = document.createElement("th");
+    apellidoHead.textContent = "Apellido";
+    apellidoHead.classList.add("texto", "1");
+    filaHead.appendChild(apellidoHead);
+    const emailHead = document.createElement("th");
+    emailHead.textContent = "Email";
+    emailHead.classList.add("texto", "1");
+    filaHead.appendChild(emailHead);
+    const telefonoHead = document.createElement("th");
+    telefonoHead.textContent = "Teléfono";
+    telefonoHead.classList.add("numero", "1");
+    filaHead.appendChild(telefonoHead);
     thead.appendChild(filaHead);
 
     // Crear filas de datos
     datos.forEach(item => {
         const fila = document.createElement("tr");
-        keys.forEach(key => {
-            const td = document.createElement("td");
-            td.textContent = item[key];
-            fila.appendChild(td);
-        });
+        let celdaId = document.createElement("td");
+        celdaId.textContent = item.id || "";
+        fila.appendChild(celdaId);
+        let celdaNombre = document.createElement("td");
+        celdaNombre.textContent = item.nombre || "";
+        fila.appendChild(celdaNombre);
+        let celdaApellido = document.createElement("td");
+        celdaApellido.textContent = item.apellido || "";
+        fila.appendChild(celdaApellido);
+        let celdaEmail = document.createElement("td");
+        celdaEmail.textContent = item.email || "";
+        fila.appendChild(celdaEmail);
+        let celdaTelefono = document.createElement("td");
+        celdaTelefono.textContent = item.telefono || "";
+        fila.appendChild(celdaTelefono);
         tbody.appendChild(fila);
     });
 
@@ -151,10 +175,11 @@ HTMLTableRowElement.prototype.borrar = function () {
         let self = this;
         borrar.addEventListener("click", function a() {
             modalBorrar.destruir();
-            fetch('../../mockAPI/borrar.json')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.respuesta) {
+            fetch('../../API/ApiAlumno.php?id=' + self.cells[0].textContent, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (response.status === 204) {
                         self.remove();
                     }
                 });
@@ -173,17 +198,20 @@ HTMLTableRowElement.prototype.borrar = function () {
 HTMLTableRowElement.prototype.editar = function () {
     const modalEditar = new Modal();
     const fila = this;
-    modalEditar.cargarPlantillaConDatos("modalEditar.html", "../../mockAPI/alumno12.json", rellenar)
+    modalEditar.cargarPlantillaConDatos("modalEditar.html", "../../API/ApiAlumno.php?id=" + fila.cells[0].textContent, rellenar)
         .then(() => {
             const btnCerrar = document.getElementById("cerrarEditar");
             const btnTomarFoto = document.getElementById("tomar-foto");
             const btnGuardar = document.getElementById("guardarEditar");
             const fileFoto = document.getElementById("foto-perfil");
+            const selectLocalidad = document.getElementById("localidad");
+            const selectProvincia = document.getElementById("provincia");
+            const localidadIdAlumno = document.getElementById("localidad_id").value;
 
             inicializarValidaciones("form-editar-alumno");
 
             modalEditar.mostrar();
-
+            cargarSelectProvinciaYLocalidad(selectProvincia, selectLocalidad, localidadIdAlumno);
             // --- Botón Cerrar ---
             btnCerrar.addEventListener("click", function a() {
                 modalEditar.destruir();
@@ -207,9 +235,9 @@ HTMLTableRowElement.prototype.editar = function () {
 
             btnGuardar.addEventListener("click", function () {
                 const formulario = document.getElementById("form-editar-alumno");
-                if (validarFormulario(formulario)) {
-                    fetch('../../mockAPI/editar.json', {
-                        method: 'POST',
+                if (validarFormularioEditar(formulario)) {
+                    fetch('../../API/ApiAlumno.php?id=' + fila.cells[0].textContent, {
+                        method: 'PUT',
                         body: new FormData(formulario)
                     })
                         .then(response => response.json())
@@ -244,3 +272,84 @@ function rellenar(plantilla, datos) {
     return html;
 }
 
+function cargarSelectProvinciaYLocalidad(selectProvincia, selectLocalidad, localidadId = null) {
+        fetch('../../API/ApiProvincia.php', { method: 'GET' })
+            .then(res => res.json())
+            .then(data => {
+                selectProvincia.innerHTML = '';
+                selectLocalidad.innerHTML = '';
+
+                // Opción por defecto
+                const defaultProv = document.createElement('option');
+                defaultProv.value = '';
+                defaultProv.textContent = 'Seleccione una provincia';
+                defaultProv.disabled = true;
+                defaultProv.selected = localidadId === null;
+                selectProvincia.appendChild(defaultProv);
+
+                const defaultLoc = document.createElement('option');
+                defaultLoc.value = '';
+                defaultLoc.textContent = 'Seleccione una localidad';
+                defaultLoc.disabled = true;
+                defaultLoc.selected = localidadId === null;
+                selectLocalidad.appendChild(defaultLoc);
+
+                let provinciaSeleccionada = null;
+                let localidadSeleccionada = null;
+
+                // Buscar la provincia y localidad que corresponden al localidadId
+                if (localidadId !== null) {
+                    for (let prov of data) {
+                        const loc = prov.localidades.find(l => l.id == localidadId);
+                        if (loc) {
+                            provinciaSeleccionada = prov;
+                            localidadSeleccionada = loc;
+                            break;
+                        }
+                    }
+                }
+
+                // Cargar todas las provincias
+                data.forEach(prov => {
+                    const option = document.createElement('option');
+                    option.value = prov.id;
+                    option.textContent = prov.nombre_prov;
+                    if (provinciaSeleccionada && prov.id == provinciaSeleccionada.id) option.selected = true;
+                    selectProvincia.appendChild(option);
+                });
+
+                // Cargar localidades si hay provincia seleccionada
+                if (provinciaSeleccionada) {
+                    cargarSelectLocalidad(selectLocalidad, provinciaSeleccionada, localidadSeleccionada.nombre_loc);
+                }
+
+                // Evento al cambiar la provincia
+                selectProvincia.addEventListener('change', () => {
+                    const prov = data.find(p => p.id == selectProvincia.value);
+                    if (prov) {
+                        cargarSelectLocalidad(selectLocalidad, prov);
+                    }
+                });
+            })
+            .catch(err => console.error("Error al cargar provincias:", err));
+    }
+
+    function cargarSelectLocalidad(selectLocalidad, provincia, nombreLocalidadSeleccionada = '') {
+        selectLocalidad.innerHTML = '';
+
+        // Opción por defecto
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = 'Seleccione una localidad';
+        defaultOption.disabled = true;
+        defaultOption.selected = nombreLocalidadSeleccionada === '';
+        selectLocalidad.appendChild(defaultOption);
+
+        provincia.localidades.forEach(loc => {
+            const option = document.createElement('option');
+            option.value = loc.id;
+            option.textContent = loc.nombre_loc;
+            if (loc.nombre_loc === nombreLocalidadSeleccionada) option.selected = true;
+            selectLocalidad.appendChild(option);
+        });
+    }

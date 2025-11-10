@@ -154,6 +154,33 @@ class RepoUsuario
         return $usuario;
     }
 
+    public function updateConConexion($usuario, $conn)
+    {
+        try {
+            $stmt = $conn->prepare("
+                UPDATE usuario
+                SET nombre_usuario = :nombre_usuario,
+                    password = :password,
+                    rol_id = :rol_id,
+                    localidad_id = :localidad_id
+                WHERE id = :id
+            ");
+
+            $stmt->bindValue(':nombre_usuario', $usuario->getNombreUsuario());
+            $stmt->bindValue(':password', $usuario->getPasswordHash());
+            $stmt->bindValue(':rol_id', $usuario->getRolId(), PDO::PARAM_INT);
+            $stmt->bindValue(':localidad_id', $usuario->getLocalidadId(), PDO::PARAM_INT);
+            $stmt->bindValue(':id', $usuario->getId(), PDO::PARAM_INT);
+
+            $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Error al actualizar usuario: " . $e->getMessage());
+            $usuario = null;
+        }
+
+        return $usuario;
+    }
+
     public function delete($id)
     {
         $result = false;

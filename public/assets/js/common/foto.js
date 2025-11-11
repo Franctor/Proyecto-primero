@@ -14,7 +14,21 @@ function gestionFoto(modalEditar) {
     });
 }
 
-function manejoCamara(modalFoto, modalEditar) {
+function fotoRegistro() {
+    const modalFoto = new Modal();
+    modalFoto.cargarPlantilla("assets/modals/modalCamara.html").then(() => {
+        modalFoto.mostrar();
+        const apagarCamara = manejoCamara(modalFoto);
+        const btnCerrarCamara = document.getElementById("cerrarCamara");
+        btnCerrarCamara.addEventListener("click", function c() {
+            apagarCamara();
+            modalFoto.destruir();
+            btnCerrarCamara.removeEventListener("click", c);
+        });
+    });
+}
+
+function manejoCamara(modalFoto, modalEditar = null) {
     const video = document.getElementById('video');
     const snap = document.getElementById('snap');
     const guardarBtn = document.getElementById('guardar');
@@ -66,25 +80,30 @@ function manejoCamara(modalFoto, modalEditar) {
     // --- Guardar recorte ---
     guardarBtn.addEventListener('click', async function () {
         canvas.toBlob(blob => {
-            // Crear un File con el blob del canvas
             const file = new File([blob], "foto.png", { type: "image/png" });
 
-            // Asignar el archivo al input del modal editar
-            const inputFile = modalEditar.modal.querySelector('#foto-perfil');
-            const dataTransfer = new DataTransfer();
-            dataTransfer.items.add(file);
-            inputFile.files = dataTransfer.files;
+            // Solo si existe modalEditar, actualiza el input y vista previa
+            if (modalEditar && modalEditar.modal) {
+                const inputFile = modalEditar.modal.querySelector('#foto-perfil');
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                inputFile.files = dataTransfer.files;
 
-            // Actualizar la vista previa de la foto en el modal editar
-            const fotoDiv = modalEditar.modal.querySelector('#foto');
-            const url = URL.createObjectURL(file);
-            fotoDiv.style.backgroundImage = `url(${url})`;
+                const fotoDiv = modalEditar.modal.querySelector('#foto');
+                const url = URL.createObjectURL(file);
+                fotoDiv.style.backgroundImage = `url(${url})`;
 
-            // Cerrar cámara y mostrar modal editar
+                modalEditar.mostrar();
+            }else {
+                const inputFile = document.getElementById('foto-perfil');
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                inputFile.files = dataTransfer.files;
+            }
+
             guardarBtn.style.display = "none";
             apagarCamara();
             modalFoto.destruir();
-            modalEditar.mostrar();
         }, 'image/png');
     });
 

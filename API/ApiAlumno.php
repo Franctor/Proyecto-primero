@@ -19,7 +19,7 @@ $idAlumno = isset($_GET['id']) ? intval($_GET['id']) : null;
 // Si viene un campo "_method" en el POST, lo usamos para sobrescribir el método real
 if ($method === 'POST' && isset($input['_method'])) {
     $method = strtoupper($input['_method']);
-    unset($input['_method']); // opcional: lo quitamos para no ensuciar la lógica
+    unset($input['_method']);
 }
 
 try {

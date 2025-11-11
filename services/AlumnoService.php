@@ -176,67 +176,68 @@ class AlumnoService
 
     public function updateAlumno($id, $data, $files)
     {
+        $resultado = null;
+
         $repoAlumno = new RepoAlumno();
         $alumno = $repoAlumno->findById($id, true);
-        if (!$alumno) {
-            return null; // Alumno no encontrado
+
+        if ($alumno) {
+            $usuario = $alumno->getUsuario();
+            if ($usuario) {
+                // === Datos a actualizar ===
+                $nombre = isset($data['nombre']) ? trim($data['nombre']) : $alumno->getNombre();
+                $apellido = isset($data['apellido']) ? trim($data['apellido']) : $alumno->getApellido();
+                $telefono = isset($data['telefono']) ? trim($data['telefono']) : $alumno->getTelefono();
+                $direccion = isset($data['direccion']) ? trim($data['direccion']) : $alumno->getDireccion();
+                $nombre_usuario = isset($data['email']) ? trim($data['email']) : $usuario->getNombreUsuario();
+                $password = isset($data['password']) && $data['password'] !== '' ? $data['password'] : null;
+                $localidad_id = isset($data['localidad']) ? trim($data['localidad']) : $usuario->getLocalidadId();
+
+                // === Manejo de archivos ===
+                $fotoRuta = $alumno->getFoto();
+                $cvRuta = $alumno->getCv();
+
+                $carpetaFotos = __DIR__ . '/../storage/foto_perfil/';
+                $carpetaCVs = __DIR__ . '/../storage/cv/';
+
+                if (isset($files['foto-perfil']) && $files['foto-perfil']['error'] === UPLOAD_ERR_OK) {
+                    $ext = pathinfo($files['foto-perfil']['name'], PATHINFO_EXTENSION);
+                    $nombreArchivo = $nombre_usuario . '.' . $ext;
+                    $destino = $carpetaFotos . $nombreArchivo;
+                    move_uploaded_file($files['foto-perfil']['tmp_name'], $destino);
+                    $fotoRuta = 'storage/foto_perfil/' . $nombreArchivo;
+                }
+
+                if (isset($files['cv']) && $files['cv']['error'] === UPLOAD_ERR_OK) {
+                    $ext = pathinfo($files['cv']['name'], PATHINFO_EXTENSION);
+                    $nombreArchivo = $nombre_usuario . '.' . strtolower($ext);
+                    $destino = $carpetaCVs . $nombreArchivo;
+                    move_uploaded_file($files['cv']['tmp_name'], $destino);
+                    $cvRuta = 'storage/cv/' . $nombreArchivo;
+                }
+
+                // === Actualizar objetos ===
+                $alumno->setNombre($nombre);
+                $alumno->setApellido($apellido);
+                $alumno->setTelefono($telefono);
+                $alumno->setDireccion($direccion);
+                $alumno->setFoto($fotoRuta);
+                $alumno->setCv($cvRuta);
+
+                $usuario->setNombreUsuario($nombre_usuario);
+                $usuario->setLocalidadId($localidad_id);
+                if ($password) {
+                    $usuario->setPassword($password);
+                }
+
+                $alumno->setUsuario($usuario);
+
+                // === Guardar cambios ===
+                $resultado = $this->actualizarAlumno($usuario, $alumno);
+            }
         }
 
-        $usuario = $alumno->getUsuario();
-        if (!$usuario) {
-            return null; // Usuario no encontrado
-        }
-
-        // === Datos a actualizar ===
-        $nombre = isset($data['nombre']) ? trim($data['nombre']) : $alumno->getNombre();
-        $apellido = isset($data['apellido']) ? trim($data['apellido']) : $alumno->getApellido();
-        $telefono = isset($data['telefono']) ? trim($data['telefono']) : $alumno->getTelefono();
-        $direccion = isset($data['direccion']) ? trim($data['direccion']) : $alumno->getDireccion();
-        $nombre_usuario = isset($data['email']) ? trim($data['email']) : $usuario->getNombreUsuario();
-        $password = isset($data['password']) && $data['password'] !== '' ? $data['password'] : null;
-        $localidad_id = isset($data['localidad']) ? trim($data['localidad']) : $usuario->getLocalidadId();
-
-        // === Manejo de archivos ===
-        $fotoRuta = $alumno->getFoto();
-        $cvRuta = $alumno->getCv();
-
-        $carpetaFotos = __DIR__ . '/../storage/foto_perfil/';
-        $carpetaCVs = __DIR__ . '/../storage/cv/';
-
-        if (isset($files['foto-perfil']) && $files['foto-perfil']['error'] === UPLOAD_ERR_OK) {
-            $ext = pathinfo($files['foto-perfil']['name'], PATHINFO_EXTENSION);
-            $nombreArchivo = $nombre_usuario . '.' . $ext;
-            $destino = $carpetaFotos . $nombreArchivo;
-            move_uploaded_file($files['foto-perfil']['tmp_name'], $destino);
-            $fotoRuta = 'storage/foto_perfil/' . $nombreArchivo;
-        }
-
-        if (isset($files['cv']) && $files['cv']['error'] === UPLOAD_ERR_OK) {
-            $ext = pathinfo($files['cv']['name'], PATHINFO_EXTENSION);
-            $nombreArchivo = $nombre_usuario . '.' . strtolower($ext);
-            $destino = $carpetaCVs . $nombreArchivo;
-            move_uploaded_file($files['cv']['tmp_name'], $destino);
-            $cvRuta = 'storage/cv/' . $nombreArchivo;
-        }
-
-        // === Actualizar objetos ===
-        $alumno->setNombre($nombre);
-        $alumno->setApellido($apellido);
-        $alumno->setTelefono($telefono);
-        $alumno->setDireccion($direccion);
-        $alumno->setFoto($fotoRuta);
-        $alumno->setCv($cvRuta);
-
-        $usuario->setNombreUsuario($nombre_usuario);
-        $usuario->setLocalidadId($localidad_id);
-        if ($password) {
-            $usuario->setPasswordHash(password_hash($password, PASSWORD_BCRYPT));
-        }
-
-        $alumno->setUsuario($usuario);
-
-        // === Guardar cambios ===
-        return $this->actualizarAlumno($usuario, $alumno);
+        return $resultado;
     }
 
     public function actualizarAlumno($usuario, $alumno)

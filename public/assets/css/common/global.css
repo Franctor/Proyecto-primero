@@ -1,0 +1,170 @@
+/* =============================================
+   VARIABLES Y ESTILOS BASE
+   ============================================= */
+
+:root {
+  /* Colores */
+  --primary-color: #2A73CC;
+  --primary-dark: #1E5AA3;
+  --primary-light: #4A8FD9;
+  --secondary-color: #F5F7FA;
+  --accent-color: #FF6B6B;
+  --text-color: #333333;
+  --text-light: #666666;
+  --text-lighter: #999999;
+  --white: #FFFFFF;
+  --border-color: #E1E5E9;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 8px 15px rgba(0, 0, 0, 0.15);
+  
+  /* Tipografía */
+  --font-primary: 'Open Sans', sans-serif;
+  --font-secondary: 'Poppins', sans-serif;
+  
+  /* Tamaños de fuente */
+  --fs-xs: 0.75em;    /* 12px */
+  --fs-sm: 0.875em;   /* 14px */
+  --fs-base: 1em;     /* 16px */
+  --fs-md: 1.125em;   /* 18px */
+  --fs-lg: 1.25em;    /* 20px */
+  --fs-xl: 1.5em;     /* 24px */
+  --fs-2xl: 2em;      /* 32px */
+  --fs-3xl: 2.5em;    /* 40px */
+  
+  /* Espaciado */
+  --space-xs: 0.5em;
+  --space-sm: 0.75em;
+  --space-md: 1em;
+  --space-lg: 1.5em;
+  --space-xl: 2em;
+  --space-2xl: 3em;
+  --space-3xl: 4em;
+  
+  /* Bordes */
+  --border-radius: 0.5em;
+  --border-radius-lg: 1em;
+}
+
+/* Reset y estilos base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-primary);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--white);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: var(--space-md);
+}
+
+h1 {
+  font-size: var(--fs-3xl);
+}
+
+h2 {
+  font-size: var(--fs-2xl);
+}
+
+h3 {
+  font-size: var(--fs-xl);
+}
+
+p {
+  margin-bottom: var(--space-md);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+ul, ol {
+  list-style-position: inside;
+  margin-bottom: var(--space-md);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Estilos para botones */
+.button {
+  display: inline-block;
+  padding: var(--space-sm) var(--space-lg);
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: var(--border-radius);
+  font-family: var(--font-secondary);
+  font-weight: 500;
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.button:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.button-login {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+
+.button-login:hover {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+.hero-button-alumno {
+  background-color: var(--primary-color);
+}
+
+.hero-button-empresa {
+  background-color: var(--white);
+  color: var(--primary-color);
+}
+
+.hero-button-empresa:hover {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+/* Utilidades */
+.section-title {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+  color: var(--text-color);
+  position: relative;
+}
+
+.section-title::after {
+  content: '';
+  display: block;
+  width: 3em;
+  height: 0.25em;
+  background-color: var(--primary-color);
+  margin: var(--space-sm) auto 0;
+  border-radius: 0.125em;
+}

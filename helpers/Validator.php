@@ -16,6 +16,8 @@ class Validator
         $nombre_usuario = $input['email'];
         $password = isset($input['password']) ? $input['password'] : null;
         $localidad_id = $input['localidad'];
+        // Incluir los ciclos del usuario
+        $ciclos = isset($input['ciclosSeleccionados']) ? $input['ciclosSeleccionados'] : [];
 
         $valido = true;
         if ($this->telefonoExiste($telefono)) {
@@ -89,6 +91,18 @@ class Validator
         }
         if ($cv && $cv['error'] !== UPLOAD_ERR_NO_FILE && !$this->validarCV($cv)) {
             $valido = false;
+        }
+        return $valido;
+    }
+
+    //Validar que en un array de ciclos vengan solo numeros enteros y no esten repetidos
+    public function validarArrayCiclos($ciclos)
+    {
+        $valido = true;
+        if (!is_array($ciclos)) {
+            $valido = false;
+        } else {
+            
         }
         return $valido;
     }

@@ -15,7 +15,7 @@ class Usuario
         $this->nombre_usuario = $nombre_usuario;
         // Se guarda la contraseña encriptada al crear el usuario
         if ($password != null) {
-            $this->password = password_hash($password, PASSWORD_DEFAULT);
+            $this->password = $password;
         } else {
             $this->generatePass();
         }
@@ -78,7 +78,7 @@ class Usuario
         return password_verify($password, $this->password);
     }
 
-    public function getPasswordHash()
+    public function getPassword()
     {
         return $this->password;
     }

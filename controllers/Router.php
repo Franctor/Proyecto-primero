@@ -3,12 +3,18 @@ namespace controllers;
 
 use Controllers\HomeController;
 use League\Plates\Engine;
+use controllers\AuthController;
+use helpers\Session;
 class Router
 {
     public function route()
     {
         $templates = new Engine(__DIR__ . '/../views');
-
+        $templates->addData([
+            'usuario' => Session::get('user'),
+            'perfil' => Session::get('perfil'),
+            'tipo' => Session::get('tipo')
+        ]);
         if (isset($_GET['menu'])) {
             $opcion = $_GET['menu'];
             switch ($opcion) {
@@ -26,6 +32,10 @@ class Router
                     // Lógica para el registro
                     $controller = new AuthController($templates);
                     $controller->register();
+                    break;
+                case 'logout':
+                    $controller = new AuthController($templates);
+                    $controller->logout();
                     break;
                 default:
                     header('Location: /');

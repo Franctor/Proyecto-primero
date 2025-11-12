@@ -35,6 +35,7 @@ try {
 
         case 'POST':
             // Lógica para manejar las solicitudes POST
+            error_log("POST recibido: " . print_r($_POST, true));
             createAlumno($input, $files, $alumnoService);
             break;
 
@@ -88,7 +89,7 @@ function getAlumnos($alumnoService)
         echo json_encode($alumnos);
     } else {
         http_response_code(404);
-            echo json_encode(['respuesta' => false]);
+        echo json_encode(['respuesta' => false]);
     }
 }
 

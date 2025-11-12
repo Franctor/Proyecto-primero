@@ -1,5 +1,7 @@
 <header>
-    <a href="/" class="header-logo"><img src="/assets/imagenes/Principal.svg" alt="logo de la empresa"></a>
+    <a href="/" class="header-logo">
+        <img src="/assets/imagenes/Principal.svg" alt="logo de la empresa">
+    </a>
 
     <input type="checkbox" id="menu-toggle" class="menu-toggle">
     <label for="menu-toggle" class="hamburger">
@@ -15,7 +17,32 @@
             <li class="header-item"><a href="/index.php?menu=notificaciones" class="header-link">Notificaciones</a></li>
         </ul>
     </nav>
+
     <div class="header-login">
-        <a href="/index.php?menu=login" class="button button-login">Login</a>
+        <?php if (helpers\Session::get('usuario_id')): ?>
+            <?php 
+            // Determinar la foto basándose en el rol y perfil disponible
+            $foto = 'storage/foto_perfil/default.png';
+            
+            if (helpers\Session::get('rol') !== 1 && isset($perfil) && method_exists($perfil, 'getFoto')) {
+                $fotoTemp = $perfil->getFoto();
+                if (!empty($fotoTemp)) {
+                    $foto = $fotoTemp;
+                }
+            }
+            ?>
+            <div class="header-profile">
+                <img src="/assets/api/api_imagen.php?file=<?= urlencode($foto) ?>" alt="Foto de perfil" class="profile-img" id="profileMenuBtn">
+                <div class="dropdown-menu" id="profileMenu">
+                    <a href="/index.php?menu=perfil">Mi cuenta</a>
+                    <?php if (helpers\Session::get('rol') === 1): ?>
+                        <a href="/index.php?menu=adminPanel">Panel Admin</a>
+                    <?php endif; ?>
+                    <a href="/index.php?menu=logout">Cerrar sesión</a>
+                </div>
+            </div>
+        <?php else: ?>
+            <a href="/index.php?menu=login" class="button button-login">Login</a>
+        <?php endif; ?>
     </div>
 </header>

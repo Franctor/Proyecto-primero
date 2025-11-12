@@ -7,6 +7,7 @@
     <link rel="icon" href="/assets/imagenes/favicon.ico" type="image/x-icon">
 
     <?= $this->section('styles') ?>
+    <script src="/assets/js/common/menuPerfil.js" defer></script>
     <?= $this->section('scripts') ?>
 
     <title><?= $this->e($title ?? 'Mi sitio web') ?></title>

@@ -93,6 +93,29 @@ class RepoEmpresa
         return $empresa;
     }
 
+    public function getByUsuarioId($usuarioId, $loadOfertas = false)
+    {
+        $empresa = null;
+
+        try {
+            $conn = Connection::getConnection();
+            $stmt = $conn->prepare("SELECT * FROM empresa WHERE usuario_id = :usuario_id");
+            $stmt->bindValue(':usuario_id', $usuarioId, PDO::PARAM_INT);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($row) {
+                $repoUsuario = new RepoUsuario();
+                $repoOferta  = $loadOfertas ? new RepoOferta()  : null;
+
+                $empresa = $this->mapRowToEmpresa($row, $repoUsuario, $repoOferta);
+            }
+        } catch (Exception $e) {
+            error_log("Error al buscar empresa por usuario ID: " . $e->getMessage());
+        }
+
+        return $empresa;
+    }
     public function findAll($loadUsuario = false, $loadOfertas = false)
     {
         $empresas = [];

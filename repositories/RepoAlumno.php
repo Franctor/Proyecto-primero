@@ -96,6 +96,33 @@ class RepoAlumno
 
         return $alumno;
     }
+
+    public function getByUsuarioId($usuarioId, $loadUsuario = false, $loadSolicitudes = false, $loadCiclos = false)
+    {
+        $alumno = null;
+
+        try {
+            $conn = Connection::getConnection();
+            $stmt = $conn->prepare("SELECT * FROM alumno WHERE usuario_id = :usuario_id");
+            $stmt->bindValue(':usuario_id', $usuarioId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($row) {
+                $repoUsuario = $loadUsuario ? new RepoUsuario() : null;
+                $repoSolicitud = $loadSolicitudes ? new RepoSolicitud() : null;
+                $repoCiclo = $loadCiclos ? new RepoCiclo() : null;
+
+                $alumno = $this->mapRowToAlumno($row, $repoUsuario, $repoSolicitud, $repoCiclo);
+            }
+        } catch (Exception $e) {
+            error_log("Error al buscar alumno por usuario ID: " . $e->getMessage());
+        }
+
+        return $alumno;
+    }
+
     public function findByCicloId($cicloId, $loadUsuario = false, $loadSolicitudes = false, $loadCiclos = false)
     {
         $alumnos = [];

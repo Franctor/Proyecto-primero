@@ -16,27 +16,47 @@ btnTomarFoto.addEventListener("click", function () {
 
 formulario.addEventListener("submit", function (e) {
     e.preventDefault();
+
     if (validarFormulario(formulario)) {
+        let datos = new FormData(formulario);
+
+        // Agregar ciclos seleccionados al FormData
+        ciclosSeleccionados.forEach(ciclo => {
+            datos.append('ciclosSeleccionados[]', ciclo.id);
+        });
+        console.log(datos.getAll('ciclosSeleccionados[]'));
+
         fetch('assets/api/api_alumno.php', {
             method: 'POST',
-            body: new FormData(formulario)
-        }).then(response => response.json())
+            body: datos
+        })
+            .then(response => response.json())
             .then(data => {
-                // Redirigir a login si el registro es exitoso
-                const errorDiv = document.createElement('div');
-                const errorMensaje = document.createElement('p');
-                errorMensaje.textContent = 'Error en el registro: Correo y/o teléfono ya están en uso.';
-                errorDiv.appendChild(errorMensaje);
-                errorDiv.className = 'error-register';
+                // Limpia errores previos si los hay
+                const errorExistente = document.querySelector('.error-register');
+                if (errorExistente) errorExistente.remove();
 
-                if (submitBtn) {
-                    if (!formulario.contains(document.querySelector('.error-register'))) {
+                // Si la API responde éxito
+                if (data.respuesta) {
+                    window.location.href = 'index.php?menu=login&registro=exito';
+                } else {
+                    const errorDiv = document.createElement('div');
+                    const errorMensaje = document.createElement('p');
+                    errorMensaje.textContent = data.message || 'Error en el registro: Correo y/o teléfono ya están en uso.';
+                    errorDiv.appendChild(errorMensaje);
+                    errorDiv.className = 'error-register';
+
+                    if (submitBtn) {
                         formulario.insertBefore(errorDiv, submitBtn);
                     }
                 }
+            })
+            .catch(err => {
+                console.error('Error en la petición:', err);
             });
+
     } else {
-        //Que vuelva hacia arriba si hay errores
+        // Que vuelva hacia arriba si hay errores
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 });

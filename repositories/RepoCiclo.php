@@ -30,6 +30,24 @@ class RepoCiclo
         return $ciclo;
     }
 
+    public function saveCicloAlumnoConConexion($alumnoId, $cicloId, $conn)
+    {
+        try {
+            $stmt = $conn->prepare("
+                INSERT INTO alumnos_ciclos (alumno_id, ciclo_id)
+                VALUES (:alumno_id, :ciclo_id)
+            ");
+
+            $stmt->bindValue(':alumno_id', $alumnoId, PDO::PARAM_INT);
+            $stmt->bindValue(':ciclo_id', $cicloId, PDO::PARAM_INT);
+
+            $stmt->execute();
+            return true;
+        } catch (Exception $e) {
+            error_log("Error al guardar ciclo-alumno: " . $e->getMessage());
+            return false;
+        }
+    }
     public function findById($id, $loadFamilia = false, $loadAlumnos = false, $loadOfertas = false)
     {
         $ciclo = null;

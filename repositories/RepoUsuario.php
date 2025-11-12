@@ -19,7 +19,7 @@ class RepoUsuario
             ");
 
             $stmt->bindValue(':nombre_usuario', $usuario->getNombreUsuario());
-            $stmt->bindValue(':password', $usuario->getPasswordHash());
+            $stmt->bindValue(':password', $usuario->getPassword());
             $stmt->bindValue(':rol_id', $usuario->getRolId(), PDO::PARAM_INT);
             $stmt->bindValue(':localidad_id', $usuario->getLocalidadId(), PDO::PARAM_INT);
 
@@ -42,7 +42,7 @@ class RepoUsuario
             ");
 
             $stmt->bindValue(':nombre_usuario', $usuario->getNombreUsuario());
-            $stmt->bindValue(':password', $usuario->getPasswordHash());
+            $stmt->bindValue(':password', $usuario->getPassword());
             $stmt->bindValue(':rol_id', $usuario->getRolId(), PDO::PARAM_INT);
             $stmt->bindValue(':localidad_id', $usuario->getLocalidadId(), PDO::PARAM_INT);
 
@@ -140,7 +140,7 @@ class RepoUsuario
             ");
 
             $stmt->bindValue(':nombre_usuario', $usuario->getNombreUsuario());
-            $stmt->bindValue(':password', $usuario->getPasswordHash());
+            $stmt->bindValue(':password', $usuario->getPassword());
             $stmt->bindValue(':rol_id', $usuario->getRolId(), PDO::PARAM_INT);
             $stmt->bindValue(':localidad_id', $usuario->getLocalidadId(), PDO::PARAM_INT);
             $stmt->bindValue(':id', $usuario->getId(), PDO::PARAM_INT);
@@ -168,7 +168,7 @@ class RepoUsuario
             ");
 
             $stmt->bindValue(':nombre_usuario', $usuario->getNombreUsuario());
-            $stmt->bindValue(':password', $usuario->getPasswordHash());
+            $stmt->bindValue(':password', $usuario->getPassword());
             $stmt->bindValue(':rol_id', $usuario->getRolId(), PDO::PARAM_INT);
             $stmt->bindValue(':localidad_id', $usuario->getLocalidadId(), PDO::PARAM_INT);
             $stmt->bindValue(':id', $usuario->getId(), PDO::PARAM_INT);

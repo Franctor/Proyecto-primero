@@ -1,12 +1,14 @@
 <?php
 namespace services;
 use helpers\Converter;
+use helpers\Security;
 use models\Usuario;
 use repositories\Connection;
 use repositories\RepoAlumno;
 use repositories\RepoUsuario;
 use repositories\RepoToken;
 use repositories\RepoSolicitud;
+use repositories\RepoCiclo;
 use models\Alumno;
 use Exception;
 class AlumnoService
@@ -18,9 +20,10 @@ class AlumnoService
         $telefono = trim($data['telefono']);
         $direccion = trim($data['direccion']);
         $nombre_usuario = trim($data['email']);
-        $password = isset($data['password']) ? trim($data['password']) : null;
+        $password = isset($data['password']) ? Security::hashPassword(trim($data['password'])) : null;
         $localidad_id = trim($data['localidad']);
-
+        // Incluir los ciclos del usuario
+        $ciclos = isset($data['ciclosSeleccionados']) ? $data['ciclosSeleccionados'] : [];
         // === Manejo de archivos ===
         $fotoRuta = null;
         $cvRuta = null;
@@ -29,6 +32,7 @@ class AlumnoService
         $carpetaFotos = __DIR__ . '/../storage/foto_perfil/';
         $carpetaCVs = __DIR__ . '/../storage/cv/';
 
+        
         // Guardar foto si viene
         if (isset($files['foto-perfil']) && $files['foto-perfil']['error'] === UPLOAD_ERR_OK) {
             $nombreArchivo = $nombre_usuario . '.png';
@@ -64,10 +68,10 @@ class AlumnoService
             $localidad_id
         );
 
-        return $this->registrarAlumno($usuario, $alumno);
+        return $this->registrarAlumno($usuario, $alumno, $ciclos);
     }
 
-    public function registrarAlumno($usuario, $alumno)
+    public function registrarAlumno($usuario, $alumno, $ciclos = [])
     {
         $conn = null;
         $resultado = false;
@@ -90,6 +94,16 @@ class AlumnoService
             $alumno = $repoAlumno->saveConConexion($alumno, $conn);
             if (!$alumno || !$alumno->getId()) {
                 throw new Exception("Error al guardar alumno");
+            }
+
+             // Guardar ciclos del alumno
+            if (!empty($ciclos)) {
+                $repoCiclo = new RepoCiclo();
+                foreach ($ciclos as $cicloId) {   
+                    if(!$repoCiclo->saveCicloAlumnoConConexion($alumno->getId(), $cicloId, $conn)) {
+                        throw new Exception("Error al guardar ciclo-alumno");
+                    }
+                }
             }
 
             // Si todo va bien

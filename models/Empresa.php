@@ -54,7 +54,7 @@ class Empresa
     {
         return $this->telefono_persona;
     }
-    public function getLogo()
+    public function getFoto()
     {
         return $this->logo;
     }

@@ -57,6 +57,90 @@ header {
   width: 100%;
 }
 
+/* Header Login y Perfil */
+.header-login {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.button-login {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  padding: var(--space-sm) var(--space-lg);
+}
+
+.button-login:hover {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+/* Menú de Perfil */
+.header-profile {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.profile-img {
+  width: 3em;
+  height: 3em;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.profile-img:hover {
+  border-color: var(--primary-color);
+  transform: scale(1.05);
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-hover);
+  padding: var(--space-sm) 0;
+  min-width: 12em;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 101;
+  border: 1px solid var(--border-color);
+}
+
+.dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: var(--space-sm) var(--space-md);
+  color: var(--text-color);
+  font-size: var(--fs-sm);
+  transition: all 0.2s ease;
+}
+
+.dropdown-menu a:hover {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+/* Separador para el enlace de admin */
+.dropdown-menu a:nth-child(2) {
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: var(--space-xs);
+}
+
 /* Menú Hamburguesa - Solo para móvil */
 .menu-toggle {
   display: none;
@@ -85,6 +169,19 @@ header {
 @media (max-width: 768px) {
   header {
     padding: var(--space-md);
+  }
+  
+  .header-logo img {
+    height: 4em;
+  }
+  
+  .profile-img {
+    width: 2.5em;
+    height: 2.5em;
+  }
+  
+  .dropdown-menu {
+    min-width: 10em;
   }
 }
 
@@ -128,8 +225,8 @@ header {
   }
   
   .header-login {
-    margin-top: var(--space-md);
-    text-align: center;
+    margin-top: 0;
+    gap: var(--space-sm);
   }
   
   /* Mostrar menú cuando el checkbox está checked */
@@ -150,5 +247,11 @@ header {
   
   .menu-toggle:checked ~ .hamburger span:nth-child(3) {
     transform: rotate(-45deg) translate(6px, -6px);
+  }
+  
+  /* Ajustes para el dropdown en móvil */
+  .dropdown-menu {
+    right: -50%;
+    min-width: 8em;
   }
 }

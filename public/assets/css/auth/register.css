@@ -374,11 +374,12 @@ input[type="file"] {
     display: none;
 }
 
-.error{
+.error .error-register{
     color: red;
     font-size: var(--fs-sm);
     margin-top: var(--space-xs);
 }
+
 
 /* ============================================= DISEÑO RESPONSIVE ============================================= */
 /* Tablet y Desktop */

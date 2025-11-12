@@ -27,4 +27,44 @@ class Converter
         }
         return $alumnosArray;
     }
+
+    public function convertirCicloAJson($ciclo)
+    {
+        $cicloArray = [
+            'id' => $ciclo->getId(),
+            'nombre' => $ciclo->getNombre(),
+            'familia_id' => $ciclo->getFamiliaId()
+        ];
+        return $cicloArray;
+    }
+
+    function convertirCiclosAJson($ciclos)
+    {
+        $ciclosArray = [];
+        
+        foreach ($ciclos as $ciclo) {
+            $ciclosArray[] = $this->convertirCicloAJson($ciclo);
+        }
+        return $ciclosArray;
+    }
+
+    public function convertirFamiliaAJson($familia)
+    {
+        $familiaArray = [
+            'id' => $familia->getId(),
+            'nombre' => $familia->getNombre(),
+            'ciclos' => $this->convertirCiclosAJson($familia->getCiclos())
+        ];
+        return $familiaArray;
+    }
+
+    public function convertirFamiliasAJson($familias)
+    {
+        $familiasArray = [];
+        
+        foreach ($familias as $familia) {
+            $familiasArray[] = $this->convertirFamiliaAJson($familia);
+        }
+        return $familiasArray;
+    }
 }

@@ -47,6 +47,11 @@ class Ciclo
         return $this->familia;
     }
 
+    public function getFamiliaId()
+    {
+        return $this->familia ? $this->familia->getId() : null;
+    }
+
     // --- Setters ---
     public function setId($id)
     {

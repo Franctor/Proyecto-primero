@@ -1,5 +1,5 @@
 function cargarSelectProvinciaYLocalidad(selectProvincia, selectLocalidad, localidadId = null) {
-    fetch('../../API/ApiProvincia.php', { method: 'GET' })
+    fetch('assets/api/api_provincia.php', { method: 'GET' })
         .then(res => res.json())
         .then(data => {
             selectProvincia.innerHTML = '';

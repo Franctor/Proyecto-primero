@@ -13,6 +13,7 @@
     <script defer src="/assets/js/common/Modal.js""></script>
     <script defer src=" /assets/js/common/foto.js"></script>
     <script defer src="/assets/js/common/provinciaLocalidad.js"></script>
+    <script defer src="/assets/js/common/familiaCiclo.js"></script>
     <script defer src="/assets/js/common/validacionesAlumno.js"></script>
     <script defer src="/assets/js/auth/registerAlumno.js"></script>
 
@@ -88,13 +89,13 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="foto-perfil">Foto</label>
-                    <input type="file" name="foto-perfil" id="foto-perfil" accept="image/*">
+                    <input type="file" name="foto-perfil" id="foto-perfil" accept="image/png, image/jpeg, image/webp">
                     <button type="button" id="tomarFoto">Tomar foto</button>
                 </div>
 
                 <div class="form-group">
                     <label for="cv">Currículum (PDF)</label>
-                    <input type="file" name="cv" id="cv" accept=".pdf">
+                    <input type="file" name="cv" id="cv" accept="application/pdf">
                 </div>
             </div>
 
@@ -110,6 +111,12 @@
                 <select name="ciclos[]" id="ciclos" multiple>
                     <option value="">Selecciona un ciclo</option>
                 </select>
+            </div>
+            <div class="form-group">
+                <div id="selectedCiclos">
+                    <label for="ciclosSeleccionados">Ciclos seleccionados</label>
+                    <select name="ciclosSeleccionados[]" id="ciclosSeleccionados" multiple></select>
+                </div>
             </div>
 
         <?php elseif ($tipo === 'empresa'): ?>
@@ -144,7 +151,7 @@
 
             <div class="form-group">
                 <label for="logo">Logo de la empresa</label>
-                <input type="file" name="logo" id="logo" accept="image/*">
+                <input type="file" name="logo" id="logo" accept="image/png, image/jpeg, image/webp">
             </div>
 
             <div class="form-group">

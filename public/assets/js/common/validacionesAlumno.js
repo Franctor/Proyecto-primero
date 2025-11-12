@@ -110,73 +110,42 @@ function validarCV(file) {
     return mensajeError;
 }
 
+function validarCiclosSeleccionados(ciclosSeleccionados) {
+    let mensajeError = "";
+    if (ciclosSeleccionados.length === 0) {
+        mensajeError = "Debes seleccionar al menos un ciclo formativo.";
+    }
+    return mensajeError;
+}
+
 function validarPassword(password) {
-    // Obtener referencias si existen
     const errorCaracteres = document.getElementById("caracteres");
     const errorMayus = document.getElementById("mayus");
     const errorMinus = document.getElementById("minus");
     const errorNum = document.getElementById("num");
     const errorEspecial = document.getElementById("especial");
 
-    // Reset de colores a estado neutral (gris o color inicial)
     const requisitos = [errorCaracteres, errorMayus, errorMinus, errorNum, errorEspecial].filter(Boolean);
-    requisitos.forEach(el => {
-        el.style.color = "#666"; // Gris neutral para estado "no evaluado"
-    });
+    requisitos.forEach(el => el.style.color = "#666");
 
-    // Si la contraseña está vacía, dejar todo en estado neutral
     if (typeof password !== "string" || password.length === 0) {
-        return false;
+        return "La contraseña no puede estar vacía.";
     }
 
     let esValida = true;
 
-    // Validar longitud
-    if (password.length < 8) {
-        if (errorCaracteres) errorCaracteres.style.color = "red";
-        esValida = false;
-    } else {
-        if (errorCaracteres) errorCaracteres.style.color = "green";
-    }
+    if (password.length < 8) { if (errorCaracteres) errorCaracteres.style.color = "red"; esValida = false; } else { if (errorCaracteres) errorCaracteres.style.color = "green"; }
+    if (!/[A-Z]/.test(password)) { if (errorMayus) errorMayus.style.color = "red"; esValida = false; } else { if (errorMayus) errorMayus.style.color = "green"; }
+    if (!/[a-z]/.test(password)) { if (errorMinus) errorMinus.style.color = "red"; esValida = false; } else { if (errorMinus) errorMinus.style.color = "green"; }
+    if (!/[0-9]/.test(password)) { if (errorNum) errorNum.style.color = "red"; esValida = false; } else { if (errorNum) errorNum.style.color = "green"; }
+    if (!/[!@#$%^&*()\-_+=]/.test(password)) { if (errorEspecial) errorEspecial.style.color = "red"; esValida = false; } else { if (errorEspecial) errorEspecial.style.color = "green"; }
 
-    // Validar mayúsculas
-    if (!/[A-Z]/.test(password)) {
-        if (errorMayus) errorMayus.style.color = "red";
-        esValida = false;
-    } else {
-        if (errorMayus) errorMayus.style.color = "green";
-    }
+    if (/\s/.test(password)) return "No se permiten espacios en la contraseña.";
 
-    // Validar minúsculas
-    if (!/[a-z]/.test(password)) {
-        if (errorMinus) errorMinus.style.color = "red";
-        esValida = false;
-    } else {
-        if (errorMinus) errorMinus.style.color = "green";
-    }
-
-    // Validar números
-    if (!/[0-9]/.test(password)) {
-        if (errorNum) errorNum.style.color = "red";
-        esValida = false;
-    } else {
-        if (errorNum) errorNum.style.color = "green";
-    }
-
-    // Validar caracteres especiales
-    if (!/[!@#$%^&*()\-_+=]/.test(password)) {
-        if (errorEspecial) errorEspecial.style.color = "red";
-        esValida = false;
-    } else {
-        if (errorEspecial) errorEspecial.style.color = "green";
-    }
-
-    if (/\s/.test(password)) {
-        esValida = false;
-    }
-
-    return esValida;
+    return esValida ? "" : "La contraseña no cumple con todos los requisitos.";
 }
+
+
 
 function inicializarValidaciones(id) {
     const formulario = document.getElementById(id);
@@ -193,10 +162,12 @@ function inicializarValidaciones(id) {
     const inputProvincia = formulario.querySelector("#provincia");
     const inputCiclos = formulario.querySelector("#ciclos");
     const inputFamilia = formulario.querySelector("#familia");
+    const selectedCiclosSelect = formulario.querySelector("#ciclosSeleccionados");
 
     /* Foto */
     if (inputFoto) {
         inputFoto.addEventListener("change", function () {
+            ;
             const file = inputFoto.files[0];
             const mensajeError = validarImagen(file);
             mostrarError(this, mensajeError);
@@ -272,6 +243,9 @@ function inicializarValidaciones(id) {
     if (inputPassword) {
         inputPassword.addEventListener("input", function () {
             validarPassword(this.value);
+            if (this.value.trim() !== "") {
+                limpiarError(this);
+            }
         });
 
         inputPassword.addEventListener("focus", function () {
@@ -279,7 +253,7 @@ function inicializarValidaciones(id) {
         });
 
         inputPassword.addEventListener("blur", function () {
-            // Opcional: resetear a neutral cuando pierde el foco y está vacío
+            //Resetear a neutral cuando pierde el foco y está vacío
             if (this.value === "") {
                 const requisitos = [
                     document.getElementById("caracteres"),
@@ -287,20 +261,12 @@ function inicializarValidaciones(id) {
                     document.getElementById("minus"),
                     document.getElementById("num"),
                     document.getElementById("especial")
-                ].filter(Boolean);
+                ];
 
                 requisitos.forEach(el => {
-                    el.style.color = ""; // Volver al color por defecto
+                    if (el) el.style.color = "";
                 });
             }
-        });
-    }
-
-    /* Ciclos */
-    if (inputCiclos) {
-        inputCiclos.addEventListener("change", function () {
-            const mensajeError = validarSelect(this.value, "ciclos");
-            mostrarError(this, mensajeError);
         });
     }
 
@@ -308,6 +274,17 @@ function inicializarValidaciones(id) {
     if (inputFamilia) {
         inputFamilia.addEventListener("change", function () {
             const mensajeError = validarSelect(this.value, "familia");
+            mostrarError(this, mensajeError);
+        });
+    }
+
+    /* Ciclos seleccionados */
+    if (selectedCiclosSelect) {
+        selectedCiclosSelect.addEventListener("change", function () {
+            limpiarError(this);
+
+            const seleccionados = Array.from(this.selectedOptions); // solo los seleccionados
+            const mensajeError = validarCiclosSeleccionados(seleccionados);
             mostrarError(this, mensajeError);
         });
     }
@@ -325,13 +302,14 @@ function validarFormulario(formulario) {
     const inputTelefono = formulario.querySelector("#telefono");
     const inputLocalidad = formulario.querySelector("#localidad");
     const inputProvincia = formulario.querySelector("#provincia");
-    const inputCiclos = formulario.querySelector("#ciclos");
     const inputFamilia = formulario.querySelector("#familia");
+    const selectedCiclosSelect = formulario.querySelector("#ciclosSeleccionados");
 
     let formularioValido = true;
 
     /* Foto */
     if (inputFoto) {
+        limpiarError(inputFoto);
         const mensajeErrorFoto = validarImagen(inputFoto.files[0]);
         if (mensajeErrorFoto) {
             mostrarError(inputFoto, mensajeErrorFoto);
@@ -341,6 +319,7 @@ function validarFormulario(formulario) {
 
     /* CV */
     if (inputCV) {
+        limpiarError(inputCV);
         const mensajeErrorCV = validarCV(inputCV.files[0]);
         if (mensajeErrorCV) {
             mostrarError(inputCV, mensajeErrorCV);
@@ -350,6 +329,7 @@ function validarFormulario(formulario) {
 
     /* Nombre */
     if (inputNombre) {
+        limpiarError(inputNombre);
         const mensajeErrorNombre = validarNombre(inputNombre.value);
         if (mensajeErrorNombre) {
             mostrarError(inputNombre, mensajeErrorNombre);
@@ -359,6 +339,7 @@ function validarFormulario(formulario) {
 
     /* Apellidos */
     if (inputApellidos) {
+        limpiarError(inputApellidos);
         const mensajeErrorApellidos = validarNombre(inputApellidos.value);
         if (mensajeErrorApellidos) {
             mostrarError(inputApellidos, mensajeErrorApellidos);
@@ -368,6 +349,7 @@ function validarFormulario(formulario) {
 
     /* Dirección */
     if (inputDireccion) {
+        limpiarError(inputDireccion);
         const mensajeErrorDireccion = validarDireccion(inputDireccion.value);
         if (mensajeErrorDireccion) {
             mostrarError(inputDireccion, mensajeErrorDireccion);
@@ -377,6 +359,7 @@ function validarFormulario(formulario) {
 
     /* Email */
     if (inputEmail) {
+        limpiarError(inputEmail);
         const mensajeErrorEmail = validarCorreoElectronico(inputEmail.value);
         if (mensajeErrorEmail) {
             mostrarError(inputEmail, mensajeErrorEmail);
@@ -386,6 +369,7 @@ function validarFormulario(formulario) {
 
     /* Password */
     if (inputPassword) {
+        limpiarError(inputPassword);
         const mensajeErrorPassword = validarPassword(inputPassword.value);
         if (mensajeErrorPassword) {
             mostrarError(inputPassword, mensajeErrorPassword);
@@ -395,6 +379,7 @@ function validarFormulario(formulario) {
 
     /* Teléfono */
     if (inputTelefono) {
+        limpiarError(inputTelefono);
         const mensajeErrorTelefono = validarTelefono(inputTelefono.value);
         if (mensajeErrorTelefono) {
             mostrarError(inputTelefono, mensajeErrorTelefono);
@@ -404,6 +389,7 @@ function validarFormulario(formulario) {
 
     /* Localidad */
     if (inputLocalidad) {
+        limpiarError(inputLocalidad);
         const mensajeErrorLocalidad = validarSelect(inputLocalidad.value, "localidad");
         if (mensajeErrorLocalidad) {
             mostrarError(inputLocalidad, mensajeErrorLocalidad);
@@ -413,6 +399,7 @@ function validarFormulario(formulario) {
 
     /* Provincia */
     if (inputProvincia) {
+        limpiarError(inputProvincia);
         const mensajeErrorProvincia = validarSelect(inputProvincia.value, "provincia");
         if (mensajeErrorProvincia) {
             mostrarError(inputProvincia, mensajeErrorProvincia);
@@ -420,20 +407,22 @@ function validarFormulario(formulario) {
         }
     }
 
-    /* Ciclos */
-    if (inputCiclos) {
-        const mensajeErrorCiclos = validarSelect(inputCiclos.value, "ciclos");
-        if (mensajeErrorCiclos) {
-            mostrarError(inputCiclos, mensajeErrorCiclos);
+    /* Familia */
+    if (inputFamilia) {
+        limpiarError(inputFamilia);
+        const mensajeErrorFamilia = validarSelect(inputFamilia.value, "familia");
+        if (mensajeErrorFamilia) {
+            mostrarError(inputFamilia, mensajeErrorFamilia);
             formularioValido = false;
         }
     }
 
-    /* Familia */
-    if (inputFamilia) {
-        const mensajeErrorFamilia = validarSelect(inputFamilia.value, "familia");
-        if (mensajeErrorFamilia) {
-            mostrarError(inputFamilia, mensajeErrorFamilia);
+    /* Ciclos seleccionados */
+    if (selectedCiclosSelect) {
+        limpiarError(selectedCiclosSelect);
+        const mensajeErrorCiclos = validarCiclosSeleccionados(Array.from(selectedCiclosSelect.options));
+        if (mensajeErrorCiclos) {
+            mostrarError(selectedCiclosSelect, mensajeErrorCiclos);
             formularioValido = false;
         }
     }

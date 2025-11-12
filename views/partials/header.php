@@ -20,10 +20,10 @@
 
     <div class="header-login">
         <?php if (helpers\Session::get('usuario_id')): ?>
-            <?php 
+            <?php
             // Determinar la foto basándose en el rol y perfil disponible
-            $foto = 'storage/foto_perfil/default.png';
-            
+            $foto = 'storage/foto_perfil/default.webp';
+
             if (helpers\Session::get('rol') !== 1 && isset($perfil) && method_exists($perfil, 'getFoto')) {
                 $fotoTemp = $perfil->getFoto();
                 if (!empty($fotoTemp)) {
@@ -32,11 +32,13 @@
             }
             ?>
             <div class="header-profile">
-                <img src="/assets/api/api_imagen.php?file=<?= urlencode($foto) ?>" alt="Foto de perfil" class="profile-img" id="profileMenuBtn">
+                <img src="/assets/api/api_imagen.php?file=<?= urlencode($foto) ?>" alt="Foto de perfil" class="profile-img"
+                    id="profileMenuBtn">
                 <div class="dropdown-menu" id="profileMenu">
-                    <a href="/index.php?menu=perfil">Mi cuenta</a>
                     <?php if (helpers\Session::get('rol') === 1): ?>
                         <a href="/index.php?menu=adminPanel">Panel Admin</a>
+                    <?php else: ?>
+                        <a href="/index.php?menu=perfil">Mi cuenta</a>
                     <?php endif; ?>
                     <a href="/index.php?menu=logout">Cerrar sesión</a>
                 </div>

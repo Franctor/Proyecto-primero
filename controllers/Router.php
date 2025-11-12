@@ -20,16 +20,13 @@ class Router
             switch ($opcion) {
                 case 'adminPanel':
                     $controller = new AdminController($templates);
-                    ;
                     $controller->adminPanel();
                     break;
                 case 'login':
-                    // Lógica para el login
                     $controller = new AuthController($templates);
                     $controller->login();
                     break;
                 case 'register':
-                    // Lógica para el registro
                     $controller = new AuthController($templates);
                     $controller->register();
                     break;

@@ -15,8 +15,8 @@ main {
   justify-content: center;
   text-align: center;
   color: var(--white);
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-              url('/assets/imagenes/Equipo.jpg') center/cover no-repeat;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url('/assets/imagenes/Equipo.jpg') center/cover no-repeat;
   padding: 0 var(--space-xl);
 }
 
@@ -44,7 +44,52 @@ main {
   flex-wrap: wrap;
 }
 
-/* Sección Empresas - CORREGIDA */
+/* Estilos para usuarios logueados en hero */
+.hero-buttons-logged {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.hero-buttons-logged .button {
+  padding: var(--space-md) var(--space-xl);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  border-radius: var(--border-radius);
+  transition: all 0.3s ease;
+  min-width: 180px;
+  text-align: center;
+}
+
+/* Botón específico para solicitudes */
+.hero-buttons-logged .button:nth-child(1) {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: var(--white);
+  border: 2px solid var(--primary-color);
+}
+
+.hero-buttons-logged .button:nth-child(1):hover {
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(42, 115, 204, 0.4);
+}
+
+/* Botón específico para ofertas */
+.hero-buttons-logged .button:nth-child(2) {
+  background: transparent;
+  color: var(--white);
+  border: 2px solid var(--white);
+}
+
+.hero-buttons-logged .button:nth-child(2):hover {
+  background: var(--white);
+  color: var(--primary-color);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+}
+
+/* Sección Empresas */
 .empresas {
   padding: var(--space-3xl) var(--space-xl);
   background-color: var(--secondary-color);
@@ -106,7 +151,7 @@ main {
   text-align: center;
 }
 
-/* Sección Funcionamiento - CORRECCIÓN DEFINITIVA */
+/* Sección Funcionamiento */
 .funcionamiento {
   padding: var(--space-3xl) var(--space-xl);
   background-color: var(--white);
@@ -118,7 +163,7 @@ main {
   gap: var(--space-xl);
   max-width: 1000px;
   margin: 0 auto;
-  align-items: start; /* Alinea todos los pasos desde la parte superior */
+  align-items: start;
 }
 
 .paso {
@@ -127,14 +172,14 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100%; /* Asegura que todos los pasos tengan la misma altura */
+  height: 100%;
 }
 
 .paso:not(:last-child)::after {
   content: '';
   position: absolute;
-  top: 2.5em; /* Alineado con el centro del círculo */
-  right: calc(-1 * var(--space-xl) / 2); /* Centrado en el gap */
+  top: 2.5em;
+  right: calc(-1 * var(--space-xl) / 2);
   width: var(--space-xl);
   height: 2px;
   background-color: var(--primary-color);
@@ -154,16 +199,16 @@ main {
   font-weight: bold;
   margin: 0 auto var(--space-lg);
   box-shadow: var(--shadow);
-  flex-shrink: 0; /* Evita que el número se reduzca */
+  flex-shrink: 0;
   position: relative;
-  z-index: 2; /* Asegura que el número esté sobre la línea */
+  z-index: 2;
 }
 
 .paso-contenido {
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex-grow: 1; /* Permite que el contenido ocupe el espacio disponible */
+  flex-grow: 1;
   width: 100%;
 }
 
@@ -172,7 +217,7 @@ main {
   margin-bottom: var(--space-md);
   text-align: center;
   width: 100%;
-  min-height: 3.5em; /* Altura mínima para títulos de 2 líneas */
+  min-height: 3.5em;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -180,12 +225,12 @@ main {
 
 .paso p {
   text-align: center;
-  flex-grow: 1; /* Hace que todos los párrafos ocupen el mismo espacio */
+  flex-grow: 1;
   display: flex;
-  align-items: flex-start; /* Alinea el texto en la parte superior */
+  align-items: flex-start;
   justify-content: center;
   margin: 0;
-  min-height: 4.5em; /* Altura mínima para párrafos de 2 líneas */
+  min-height: 4.5em;
 }
 
 /* Sección Ventajas */
@@ -271,29 +316,34 @@ main {
     --fs-3xl: 2em;
     --fs-2xl: 1.75em;
   }
-  
+
   .hero {
     height: 70vh;
     padding: 0 var(--space-lg);
   }
-  
-  .hero-buttons {
+
+  .hero-buttons,
+  .hero-buttons-logged {
     flex-direction: column;
     align-items: center;
   }
-  
+
+  .hero-buttons-logged .button {
+    min-width: 200px;
+  }
+
   .pasos {
     grid-template-columns: 1fr;
     gap: var(--space-2xl);
   }
-  
+
   .paso:not(:last-child)::after {
     display: none;
   }
-  
+
   .paso h3,
   .paso p {
-    min-height: auto; /* Elimina la altura mínima en móvil */
+    min-height: auto;
   }
 }
 
@@ -303,17 +353,26 @@ main {
     --fs-2xl: 1.5em;
     --fs-xl: 1.25em;
   }
-  
+
   .hero {
     height: 60vh;
     padding: 0 var(--space-md);
   }
-  
-  .empresas, .funcionamiento, .ventajas, .contact {
+
+  .empresas,
+  .funcionamiento,
+  .ventajas,
+  .contact {
     padding: var(--space-2xl) var(--space-md);
   }
-  
-  .empresas-grid, .ventajas-grid {
+
+  .empresas-grid,
+  .ventajas-grid {
     grid-template-columns: 1fr;
+  }
+
+  .hero-buttons-logged .button {
+    padding: var(--space-sm) var(--space-lg);
+    font-size: var(--fs-sm);
   }
 }

@@ -313,7 +313,7 @@ input[type="file"] {
 
 #repetir:hover {
     background-color: #e05555;
-    
+
     transform: translateY(-2px);
     box-shadow: var(--shadow-hover);
 }
@@ -374,13 +374,20 @@ input[type="file"] {
     display: none;
 }
 
-.error ,
-.error-register{
+.error,
+.error-register {
     color: red;
     font-size: var(--fs-sm);
     margin-top: var(--space-xs);
 }
 
+.password-requirements li.ok {
+    color: green;
+}
+
+.password-requirements li.error {
+    color: red;
+}
 
 /* ============================================= DISEÑO RESPONSIVE ============================================= */
 /* Tablet y Desktop */

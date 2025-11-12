@@ -76,7 +76,19 @@ class AuthController
         if (isset($_GET['tipo'])) {
             $tipo = $_GET['tipo'];
             if ($tipo === 'alumno' || $tipo === 'empresa') {
-                echo $this->templates->render('auth/register', ['tipo' => $tipo]);
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $inputs = $_POST;
+                    $files = $_FILES;
+                    $validator = new Validator();
+                    $errores = $validator->validarFormularioRegistroEmpresa($inputs, $files);
+                    if (empty($errores)) {
+                        // Aquí iría la lógica para registrar al usuario si no hay errores
+                        // Por ejemplo, guardar en la base de datos
+                        header('Location: /index.php?menu=login');
+                        exit;
+                    }
+                }
+                echo $this->templates->render('auth/register', ['tipo' => $tipo, 'errores' => $errores ?? []]);
             } else {
                 header('Location: /index.php');
                 exit;

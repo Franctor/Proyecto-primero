@@ -69,11 +69,20 @@ header {
   color: var(--primary-color);
   border: 1px solid var(--primary-color);
   padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--border-radius);
+  font-family: var(--font-secondary);
+  font-weight: 500;
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
 }
 
 .button-login:hover {
   background-color: var(--primary-color);
   color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
 }
 
 /* Menú de Perfil */
@@ -128,6 +137,7 @@ header {
   color: var(--text-color);
   font-size: var(--fs-sm);
   transition: all 0.2s ease;
+  text-decoration: none;
 }
 
 .dropdown-menu a:hover {
@@ -135,10 +145,9 @@ header {
   color: var(--primary-color);
 }
 
-/* Separador para el enlace de admin */
-.dropdown-menu a:nth-child(2) {
+/* Separador entre opciones del dropdown */
+.dropdown-menu a:not(:last-child) {
   border-bottom: 1px solid var(--border-color);
-  margin-bottom: var(--space-xs);
 }
 
 /* Menú Hamburguesa - Solo para móvil */
@@ -183,6 +192,10 @@ header {
   .dropdown-menu {
     min-width: 10em;
   }
+  
+  .header-menu {
+    gap: var(--space-md);
+  }
 }
 
 @media (max-width: 480px) {
@@ -225,7 +238,6 @@ header {
   }
   
   .header-login {
-    margin-top: 0;
     gap: var(--space-sm);
   }
   

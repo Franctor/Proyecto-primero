@@ -17,12 +17,22 @@
         <p class="hero-subtitle">Tu futuro profesional comienza aquí. Regístrate y empieza a conectar
             oportunidades.</p>
         <div class="hero-buttons">
-            <a href="/index.php?menu=register&tipo=alumno" class="button hero-button-alumno">Soy Alumno - Busca Empleo</a>
-            <a href="/index.php?menu=register&tipo=empresa" class="button hero-button-empresa">Soy Empresa - Publica una Oferta</a>
+            <?php if (!$usuario): ?>
+                <a href="/index.php?menu=register&tipo=alumno" class="button hero-button-alumno">Soy Alumno - Busca
+                    Empleo</a>
+                <a href="/index.php?menu=register&tipo=empresa" class="button hero-button-empresa">Soy Empresa - Publica una
+                    Oferta</a>
+            <?php else: ?>
+                <div class="hero-buttons-logged">
+                    <a href="/index.php?menu=solicitudes" class="button hero-button-alumno">Ver Solicitudes</a>
+                    <a href="/index.php?menu=ofertas" class="button hero-button-empresa">Ver Ofertas</a>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </section>
 
+<!-- El resto de tu código se mantiene igual -->
 <section class="empresas">
     <h2 class="section-title">Empresas que ya confían en nosotros</h2>
     <div class="empresas-grid">

@@ -22,6 +22,7 @@ class AlumnoService
         $nombre_usuario = trim($data['email']);
         $password = isset($data['password']) ? Security::hashPassword(trim($data['password'])) : null;
         $localidad_id = trim($data['localidad']);
+        $activo = isset($data['activo']) ? (int)$data['activo'] : 0;
         // Incluir los ciclos del usuario
         $ciclos = isset($data['ciclosSeleccionados']) ? $data['ciclosSeleccionados'] : [];
         // === Manejo de archivos ===
@@ -39,6 +40,8 @@ class AlumnoService
             $destino = $carpetaFotos . $nombreArchivo;
             move_uploaded_file($files['foto-perfil']['tmp_name'], $destino);
             $fotoRuta = 'storage/foto_perfil/' . $nombreArchivo; // ruta relativa
+        }else {
+            $fotoRuta = 'storage/foto_perfil/default.png'; // ruta por defecto
         }
 
         // Guardar CV si viene
@@ -48,6 +51,8 @@ class AlumnoService
             $destino = $carpetaCVs . $nombreArchivo;
             move_uploaded_file($files['cv']['tmp_name'], $destino);
             $cvRuta = 'storage/cv/' . $nombreArchivo; // ruta relativa
+        }else {
+            $cvRuta = 'storage/cv/default.pdf'; // ruta por defecto
         }
 
         // Crear objetos
@@ -58,7 +63,7 @@ class AlumnoService
             $direccion,
             $fotoRuta,
             $cvRuta,
-            0
+            $activo
         );
 
         $usuario = new Usuario(
@@ -71,7 +76,7 @@ class AlumnoService
         return $this->registrarAlumno($usuario, $alumno, $ciclos);
     }
 
-    public function registrarAlumno($usuario, $alumno, $ciclos = [])
+    private function registrarAlumno($usuario, $alumno, $ciclos = [])
     {
         $conn = null;
         $resultado = false;

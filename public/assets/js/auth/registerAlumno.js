@@ -24,8 +24,7 @@ formulario.addEventListener("submit", function (e) {
         ciclosSeleccionados.forEach(ciclo => {
             datos.append('ciclosSeleccionados[]', ciclo.id);
         });
-        console.log(datos.getAll('ciclosSeleccionados[]'));
-
+        datos.append('activo', '1'); // Por defecto, el alumno se registra como activo
         fetch('assets/api/api_alumno.php', {
             method: 'POST',
             body: datos

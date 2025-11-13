@@ -3,6 +3,7 @@ namespace controllers;
 use League\Plates\Engine;
 use repositories\RepoAlumno;
 use repositories\RepoEmpresa;
+use services\EmpresaService;
 use services\UsuarioService;
 use helpers\Security;
 use helpers\Session;
@@ -37,24 +38,34 @@ class AuthController
                             $alumno = $repoAlumno->getByUsuarioId($user->getId());
                             Session::set('perfil', $alumno);
                             Session::set('tipo', 'alumno');
+                            Session::set('activo', $alumno->getActivo());
                         } elseif ($user->getRolId() === 3) {
                             $repoEmpresa = new RepoEmpresa();
                             $empresa = $repoEmpresa->getByUsuarioId($user->getId());
                             Session::set('perfil', $empresa);
                             Session::set('tipo', 'empresa');
+                            Session::set('activo', $empresa->getVerificada());
                         } else {
                             Session::set('tipo', 'admin');
+                            Session::set('activo', 1);
                         }
 
                         // Datos generales del usuario
-                        Session::set('usuario_id', $user->getId());
-                        Session::set('rol', $user->getRolId());
-                        Session::set('nombre_usuario', $user->getNombreUsuario());
+                        //Si no está activa, no iniciamos sesion.
+                        if (Session::get('activo') == 1) {
+                            Session::set('usuario_id', $user->getId());
+                            Session::set('rol', $user->getRolId());
+                            Session::set('nombre_usuario', $user->getNombreUsuario());
 
-                        Session::login($user);
+                            Session::login($user);
+                        }
 
-                        header('Location: /index.php');
-                        exit;
+                        if (Session::isLogged()) {
+                            header('Location: /index.php');
+                            exit;
+                        }else {
+                            $error = 'Tu cuenta no está activa. Por favor, verifique su correo u espere a que un administrador la active.';
+                        }
 
                     } else {
                         $error = 'Correo electrónico o contraseña incorrectos.';
@@ -82,6 +93,8 @@ class AuthController
                     $validator = new Validator();
                     $errores = $validator->validarFormularioRegistroEmpresa($inputs, $files);
                     if (empty($errores)) {
+                        $empresaService = new EmpresaService();
+                        $empresaService->registrarEmpresa($inputs, $files);
                         header('Location: /index.php?menu=login');
                         exit;
                     }

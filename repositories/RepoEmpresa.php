@@ -25,7 +25,7 @@ class RepoEmpresa
             $stmt->bindValue(':direccion', $empresa->getDireccion());
             $stmt->bindValue(':nombre_persona', $empresa->getNombrePersona());
             $stmt->bindValue(':telefono_persona', $empresa->getTelefonoPersona());
-            $stmt->bindValue(':logo', $empresa->getLogo());
+            $stmt->bindValue(':logo', $empresa->getFoto());
             $stmt->bindValue(':verificada', $empresa->getVerificada(), PDO::PARAM_INT);
             $stmt->bindValue(':descripcion', $empresa->getDescripcion());
             $stmt->bindValue(':usuario_id', $empresa->getUsuario() ? $empresa->getUsuario()->getId() : null, PDO::PARAM_INT);
@@ -54,7 +54,7 @@ class RepoEmpresa
             $stmt->bindValue(':direccion', $empresa->getDireccion());
             $stmt->bindValue(':nombre_persona', $empresa->getNombrePersona());
             $stmt->bindValue(':telefono_persona', $empresa->getTelefonoPersona());
-            $stmt->bindValue(':logo', $empresa->getLogo());
+            $stmt->bindValue(':logo', $empresa->getFoto());
             $stmt->bindValue(':verificada', $empresa->getVerificada(), PDO::PARAM_INT);
             $stmt->bindValue(':descripcion', $empresa->getDescripcion());
             $stmt->bindValue(':usuario_id', $empresa->getUsuario() ? $empresa->getUsuario()->getId() : null, PDO::PARAM_INT);
@@ -159,7 +159,7 @@ class RepoEmpresa
             $stmt->bindValue(':direccion', $empresa->getDireccion());
             $stmt->bindValue(':nombre_persona', $empresa->getNombrePersona());
             $stmt->bindValue(':telefono_persona', $empresa->getTelefonoPersona());
-            $stmt->bindValue(':logo', $empresa->getLogo());
+            $stmt->bindValue(':logo', $empresa->getFoto());
             $stmt->bindValue(':verificada', $empresa->getVerificada(), PDO::PARAM_INT);
             $stmt->bindValue(':descripcion', $empresa->getDescripcion());
             $stmt->bindValue(':id', $empresa->getId(), PDO::PARAM_INT);

@@ -389,6 +389,9 @@ input[type="file"] {
     color: red;
 }
 
+.neutral {
+    color: gray;
+}
 /* ============================================= DISEÑO RESPONSIVE ============================================= */
 /* Tablet y Desktop */
 @media (min-width: 768px) {

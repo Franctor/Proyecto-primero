@@ -64,7 +64,6 @@ class Validator
         return $errores;
     }
 
-    // Mantener esta para el ul de requirements
     public function validarPassword($password)
     {
         $errores = [];

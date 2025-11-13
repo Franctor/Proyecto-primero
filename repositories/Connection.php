@@ -12,7 +12,7 @@ class Connection
     {
         if (self::$conn === null) {
             try {
-                self::$conn = new PDO('mysql:host=localhost;dbname=mydb', 'root', 'root');
+                self::$conn = new PDO('mysql:host=mysql;dbname=mydb', 'root', 'root');
                 self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             } catch (PDOException $e) {
                 error_log("Error de conexión: " . $e->getMessage());

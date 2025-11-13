@@ -82,8 +82,6 @@ class AuthController
                     $validator = new Validator();
                     $errores = $validator->validarFormularioRegistroEmpresa($inputs, $files);
                     if (empty($errores)) {
-                        // Aquí iría la lógica para registrar al usuario si no hay errores
-                        // Por ejemplo, guardar en la base de datos
                         header('Location: /index.php?menu=login');
                         exit;
                     }

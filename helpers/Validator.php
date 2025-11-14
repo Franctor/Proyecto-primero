@@ -230,7 +230,7 @@ class Validator
 
     // ===================== Validaciones compuestas =====================
 
-    public function validarAlumno($input, $files)
+    public function validarAlumno($input, $files, $archivosObligatorios = true)
     {
         $errores = [];
 
@@ -277,14 +277,21 @@ class Validator
             $errores = array_merge($errores, $erroresLocalidad);
         }
 
-        $erroresFoto = $this->validarFoto($files['foto-perfil'] ?? null);
-        if (!empty($erroresFoto)) {
-            $errores = array_merge($errores, $erroresFoto);
-        }
-
-        $erroresCV = $this->validarCV($files['cv'] ?? null);
-        if (!empty($erroresCV)) {
-            $errores = array_merge($errores, $erroresCV);
+        // Validación de archivos según contexto
+        if ($archivosObligatorios) {
+            $erroresFoto = $this->validarFoto($files['foto-perfil'] ?? null);
+            $erroresCV = $this->validarCV($files['cv'] ?? null);
+            $errores = array_merge($errores, $erroresFoto, $erroresCV);
+        } else {
+            // archivos opcionales: solo se validan si vienen
+            if (!empty($files['foto-perfil']['tmp_name'])) {
+                $erroresFoto = $this->validarFoto($files['foto-perfil']);
+                $errores = array_merge($errores, $erroresFoto);
+            }
+            if (!empty($files['cv']['tmp_name'])) {
+                $erroresCV = $this->validarCV($files['cv']);
+                $errores = array_merge($errores, $erroresCV);
+            }
         }
 
         return empty($errores);

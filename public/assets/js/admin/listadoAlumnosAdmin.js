@@ -3,7 +3,7 @@ const btnAgregar = document.getElementById("add");
 const btnAgregarVarios = document.getElementById("adds");
 let alumnos = [];
 
-fetch('../../API/ApiAlumno.php', {
+fetch('assets/api/api_alumno.php', {
     method: 'GET'
 })
     .then(response => response.json())
@@ -59,14 +59,55 @@ tabla.ondblclick = function () {
 
 btnAgregar.addEventListener('click', function () {
     const modalAdd = new Modal();
-    modalAdd.cargarPlantilla("modalAgregar.html").then(() => {
+    modalAdd.cargarPlantilla("assets/modals/modalAgregar.html").then(() => {
         const btnCerrar = document.getElementById("cerrarAdd");
-        const btnTomarFoto = document.getElementById("tomar-foto");
-        const fileFoto = document.getElementById("foto-perfil");
         const btnGuardar = document.getElementById("guardarAdd");
         const selectProvincia = document.getElementById("provincia");
         const selectLocalidad = document.getElementById("localidad");
+        const selectFamilia = document.getElementById("familia");
+        const selectCiclo = document.getElementById("ciclos");
+        const selectedCiclosSelect = document.getElementById("ciclosSeleccionados");
+
+
         modalAdd.mostrar();
+        cargarSelectFamiliaYCiclo(selectFamilia, selectCiclo);
+        let ciclosSeleccionados = [];
+
+        function actualizarSelectCiclos() {
+            selectedCiclosSelect.innerHTML = '';
+
+            ciclosSeleccionados.forEach(ciclo => {
+                const option = document.createElement('option');
+                option.value = ciclo.id;
+                option.textContent = ciclo.nombre;
+                selectedCiclosSelect.appendChild(option);
+            });
+        }
+
+        // Añadir ciclo con doble clic en selectCiclo
+        selectCiclo.addEventListener('dblclick', () => {
+            const selectedIndex = selectCiclo.selectedIndex;
+            const selectedOption = selectCiclo.options[selectedIndex];
+
+            // Si hay un ciclo seleccionado y no está ya en la lista, añadirlo
+            if (selectedOption && !ciclosSeleccionados.some(c => c.id == selectedOption.value)) {
+                ciclosSeleccionados.push({
+                    id: selectedOption.value,
+                    nombre: selectedOption.textContent
+                });
+                actualizarSelectCiclos();
+            }
+            selectCiclo.value = '';
+        });
+
+        // Eliminar ciclo con doble clic en select múltiple
+        selectedCiclosSelect.addEventListener('dblclick', (e) => {
+            if (e.target.tagName === 'OPTION') {
+                const value = e.target.value;
+                ciclosSeleccionados = ciclosSeleccionados.filter(c => c.id != value);
+                actualizarSelectCiclos();
+            }
+        });
         cargarSelectProvinciaYLocalidad(selectProvincia, selectLocalidad);
         inicializarValidaciones("form-add-alumno");
 
@@ -77,28 +118,19 @@ btnAgregar.addEventListener('click', function () {
             btnCerrar.removeEventListener("click", a);
         });
 
-        // --- Botón Tomar foto ---
-        btnTomarFoto.addEventListener("click", function b() {
-            gestionFoto(modalAdd); // función definida en foto.js
-        });
-
-        // --- Previsualizar imagen seleccionada ---
-        fileFoto.addEventListener("change", function d() {
-            const fotoDiv = document.getElementById("foto");
-            const file = fileFoto.files[0];
-            if (file) {
-                const url = URL.createObjectURL(file);
-                fotoDiv.style.backgroundImage = `url(${url})`;
-            }
-        });
-
         // --- Botón Guardar ---
         btnGuardar.addEventListener("click", function c() {
             const formulario = document.getElementById("form-add-alumno");
             if (validarFormulario(formulario)) {
-                fetch('../../API/ApiAlumno.php', {
+                const datos = new FormData(formulario);
+                datos.append('admin', '1');
+                // Agregar ciclos seleccionados al FormData
+                ciclosSeleccionados.forEach(ciclo => {
+                    datos.append('ciclosSeleccionados[]', ciclo.id);
+                });
+                fetch('../assets/api/api_alumno.php', {
                     method: 'POST',
-                    body: new FormData(formulario)
+                    body: datos
                 })
                     .then(response => response.json())
                     .then(data => {

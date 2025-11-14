@@ -35,6 +35,30 @@ class RepoToken
         return $token;
     }
 
+    public function saveByUserId($token, $userId)
+    {
+        try {
+            $conn = Connection::getConnection();
+            $stmt = $conn->prepare("
+            INSERT INTO token (valor, usuario_id)
+            VALUES (:valor, :usuario_id)
+        ");
+
+            $stmt->bindValue(':valor', $token);
+            $stmt->bindValue(':usuario_id', $userId, PDO::PARAM_INT);
+
+            $stmt->execute();
+
+            $tokenObj = new Token($token);
+            $tokenObj->setId($conn->lastInsertId());
+
+            return $tokenObj;
+
+        } catch (Exception $e) {
+            die("Error al guardar token con ID de usuario: " . $e->getMessage());
+        }
+    }
+
     public function findById($id, $loadUsuario = true)
     {
         $token = null;
@@ -114,6 +138,8 @@ class RepoToken
 
         return $result;
     }
+
+
     public function deleteByUsuarioId($usuarioId)
     {
         $result = false;
@@ -137,7 +163,7 @@ class RepoToken
     {
         $usuario = null;
 
-        if($repoUsuario){
+        if ($repoUsuario) {
             $usuario = $repoUsuario->findById($row['usuario_id']);
         }
 

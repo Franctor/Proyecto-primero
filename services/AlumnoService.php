@@ -20,7 +20,7 @@ class AlumnoService
         $telefono = trim($data['telefono']);
         $direccion = trim($data['direccion']);
         $nombre_usuario = trim($data['email']);
-        $password = isset($data['password']) ? Security::hashPassword(trim($data['password'])) : null;
+        $password = isset($data['password']) ? Security::hashPassword(trim($data['password'])) : Security::generatePassword();
         $localidad_id = trim($data['localidad']);
         $activo = isset($data['activo']) ? (int)$data['activo'] : 0;
         // Incluir los ciclos del usuario

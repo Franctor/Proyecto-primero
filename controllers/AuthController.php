@@ -5,6 +5,7 @@ use repositories\RepoAlumno;
 use repositories\RepoEmpresa;
 use services\EmpresaService;
 use services\UsuarioService;
+use services\TokenService;
 use helpers\Security;
 use helpers\Session;
 use helpers\Validator;
@@ -58,12 +59,16 @@ class AuthController
                             Session::set('nombre_usuario', $user->getNombreUsuario());
 
                             Session::login($user);
+                            $token = Security::generateToken();
+                            Session::set('token', $token);
+                            $tokenService = new TokenService();
+                            $tokenService->saveToken(Session::get('usuario_id'), Session::get('token'));
                         }
 
                         if (Session::isLogged()) {
                             header('Location: /index.php');
                             exit;
-                        }else {
+                        } else {
                             $error = 'Tu cuenta no está activa. Por favor, verifique su correo u espere a que un administrador la active.';
                         }
 
@@ -112,6 +117,8 @@ class AuthController
 
     public function logout()
     {
+        $tokenService = new TokenService();
+        $tokenService->deleteToken(Session::get('usuario_id'));
         Session::logout();
         header('Location: /index.php');
         exit;

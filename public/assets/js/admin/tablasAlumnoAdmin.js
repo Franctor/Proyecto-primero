@@ -168,14 +168,14 @@ HTMLTableElement.prototype.ordenar = function (columna, clase = 'texto', tipo = 
 //Método para borrar una fila
 HTMLTableRowElement.prototype.borrar = function () {
     const modalBorrar = new Modal();
-    modalBorrar.cargarPlantilla("modalEliminar.html").then(() => {
+    modalBorrar.cargarPlantilla("assets/modals/modalEliminar.html").then(() => {
         modalBorrar.mostrar();
         let borrar = document.getElementById("delete");
         let cancelar = document.getElementById("cancel");
         let self = this;
         borrar.addEventListener("click", function a() {
             modalBorrar.destruir();
-            fetch('../../API/ApiAlumno.php?id=' + self.cells[0].textContent, {
+            fetch('/assets/api/api_alumno.php?id=' + self.cells[0].textContent, {
                 method: 'DELETE'
             })
                 .then(response => {
@@ -198,7 +198,7 @@ HTMLTableRowElement.prototype.borrar = function () {
 HTMLTableRowElement.prototype.editar = function () {
     const modalEditar = new Modal();
     const fila = this;
-    modalEditar.cargarPlantillaConDatos("modalEditar.html", "../../API/ApiAlumno.php?id=" + fila.cells[0].textContent, rellenar)
+    modalEditar.cargarPlantillaConDatos("assets/modals/modalEditar.html", "/assets/api/api_alumno.phpid=" + fila.cells[0].textContent, rellenar)
         .then(() => {
             const btnCerrar = document.getElementById("cerrarEditar");
             const btnTomarFoto = document.getElementById("tomar-foto");

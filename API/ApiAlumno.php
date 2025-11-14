@@ -35,7 +35,6 @@ try {
 
         case 'POST':
             // Lógica para manejar las solicitudes POST
-            error_log("POST recibido: " . print_r($_POST, true));
             createAlumno($input, $files, $alumnoService);
             break;
 
@@ -96,7 +95,11 @@ function getAlumnos($alumnoService)
 function createAlumno($input, $files, $alumnoService)
 {
     $validate = new Validator();
-    if ($validate->validarAlumno($input, $files)) {
+
+    // Detectar si es registro admin o usuario normal
+    $esAdmin = isset($input['admin']) && $input['admin'] == 1;
+
+    if ($validate->validarAlumno($input, $files, !$esAdmin)) { // si no es admin, archivos obligatorios
         $alumno = $alumnoService->createAlumno($input, $files);
     } else {
         $alumno = null;

@@ -13,6 +13,7 @@ class Modal {
     const datos = await fetch(datosURL).then(r => r.json());
     const contenido = funcionRellenar(plantilla, datos);
     this.modal.innerHTML = contenido;
+    return datos;
   }
 
   async cargarPlantilla(plantillaUrl){

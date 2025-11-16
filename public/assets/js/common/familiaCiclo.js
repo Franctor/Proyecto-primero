@@ -2,11 +2,12 @@ function cargarSelectFamiliaYCiclo(selectFamilia, selectCiclo, cicloId = null) {
     fetch('assets/api/api_familia.php', { method: 'GET' })
         .then(res => res.json())
         .then(data => {
-            // Limpiar los select
+
+            // Limpiar selects
             selectFamilia.innerHTML = '';
             selectCiclo.innerHTML = '';
 
-            // Opción por defecto
+            // Opción por defecto familia
             const defaultFam = document.createElement('option');
             defaultFam.value = '';
             defaultFam.textContent = 'Seleccione una familia profesional';
@@ -14,6 +15,7 @@ function cargarSelectFamiliaYCiclo(selectFamilia, selectCiclo, cicloId = null) {
             defaultFam.selected = cicloId === null;
             selectFamilia.appendChild(defaultFam);
 
+            // Opción por defecto ciclo
             const defaultCic = document.createElement('option');
             defaultCic.value = '';
             defaultCic.textContent = 'Seleccione un ciclo formativo';
@@ -24,15 +26,14 @@ function cargarSelectFamiliaYCiclo(selectFamilia, selectCiclo, cicloId = null) {
             let familiaSeleccionada = null;
             let cicloSeleccionado = null;
 
-            // Buscar familia y ciclo si se pasa un cicloId (modo edición)
+            // Buscar familia y ciclo
             if (cicloId !== null) {
-                for (let fam of data) {
-                    const ciclo = fam.ciclos.find(c => c.id == cicloId);
-                    if (ciclo) {
-                        familiaSeleccionada = fam;
-                        cicloSeleccionado = ciclo;
-                        break;
-                    }
+                familiaSeleccionada = data.find(fam =>
+                    fam.ciclos.some(c => c.id == cicloId)
+                );
+
+                if (familiaSeleccionada) {
+                    cicloSeleccionado = familiaSeleccionada.ciclos.find(c => c.id == cicloId);
                 }
             }
 
@@ -45,18 +46,23 @@ function cargarSelectFamiliaYCiclo(selectFamilia, selectCiclo, cicloId = null) {
                 selectFamilia.appendChild(option);
             });
 
-            // Si hay familia seleccionada, cargar ciclos correspondientes
+            // Si hay familia seleccionada, cargar sus ciclos
             if (familiaSeleccionada) {
-                cargarSelectCiclo(selectCiclo, familiaSeleccionada, cicloSeleccionado ? cicloSeleccionado.nombre : '');
+                cargarSelectCiclo(
+                    selectCiclo,
+                    familiaSeleccionada,
+                    cicloSeleccionado ? cicloSeleccionado.nombre : ''
+                );
             }
 
-            // Evento al cambiar la familia
+            // Evento al cambiar familia
             selectFamilia.addEventListener('change', () => {
                 const fam = data.find(f => f.id == selectFamilia.value);
+
                 if (fam) {
                     cargarSelectCiclo(selectCiclo, fam);
                 } else {
-                    // Si se deselecciona, limpiar ciclos
+                    // Si no hay familia válida, reiniciar ciclos
                     selectCiclo.innerHTML = '';
                     const def = document.createElement('option');
                     def.value = '';
@@ -66,9 +72,11 @@ function cargarSelectFamiliaYCiclo(selectFamilia, selectCiclo, cicloId = null) {
                     selectCiclo.appendChild(def);
                 }
             });
+
         })
         .catch(err => console.error("Error al cargar familias:", err));
 }
+
 
 function cargarSelectCiclo(selectCiclo, familia, nombreCicloSeleccionado = '') {
     selectCiclo.innerHTML = '';

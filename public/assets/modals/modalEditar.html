@@ -1,48 +1,74 @@
 
-<div class="contenido-modal-editar">
-  <span id="cerrarEditar">x</span>
-  <form id="form-editar-alumno">
-    <div id="marco">
-      <div id="manejo-foto">
-        <div id="foto" data-foto="{{foto}}"></div>
-        <input type="file" id="foto-perfil" name="foto-perfil" accept="image/png, image/jpeg, image/webp">
-        <button type="button" id="tomar-foto">Tomar foto</button>
-      </div>
-      <div id="input-datos">
-        <div>
-          <label for="nombre"><span class="obligatorio">*</span>Nombre</label>
-          <input type="text" name="nombre" id="nombre" value="{{nombre}}">
-        </div>
-        <div>
-          <label for="apellido"><span class="obligatorio">*</span>Apellido</label>
-          <input type="text" name="apellido" id="apellido" value="{{apellido}}">
-        </div>
-        <div>
-          <label for="email"><span class="obligatorio">*</span>Email</label>
-          <input type="text" name="email" id="email" value="{{email}}">
-        </div>
-        <div>
-          <label for="telefono"><span class="obligatorio">*</span>Teléfono</label>
-          <input type="text" name="telefono" id="telefono" value="{{telefono}}">
-        </div>
-        <div>
-          <label for="provincia">Provincia</label>
-          <select name="provincia" id="provincia">
-          </select>
-        </div>
-        <div>
-          <label for="localidad">Localidad</label>
-          <select name="localidad" id="localidad">
-            <option id="localidad_id" value="{{localidad_id}}"></option>
-          </select>
-        </div>
-        <div>
-          <label for="direccion"><span class="obligatorio">*</span>Dirección</label>
-          <input type="text" name="direccion" id="direccion" value="{{direccion}}">
-        </div>
-        <input type="file" id="cv" name="cv" accept="application/pdf">
-      </div>
+
+<button class="adm-close" id="cerrarEditar">×</button>
+
+<form id="form-editar-alumno">
+  <div class="adm-row">
+    <div class="adm-group">
+      <label for="nombre">Nombre</label>
+      <input type="text" name="nombre" id="nombre" value="{{nombre}}">
     </div>
-    <button type="button" id="guardarEditar">Guardar datos</button>
-  </form>
-</div>
+
+    <div class="adm-group">
+      <label for="apellido">Apellido/s</label>
+      <input type="text" name="apellido" id="apellido" value="{{apellido}}">
+    </div>
+
+    <div class="adm-group">
+      <label for="email">Correo electrónico</label>
+      <input type="email" name="email" id="email" value="{{email}}">
+    </div>
+  </div>
+
+  <div class="adm-row">
+    <div class="adm-group">
+      <label for="provincia">Provincia</label>
+      <select name="provincia" id="provincia">
+        <option value="">Selecciona una provincia</option>
+      </select>
+    </div>
+
+    <div class="adm-group">
+      <label for="localidad">Localidad</label>
+      <select name="localidad" id="localidad">
+        <option id="localidad_id" value="{{localidad_id}}"></option>
+      </select>
+    </div>
+
+    <div class="adm-group">
+      <label for="telefono">Teléfono</label>
+      <input type="tel" name="telefono" id="telefono" value="{{telefono}}">
+    </div>
+  </div>
+
+  <div class="adm-row">
+    <div class="adm-group">
+      <label for="direccion">Dirección</label>
+      <input type="text" name="direccion" id="direccion" value="{{direccion}}">
+    </div>
+
+    <div class="adm-group">
+      <label for="familia">Familia profesional</label>
+      <select name="familia" id="familia">
+        <option value="">Selecciona una familia</option>
+      </select>
+    </div>
+
+    <div class="adm-group">
+      <label for="ciclos">Ciclos</label>
+      <select name="ciclos[]" id="ciclos" multiple></select>
+    </div>
+  </div>
+
+  <div class="adm-row">
+    <div class="adm-group">
+      <label for="ciclosSeleccionados">Ciclos seleccionados</label>
+      <select name="ciclosSeleccionados[]" id="ciclosSeleccionados" multiple></select>
+    </div>
+  </div>
+
+  <button type="button" id="guardarEditar" class="adm-btn adm-btn-primary">
+    Guardar datos
+  </button>
+
+</form>

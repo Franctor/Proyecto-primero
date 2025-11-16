@@ -33,6 +33,21 @@ function validarNombre(nombre) {
     return mensajeError;
 }
 
+/* Funciones de validación específicas */
+function validarApellido(apellido) {
+    apellido = apellido.trim();
+    let mensajeError = "";
+
+    if (apellido === "") {
+        mensajeError = "El apellido no puede estar vacío.";
+    } else if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s'.-]+$/.test(apellido)) {
+        mensajeError = "El apellido solo puede contener letras y espacios.";
+    } else if (apellido.length < 2 || apellido.length > 45) {
+        mensajeError = "El apellido debe tener entre 2 y 45 caracteres.";
+    }
+    return mensajeError;
+}
+
 function validarDireccion(direccion) {
     direccion = direccion.trim();
     let mensajeError = "";
@@ -160,7 +175,6 @@ function inicializarValidaciones(id) {
     const inputTelefono = formulario.querySelector("#telefono");
     const inputLocalidad = formulario.querySelector("#localidad");
     const inputProvincia = formulario.querySelector("#provincia");
-    const inputCiclos = formulario.querySelector("#ciclos");
     const inputFamilia = formulario.querySelector("#familia");
     const selectedCiclosSelect = formulario.querySelector("#ciclosSeleccionados");
 
@@ -506,4 +520,48 @@ function validarFormularioEditar(formulario) {
     return formularioValido;
 }
 
+function validarFilaCSV(fila) {
+
+    let esValida = true;
+
+    // Limpia errores anteriores
+    for (let i = 1; i <= 4; i++) {
+        const celda = fila.children[i];
+
+        const viejoError = celda.querySelector(".error-mensaje");
+        if (viejoError) viejoError.remove();
+    }
+
+    const funciones = [
+        validarNombre,
+        validarApellido,
+        validarCorreoElectronico,
+        validarTelefono
+    ];
+
+    for (let i = 0; i < 4; i++) {
+
+        const celda = fila.children[i + 1];
+
+        // Obtener valor del input si existe, si no usar texto
+        const input = celda.querySelector("input");
+        const valor = input ? input.value.trim() : celda.textContent.trim();
+
+        const msgError = funciones[i](valor);
+
+        // Si hay error -> pintarlo
+        if (msgError !== "") {
+
+            esValida = false;
+
+            const div = document.createElement("div");
+            div.classList.add("error-mensaje");
+            div.textContent = msgError;
+
+            celda.appendChild(div);
+        }
+    }
+
+    return esValida;
+}
 

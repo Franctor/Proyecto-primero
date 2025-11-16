@@ -255,9 +255,11 @@ class Validator
             $errores = array_merge($errores, $erroresTelefono);
         }
 
-        $erroresDireccion = $this->validarDireccion($input['direccion'] ?? '');
-        if (!empty($erroresDireccion)) {
-            $errores = array_merge($errores, $erroresDireccion);
+        if ($archivosObligatorios) {
+            $erroresDireccion = $this->validarDireccion($input['direccion'] ?? '');
+            if (!empty($erroresDireccion)) {
+                $errores = array_merge($errores, $erroresDireccion);
+            }
         }
 
         $erroresEmail = $this->validarCorreoElectronico($input['email'] ?? '');

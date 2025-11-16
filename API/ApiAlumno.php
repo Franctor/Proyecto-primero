@@ -111,8 +111,7 @@ function createAlumno($input, $files, $alumnoService)
         http_response_code(201);
         echo json_encode($alumno);
     } else {
-        http_response_code(400);
-        echo json_encode(['error' => 'Error al crear el alumno']);
+        echo json_encode(['respuesta' => false]);
     }
 }
 

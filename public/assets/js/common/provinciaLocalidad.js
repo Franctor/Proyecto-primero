@@ -23,25 +23,26 @@ function cargarSelectProvinciaYLocalidad(selectProvincia, selectLocalidad, local
             let provinciaSeleccionada = null;
             let localidadSeleccionada = null;
 
-            // Buscar la provincia y localidad que corresponden al localidadId
+            // Buscar provincia y localidad
             if (localidadId !== null) {
-                for (let prov of data) {
-                    const loc = prov.localidades.find(l => l.id == localidadId);
-                    if (loc) {
-                        provinciaSeleccionada = prov;
-                        localidadSeleccionada = loc;
-                        break;
-                    }
+                provinciaSeleccionada = data.find(prov =>
+                    prov.localidades.some(l => l.id == localidadId)
+                );
+
+                if (provinciaSeleccionada) {
+                    localidadSeleccionada = provinciaSeleccionada.localidades.find(l => l.id == localidadId);
                 }
             }
 
-            // Cargar todas las provincias
+            // Cargar provincias
             data.forEach(prov => {
-                const option = document.createElement('option');
-                option.value = prov.id;
-                option.textContent = prov.nombre_prov;
-                if (provinciaSeleccionada && prov.id == provinciaSeleccionada.id) option.selected = true;
-                selectProvincia.appendChild(option);
+                if (prov.id !== 777) {
+                    const option = document.createElement('option');
+                    option.value = prov.id;
+                    option.textContent = prov.nombre_prov;
+                    if (provinciaSeleccionada && prov.id == provinciaSeleccionada.id) option.selected = true;
+                    selectProvincia.appendChild(option);
+                }
             });
 
             // Cargar localidades si hay provincia seleccionada
@@ -72,10 +73,12 @@ function cargarSelectLocalidad(selectLocalidad, provincia, nombreLocalidadSelecc
     selectLocalidad.appendChild(defaultOption);
 
     provincia.localidades.forEach(loc => {
-        const option = document.createElement('option');
-        option.value = loc.id;
-        option.textContent = loc.nombre_loc;
-        if (loc.nombre_loc === nombreLocalidadSeleccionada) option.selected = true;
-        selectLocalidad.appendChild(option);
+        if (loc.id !== 777) {
+            const option = document.createElement('option');
+            option.value = loc.id;
+            option.textContent = loc.nombre_loc;
+            if (loc.nombre_loc === nombreLocalidadSeleccionada) option.selected = true;
+            selectLocalidad.appendChild(option);
+        }
     });
 }

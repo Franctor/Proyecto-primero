@@ -13,7 +13,8 @@ class Converter
             'direccion' => $alumno->getDireccion(),
             'email' => $alumno->getUsuario() ? $alumno->getUsuario()->getNombreUsuario() : null,
             'localidad_id' => $alumno->getUsuario() ? $alumno->getUsuario()->getLocalidadId() : null,
-            'foto' => $alumno->getFoto64()
+            'foto' => $alumno->getFoto64(),
+            'ciclos' => $this->convertirCiclosAJson($alumno->getCiclos())
         ];
         return $alumnoArray;
     }

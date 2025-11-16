@@ -198,64 +198,105 @@ HTMLTableRowElement.prototype.borrar = function () {
 HTMLTableRowElement.prototype.editar = function () {
     const modalEditar = new Modal();
     const fila = this;
-    modalEditar.cargarPlantillaConDatos("assets/modals/modalEditar.html", "/assets/api/api_alumno.phpid=" + fila.cells[0].textContent, rellenar)
-        .then(() => {
-            const btnCerrar = document.getElementById("cerrarEditar");
-            const btnTomarFoto = document.getElementById("tomar-foto");
-            const btnGuardar = document.getElementById("guardarEditar");
-            const fileFoto = document.getElementById("foto-perfil");
-            const selectLocalidad = document.getElementById("localidad");
+    modalEditar.cargarPlantillaConDatos("assets/modals/modalEditar.html", "/assets/api/api_alumno.php?id=" + fila.cells[0].textContent, rellenar)
+        .then((datos) => {
+            const btnCerrar = document.getElementById("cerrarEditar"); const btnGuardar = document.getElementById("guardarEditar"); const selectLocalidad = document.getElementById("localidad");
             const selectProvincia = document.getElementById("provincia");
             const localidadIdAlumno = document.getElementById("localidad_id").value;
-            const divFoto = document.getElementById("foto");
+            const selectCiclos = document.getElementById("ciclos");
+            const selectFamilia = document.getElementById("familia");
+            //const divFoto = document.getElementById("foto");
+            //const fotoBase64 = divFoto.dataset.foto;
+            /**
+             * Logica para rellenar los ciclos seleccionados
+             */
+            // --- Rellenar ciclos seleccionados ---
+            const selectedCiclosSelect = document.getElementById("ciclosSeleccionados");
+            selectedCiclosSelect.innerHTML = "";
 
-            const fotoBase64 = divFoto.dataset.foto;
-
-            if (fotoBase64 && fotoBase64.trim() !== "") {
-                // Aplica la imagen desde JS, sin mostrarla en el HTML
-                divFoto.style.backgroundImage = `url(data:image/png;base64,${fotoBase64})`;
-            } else {
-                divFoto.style.backgroundImage = 'url(../../storage/foto_perfil/default.png)';
+            let ciclosSeleccionados = [];
+            if (datos.ciclos && Array.isArray(datos.ciclos)) {
+                datos.ciclos.forEach(ciclo => {
+                    const option = document.createElement("option");
+                    option.value = ciclo.id;
+                    option.textContent = ciclo.nombre;
+                    selectedCiclosSelect.appendChild(option);
+                    ciclosSeleccionados.push({
+                        id: ciclo.id,
+                        nombre: ciclo.nombre
+                    });
+                });
             }
-            divFoto.removeAttribute("data-foto");
+            function actualizarSelectCiclos() {
+                selectedCiclosSelect.innerHTML = '';
+
+                ciclosSeleccionados.forEach(ciclo => {
+                    const option = document.createElement('option');
+                    option.value = ciclo.id;
+                    option.textContent = ciclo.nombre;
+                    selectedCiclosSelect.appendChild(option);
+                });
+            }
+
+            // Añadir ciclo con doble clic en selectCiclo
+            selectCiclos.addEventListener('dblclick', () => {
+                const selectedIndex = selectCiclos.selectedIndex;
+                const selectedOption = selectCiclos.options[selectedIndex];
+
+                // Si hay un ciclo seleccionado y no está ya en la lista, añadirlo
+                if (selectedOption && !ciclosSeleccionados.some(c => c.id == selectedOption.value)) {
+                    ciclosSeleccionados.push({
+                        id: selectedOption.value,
+                        nombre: selectedOption.textContent
+                    });
+                    actualizarSelectCiclos();
+                }
+                selectCiclos.value = '';
+            });
+
+            // Eliminar ciclo con doble clic en select múltiple
+            selectedCiclosSelect.addEventListener('dblclick', (e) => {
+                const value = e.target.value;
+                ciclosSeleccionados = ciclosSeleccionados.filter(c => c.id != value);
+                actualizarSelectCiclos();
+            });
+            //if (fotoBase64 && fotoBase64.trim() !== "") {
+            // Aplica la imagen desde JS, sin mostrarla en el HTML
+            //    divFoto.style.backgroundImage = `url(data:image/png;base64,${fotoBase64})`;
+            //} else {
+            //    divFoto.style.backgroundImage = 'url(../../storage/foto_perfil/default.png)';
+            //}
+            //divFoto.removeAttribute("data-foto");
 
             inicializarValidaciones("form-editar-alumno");
 
             modalEditar.mostrar();
             cargarSelectProvinciaYLocalidad(selectProvincia, selectLocalidad, localidadIdAlumno);
+            cargarSelectFamiliaYCiclo(selectFamilia, selectCiclos);
+
+
             // --- Botón Cerrar ---
             btnCerrar.addEventListener("click", function a() {
                 modalEditar.destruir();
                 btnCerrar.removeEventListener("click", a);
             });
 
-            // --- Botón Tomar foto ---
-            btnTomarFoto.addEventListener("click", function () {
-                gestionFoto(modalEditar); // función definida en foto.js
-            });
-
-            // --- Previsualizar imagen seleccionada ---
-            fileFoto.addEventListener("change", function () {
-                const fotoDiv = document.getElementById("foto");
-                const file = fileFoto.files[0];
-                if (file) {
-                    const url = URL.createObjectURL(file);
-                    fotoDiv.style.backgroundImage = `url(${url})`;
-                }
-            });
 
             btnGuardar.addEventListener("click", function () {
                 const formulario = document.getElementById("form-editar-alumno");
                 const formData = new FormData(formulario);
                 formData.append('_method', 'PUT'); // indicamos que es un update
+                ciclosSeleccionados.forEach(ciclo => {
+                    formData.append('ciclosSeleccionados[]', ciclo.id);
+                });
                 if (validarFormularioEditar(formulario)) {
-                    fetch('../../API/ApiAlumno.php?id=' + fila.cells[0].textContent, {
+                    fetch('assets/api/api_alumno.php?id=' + fila.cells[0].textContent, {
                         method: 'POST',
                         body: formData
                     })
                         .then(response => response.json())
                         .then(data => {
-                            if (data.respuesta) {   
+                            if (data.respuesta) {
                                 modalEditar.destruir();
                                 const celdas = fila.cells;
                                 celdas[0].textContent = data.id || celdas[0].textContent;
@@ -274,7 +315,6 @@ HTMLTableRowElement.prototype.editar = function () {
         });
 };
 
-
 function rellenar(plantilla, datos) {
     let html = plantilla;
     for (let clave in datos) {
@@ -284,84 +324,3 @@ function rellenar(plantilla, datos) {
     return html;
 }
 
-function cargarSelectProvinciaYLocalidad(selectProvincia, selectLocalidad, localidadId = null) {
-    fetch('../../API/ApiProvincia.php', { method: 'GET' })
-        .then(res => res.json())
-        .then(data => {
-            selectProvincia.innerHTML = '';
-            selectLocalidad.innerHTML = '';
-
-            // Opción por defecto
-            const defaultProv = document.createElement('option');
-            defaultProv.value = '';
-            defaultProv.textContent = 'Seleccione una provincia';
-            defaultProv.disabled = true;
-            defaultProv.selected = localidadId === null;
-            selectProvincia.appendChild(defaultProv);
-
-            const defaultLoc = document.createElement('option');
-            defaultLoc.value = '';
-            defaultLoc.textContent = 'Seleccione una localidad';
-            defaultLoc.disabled = true;
-            defaultLoc.selected = localidadId === null;
-            selectLocalidad.appendChild(defaultLoc);
-
-            let provinciaSeleccionada = null;
-            let localidadSeleccionada = null;
-
-            // Buscar la provincia y localidad que corresponden al localidadId
-            if (localidadId !== null) {
-                for (let prov of data) {
-                    const loc = prov.localidades.find(l => l.id == localidadId);
-                    if (loc) {
-                        provinciaSeleccionada = prov;
-                        localidadSeleccionada = loc;
-                        break;
-                    }
-                }
-            }
-
-            // Cargar todas las provincias
-            data.forEach(prov => {
-                const option = document.createElement('option');
-                option.value = prov.id;
-                option.textContent = prov.nombre_prov;
-                if (provinciaSeleccionada && prov.id == provinciaSeleccionada.id) option.selected = true;
-                selectProvincia.appendChild(option);
-            });
-
-            // Cargar localidades si hay provincia seleccionada
-            if (provinciaSeleccionada) {
-                cargarSelectLocalidad(selectLocalidad, provinciaSeleccionada, localidadSeleccionada.nombre_loc);
-            }
-
-            // Evento al cambiar la provincia
-            selectProvincia.addEventListener('change', () => {
-                const prov = data.find(p => p.id == selectProvincia.value);
-                if (prov) {
-                    cargarSelectLocalidad(selectLocalidad, prov);
-                }
-            });
-        })
-        .catch(err => console.error("Error al cargar provincias:", err));
-}
-
-function cargarSelectLocalidad(selectLocalidad, provincia, nombreLocalidadSeleccionada = '') {
-    selectLocalidad.innerHTML = '';
-
-    // Opción por defecto
-    const defaultOption = document.createElement('option');
-    defaultOption.value = '';
-    defaultOption.textContent = 'Seleccione una localidad';
-    defaultOption.disabled = true;
-    defaultOption.selected = nombreLocalidadSeleccionada === '';
-    selectLocalidad.appendChild(defaultOption);
-
-    provincia.localidades.forEach(loc => {
-        const option = document.createElement('option');
-        option.value = loc.id;
-        option.textContent = loc.nombre_loc;
-        if (loc.nombre_loc === nombreLocalidadSeleccionada) option.selected = true;
-        selectLocalidad.appendChild(option);
-    });
-}

@@ -11,10 +11,12 @@ use repositories\Connection;
 
 class RepoAlumno
 {
-    public function save($alumno)
+    public function save($alumno, $conn = null)
     {
         try {
-            $conn = Connection::getConnection();
+            if ($conn == null) {
+                $conn = Connection::getConnection();
+            }
             $stmt = $conn->prepare("
                 INSERT INTO alumno (nombre, apellido, telefono, direccion, foto, cv, activo, usuario_id)
                 VALUES (:nombre, :apellido, :telefono, :direccion, :foto, :cv, :activo, :usuario_id)
@@ -33,38 +35,6 @@ class RepoAlumno
             $alumno->setId($conn->lastInsertId());
         } catch (Exception $e) {
             error_log("Error al guardar alumno: " . $e->getMessage());
-            $alumno = null;
-        }
-
-        return $alumno;
-    }
-
-    public function saveConConexion($alumno, $conn)
-    {
-        try {
-            $stmt = $conn->prepare("
-                INSERT INTO alumno (nombre, apellido, telefono, direccion, foto, cv, activo, usuario_id)
-                VALUES (:nombre, :apellido, :telefono, :direccion, :foto, :cv, :activo, :usuario_id)
-            ");
-
-            $stmt->bindValue(':nombre', $alumno->getNombre());
-            $stmt->bindValue(':apellido', $alumno->getApellido());
-            $stmt->bindValue(':telefono', $alumno->getTelefono());
-            $stmt->bindValue(':direccion', $alumno->getDireccion());
-            $stmt->bindValue(':foto', $alumno->getFoto());
-            $stmt->bindValue(':cv', $alumno->getCv());
-            $stmt->bindValue(':activo', $alumno->getActivo(), PDO::PARAM_INT);
-            $stmt->bindValue(':usuario_id', $alumno->getUsuario() ? $alumno->getUsuario()->getId() : null, PDO::PARAM_INT);
-
-            $stmt->execute();
-            $id = $conn->lastInsertId();
-            if ($id) {
-                $alumno->setId((int) $id);
-            } else {
-                throw new Exception("No se pudo obtener el ID insertado para alumno");
-            }
-        } catch (Exception $e) {
-            error_log("Error al guardar alumno con conexión: " . $e->getMessage());
             $alumno = null;
         }
 
@@ -201,10 +171,12 @@ class RepoAlumno
         return $alumnos;
     }
 
-    public function update($alumno)
+    public function update($alumno, $conn = null)
     {
         try {
-            $conn = Connection::getConnection();
+            if ($conn == null) {
+                $conn = Connection::getConnection();
+            }
             $stmt = $conn->prepare("
                 UPDATE alumno
                 SET nombre = :nombre,
@@ -235,50 +207,14 @@ class RepoAlumno
         return $alumno;
     }
 
-    public function updateConConexion($alumno, $conn)
-    {
-        try {
-            $usuarioId = $alumno->getUsuario() ? $alumno->getUsuario()->getId() : null;
-
-            $stmt = $conn->prepare("
-            UPDATE alumno
-            SET nombre = :nombre,
-                apellido = :apellido,
-                telefono = :telefono,
-                direccion = :direccion,
-                foto = :foto,
-                cv = :cv,
-                activo = :activo,
-                usuario_id = :usuario_id
-            WHERE id = :id
-        ");
-
-            $stmt->bindValue(':nombre', $alumno->getNombre());
-            $stmt->bindValue(':apellido', $alumno->getApellido());
-            $stmt->bindValue(':telefono', $alumno->getTelefono());
-            $stmt->bindValue(':direccion', $alumno->getDireccion());
-            $stmt->bindValue(':foto', $alumno->getFoto());
-            $stmt->bindValue(':cv', $alumno->getCv());
-            $stmt->bindValue(':activo', $alumno->getActivo(), PDO::PARAM_INT);
-            $stmt->bindValue(':usuario_id', $usuarioId, PDO::PARAM_INT);
-            $stmt->bindValue(':id', $alumno->getId(), PDO::PARAM_INT);
-
-            $stmt->execute();
-
-        } catch (Exception $e) {
-            error_log("Error al actualizar alumno con conexión: " . $e->getMessage());
-            return null;
-        }
-
-        return $alumno;
-    }
-
-    public function delete($id)
+    public function delete($id, $conn = null)
     {
         $result = false;
 
         try {
-            $conn = Connection::getConnection();
+            if ($conn == null) {
+                $conn = Connection::getConnection();
+            }
             $stmt = $conn->prepare("DELETE FROM alumno WHERE id = :id");
             $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $result = $stmt->execute();
@@ -289,12 +225,14 @@ class RepoAlumno
         return $result;
     }
 
-    public function deleteCiclosByAlumnoId($alumnoId)
+    public function deleteCiclosByAlumnoId($alumnoId, $conn = null)
     {
         $result = false;
 
         try {
-            $conn = Connection::getConnection();
+            if ($conn == null) {
+                $conn = Connection::getConnection();
+            }
             $stmt = $conn->prepare("DELETE FROM alumnos_ciclos WHERE alumno_id = :alumno_id");
             $stmt->bindValue(':alumno_id', $alumnoId, PDO::PARAM_INT);
             $result = $stmt->execute();

@@ -308,6 +308,14 @@
   background: var(--primary-dark);
 }
 
+.valido {
+  background-color: green;
+}
+
+.invalido {
+  background-color: red;
+}
+
 /* Responsive para contenido del modal */
 @media (max-width: 768px) {
   .adm-row {

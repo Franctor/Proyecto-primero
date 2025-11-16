@@ -40,6 +40,7 @@ class Security
         // Mezclar los caracteres para no dejar los primeros fijos
         $password = str_shuffle($password);
 
+        $password = password_hash( $password, PASSWORD_DEFAULT );
         // Guardar la contraseña
         return $password;
     }

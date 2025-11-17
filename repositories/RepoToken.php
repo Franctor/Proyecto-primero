@@ -140,12 +140,14 @@ class RepoToken
     }
 
 
-    public function deleteByUsuarioId($usuarioId)
+    public function deleteByUsuarioId($usuarioId, $conn = null)
     {
         $result = false;
 
         try {
-            $conn = Connection::getConnection();
+            if ($conn === null) {
+                $conn = Connection::getConnection();
+            }
             $stmt = $conn->prepare("DELETE FROM token WHERE usuario_id = :usuario_id");
             $stmt->bindValue(':usuario_id', $usuarioId, PDO::PARAM_INT);
             $result = $stmt->execute();

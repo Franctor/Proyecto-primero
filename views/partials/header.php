@@ -22,7 +22,7 @@
         <?php if (helpers\Session::get('usuario_id')): ?>
             <?php
             // Determinar la foto basándose en el rol y perfil disponible
-            $foto = 'storage/foto_perfil/default.webp';
+            $foto = 'storage/foto_perfil/default.png';
 
             if (helpers\Session::get('rol') !== 1 && isset($perfil) && method_exists($perfil, 'getFoto')) {
                 $fotoTemp = $perfil->getFoto();

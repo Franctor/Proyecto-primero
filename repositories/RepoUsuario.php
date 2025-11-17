@@ -182,12 +182,14 @@ class RepoUsuario
         return $usuario;
     }
 
-    public function delete($id)
+    public function delete($id, $conn = null)
     {
         $result = false;
 
         try {
-            $conn = Connection::getConnection();
+            if ($conn === null) {
+                $conn = Connection::getConnection();
+            }
             $stmt = $conn->prepare("DELETE FROM usuario WHERE id = :id");
             $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $result = $stmt->execute();

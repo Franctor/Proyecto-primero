@@ -146,12 +146,14 @@ class RepoSolicitud
         return $result;
     }
 
-    public function deleteByAlumnoId($alumnoId)
+    public function deleteByAlumnoId($alumnoId, $conn = null)
     {
         $result = false;
 
         try {
-            $conn = Connection::getConnection();
+            if ($conn === null) {
+                $conn = Connection::getConnection();
+            }
             $stmt = $conn->prepare("DELETE FROM solicitud WHERE alumno_id = :alumno_id");
             $stmt->bindValue(':alumno_id', $alumnoId, PDO::PARAM_INT);
             $result = $stmt->execute();

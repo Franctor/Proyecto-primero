@@ -416,6 +416,7 @@ class Validator
             $errores['descripcion'] = $erroresDescripcion;
         }
 
+
         // Provincia y localidad
         $erroresProvincia = $this->validarProvincia($input['provincia'] ?? '');
         if (!empty($erroresProvincia)) {
@@ -435,6 +436,113 @@ class Validator
         $erroresDescripcion = $this->validarDescripcion($input['descripcion'] ?? '');
         if (!empty($erroresDescripcion)) {
             $errores['descripcion'] = $erroresDescripcion;
+        }
+
+        return $errores;
+    }
+
+    public function validarEmpresaAdmin($data)
+    {
+        $errores = [];
+
+        // Email
+        $erroresEmail = $this->validarCorreoElectronico($data['email'] ?? '');
+        if (!empty($erroresEmail)) {
+            $errores['email'] = $erroresEmail;
+        }
+
+        // Nombre empresa
+        $erroresNombre = $this->validarNombre($data['nombre'] ?? '');
+        if (!empty($erroresNombre)) {
+            $errores['nombre'] = $erroresNombre;
+        }
+
+        // Teléfono empresa
+        $erroresTelefono = $this->validarTelefono($data['telefono'] ?? '');
+        if (!empty($erroresTelefono)) {
+            $errores['telefono'] = $erroresTelefono;
+        }
+
+        // Dirección
+        $erroresDireccion = $this->validarDireccion($data['direccion'] ?? '');
+        if (!empty($erroresDireccion)) {
+            $errores['direccion'] = $erroresDireccion;
+        }
+
+        // Provincia
+        $erroresProvincia = $this->validarProvincia($data['provincia'] ?? '');
+        if (!empty($erroresProvincia)) {
+            $errores['provincia'] = $erroresProvincia;
+        }
+
+        // Localidad
+        $erroresLocalidad = $this->validarLocalidad($data['localidad'] ?? '');
+        if (!empty($erroresLocalidad)) {
+            $errores['localidad'] = $erroresLocalidad;
+        }
+
+        // Nombre persona contacto
+        $erroresNombrePersona = $this->validarNombre($data['nombre_persona'] ?? '');
+        if (!empty($erroresNombrePersona)) {
+            $errores['nombre_persona'] = $erroresNombrePersona;
+        }
+
+        // Teléfono persona contacto
+        $erroresTelefonoPersona = $this->validarTelefono($data['telefono_persona'] ?? '');
+        if (!empty($erroresTelefonoPersona)) {
+            $errores['telefono_persona'] = $erroresTelefonoPersona;
+        }
+
+        // Repetido (correo o teléfono duplicado)
+        if ($this->correoExiste($data['email'] ?? '') || $this->telefonoExiste($data['telefono'] ?? '')) {
+            $errores['repetido'][] = "El correo electrónico y/o teléfono ya está registrado.";
+        }
+
+        return $errores;
+    }
+
+    public function validarEmpresaAdminEditar($data, $nombreUsuario) {
+        $errores = [];
+        // Email
+        $erroresEmail = $this->validarCorreoElectronico($data['email'] ?? '');
+        if (!empty($erroresEmail)) {
+            $errores['email'] = $erroresEmail;
+        }
+
+        // Nombre empresa
+        $erroresNombre = $this->validarNombre($data['nombre'] ?? '');
+        if (!empty($erroresNombre)) {
+            $errores['nombre'] = $erroresNombre;
+        }
+
+        // Teléfono empresa
+        $erroresTelefono = $this->validarTelefono($data['telefono'] ?? '');
+        if (!empty($erroresTelefono)) {
+            $errores['telefono'] = $erroresTelefono;
+        }
+
+        // Dirección
+        $erroresDireccion = $this->validarDireccion($data['direccion'] ?? '');
+        if (!empty($erroresDireccion)) {
+            $errores['direccion'] = $erroresDireccion;
+        }
+
+        // Nombre persona contacto
+        $erroresNombrePersona = $this->validarNombre($data['nombre_persona'] ?? '');
+        if (!empty($erroresNombrePersona)) {
+            $errores['nombre_persona'] = $erroresNombrePersona;
+        }
+
+        // Teléfono persona contacto
+        $erroresTelefonoPersona = $this->validarTelefono($data['telefono_persona'] ?? '');
+        if (!empty($erroresTelefonoPersona)) {
+            $errores['telefono_persona'] = $erroresTelefonoPersona;
+        }
+
+        if(isset($data["email"]) && $data["email"] !== $nombreUsuario) {
+            if ($this->correoExiste($data['email'] ?? '')) {
+                $errores['repetido'][] = "El correo electrónico ya está registrado.";
+            }
         }
 
         return $errores;

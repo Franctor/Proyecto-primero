@@ -15,8 +15,8 @@ class AlumnoService
 {
     public function createAlumno($data, $files)
     {
-        $nombre = trim($data['nombre']);
-        $apellido = trim($data['apellido']);
+        $nombre = ucfirst(trim($data['nombre']));
+        $apellido = ucfirst(trim($data['apellido']));
         $telefono = trim($data['telefono']);
         $direccion = isset($data['direccion']) ? trim($data['direccion']) : 'undefined';
         $nombre_usuario = trim($data['email']);
@@ -145,11 +145,11 @@ class AlumnoService
             $usuarioId = $alumno->getUsuario()->getId();
 
             // Eliminar en orden lógico
-            $repoToken->deleteByUsuarioId($usuarioId);
-            $repoSolicitud->deleteByAlumnoId($alumnoId);
-            $repoAlumno->deleteCiclosByAlumnoId($alumnoId);
-            $repoAlumno->delete($alumnoId);
-            $repoUsuario->delete($usuarioId);
+            $repoToken->deleteByUsuarioId($usuarioId, $conn);
+            $repoSolicitud->deleteByAlumnoId($alumnoId, $conn);
+            $repoAlumno->deleteCiclosByAlumnoId($alumnoId, $conn);
+            $repoAlumno->delete($alumnoId, $conn);
+            $repoUsuario->delete($usuarioId, $conn);
 
             $conn->commit();
             $ok = true;
@@ -209,7 +209,7 @@ class AlumnoService
                 $telefono = isset($data['telefono']) ? trim($data['telefono']) : $alumno->getTelefono();
                 $direccion = isset($data['direccion']) ? trim($data['direccion']) : $alumno->getDireccion();
                 $nombre_usuario = isset($data['email']) ? trim($data['email']) : $usuario->getNombreUsuario();
-                $password = isset($data['password']) && $data['password'] !== '' ? $data['password'] : null;
+                $password = isset($data['password']) && $data['password'] !== '' ? $data['password'] : $usuario->getPassword();
                 $localidad_id = isset($data['localidad']) ? trim($data['localidad']) : $usuario->getLocalidadId();
                 $ciclos = isset($data['ciclosSeleccionados']) ? $data['ciclosSeleccionados'] : [];
 

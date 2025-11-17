@@ -119,6 +119,24 @@ class RepoOferta
         return $result;
     }
 
+    public function deleteByEmpresaId($empresaId, $conn = null)
+    {
+        $result = false;
+
+        try {
+            if ($conn === null) {
+                $conn = Connection::getConnection();
+            }
+            $stmt = $conn->prepare("DELETE FROM oferta WHERE empresa_id = :empresa_id");
+            $stmt->bindValue(':empresa_id', $empresaId, PDO::PARAM_INT);
+            $result = $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Error al eliminar ofertas por empresa ID: " . $e->getMessage());
+        }
+
+        return $result;
+    }
+
     public function findByEmpresaId($empresaId, $loadEmpresa = false, $loadSolicitudes = false, $loadCiclos = false)
     {
         $ofertas = [];

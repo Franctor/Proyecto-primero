@@ -137,10 +137,12 @@ class RepoEmpresa
         return $empresas;
     }
 
-    public function update($empresa)
+    public function update($empresa, $conn = null)
     {
         try {
-            $conn = Connection::getConnection();
+            if ($conn === null) {
+                $conn = Connection::getConnection();
+            }
             $stmt = $conn->prepare("
                 UPDATE empresa
                 SET nombre = :nombre,
@@ -173,12 +175,14 @@ class RepoEmpresa
         return $empresa;
     }
 
-    public function delete($id)
+    public function delete($id, $conn = null)
     {
         $result = false;
 
         try {
-            $conn = Connection::getConnection();
+            if ($conn === null) {
+                $conn = Connection::getConnection();
+            }
             $stmt = $conn->prepare("DELETE FROM empresa WHERE id = :id");
             $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $result = $stmt->execute();

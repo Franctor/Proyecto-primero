@@ -96,7 +96,7 @@ class AuthController
                     $inputs = $_POST;
                     $files = $_FILES;
                     $validator = new Validator();
-                    $errores = $validator->validarFormularioRegistroEmpresa($inputs, $files);
+                    $errores = $validator->validarFormularioRegistroEmpresa($inputs, $files) ?? [];
                     if (empty($errores)) {
                         $empresaService = new EmpresaService();
                         $empresaService->registrarEmpresa($inputs, $files);

@@ -18,8 +18,8 @@ $this->layout('layouts/adminEmpresaLayout', ['title' => 'Editar Empresa']);
         <input type="hidden" name="opcion" value="editar">
         <input type="hidden" name="empresa_id" value="<?= $empresa->getId() ?>">
 
-        <div class="adm-row">
-            <div class="adm-group">
+        <div class="form-row">
+            <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="text" id="email" name="email"
                     value="<?= $this->e($old['email'] ?? $empresa->getUsuario()->getNombreUsuario()) ?>"
@@ -29,7 +29,7 @@ $this->layout('layouts/adminEmpresaLayout', ['title' => 'Editar Empresa']);
                 <?php endif; ?>
             </div>
 
-            <div class="adm-group">
+            <div class="form-group">
                 <label for="nombre">Nombre de la Empresa:</label>
                 <input type="text" id="nombre" name="nombre"
                     value="<?= $this->e($old['nombre'] ?? $empresa->getNombre()) ?>"
@@ -40,8 +40,8 @@ $this->layout('layouts/adminEmpresaLayout', ['title' => 'Editar Empresa']);
             </div>
         </div>
 
-        <div class="adm-row">
-            <div class="adm-group">
+        <div class="form-row">
+            <div class="form-group">
                 <label for="telefono">Teléfono de la empresa:</label>
                 <input type="text" id="telefono" name="telefono"
                     value="<?= $this->e($old['telefono'] ?? $empresa->getTelefono()) ?>"
@@ -51,7 +51,7 @@ $this->layout('layouts/adminEmpresaLayout', ['title' => 'Editar Empresa']);
                 <?php endif; ?>
             </div>
 
-            <div class="adm-group">
+            <div class="form-group">
                 <label for="direccion">Dirección:</label>
                 <input type="text" id="direccion" name="direccion"
                     value="<?= $this->e($old['direccion'] ?? $empresa->getDireccion()) ?>"
@@ -62,8 +62,8 @@ $this->layout('layouts/adminEmpresaLayout', ['title' => 'Editar Empresa']);
             </div>
         </div>
 
-        <div class="adm-row">
-            <div class="adm-group">
+        <div class="form-row">
+            <div class="form-group">
                 <label for="nombre_persona">Nombre de la persona de contacto:</label>
                 <input type="text" id="nombre_persona" name="nombre_persona"
                     value="<?= $this->e($old['nombre_persona'] ?? $empresa->getNombrePersona()) ?>"
@@ -73,7 +73,7 @@ $this->layout('layouts/adminEmpresaLayout', ['title' => 'Editar Empresa']);
                 <?php endif; ?>
             </div>
 
-            <div class="adm-group">
+            <div class="form-group">
                 <label for="telefono_persona">Teléfono de la persona de contacto:</label>
                 <input type="text" id="telefono_persona" name="telefono_persona"
                     value="<?= $this->e($old['telefono_persona'] ?? $empresa->getTelefonoPersona()) ?>"
@@ -84,8 +84,8 @@ $this->layout('layouts/adminEmpresaLayout', ['title' => 'Editar Empresa']);
             </div>
         </div>
 
-        <div class="adm-row">
-            <div class="adm-group">
+        <div class="form-row">
+            <div class="form-group">
                 <label for="verificada">¿Empresa verificada?</label>
                 <select id="verificada" name="verificada"
                     class="<?= !empty($errores['verificada'] ?? []) ? 'invalido' : '' ?>">
@@ -98,9 +98,9 @@ $this->layout('layouts/adminEmpresaLayout', ['title' => 'Editar Empresa']);
             </div>
         </div>
 
-        <button type="submit" class="adm-btn-primary">Guardar Cambios</button>
+        <button type="submit" class="button">Guardar Cambios</button>
     </form><br>
 
-    <a href="index.php?menu=adminPanel&accion=panelEmpresas" class="adm-btn">Volver al panel de empresas</a>
+    <a href="index.php?menu=adminPanel&accion=panelEmpresas" class="button">Volver al panel de empresas</a>
 </section>
 <?php $this->stop() ?>

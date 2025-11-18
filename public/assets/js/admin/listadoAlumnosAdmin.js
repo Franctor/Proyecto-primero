@@ -488,18 +488,19 @@ async function cargarCSV(archivo, tbody) {
         }
 
         // Acciones (Editar / Eliminar)
+        const br = document.createElement("br");
         const tdAcciones = document.createElement("td");
 
         const btnEliminar = document.createElement("button");
         btnEliminar.textContent = "Eliminar";
-        btnEliminar.classList.add("adm-btn");
+        btnEliminar.classList.add("button", "eliminarEmpresa");
         btnEliminar.addEventListener("click", function () {
             tr.remove();
         });
 
         const btnEditar = document.createElement("button");
         btnEditar.textContent = "Editar";
-        btnEditar.classList.add("adm-btn");
+        btnEditar.classList.add("button");
 
         // EDITAR EN LINEA
         btnEditar.addEventListener("click", function () {
@@ -527,13 +528,16 @@ async function cargarCSV(archivo, tbody) {
 
             const btnGuardar = document.createElement("button");
             btnGuardar.textContent = "Guardar";
-            btnGuardar.classList.add("adm-btn");
+            btnGuardar.classList.add("button", "verificarEmpresa");
+
+            
 
             const btnCancelar = document.createElement("button");
             btnCancelar.textContent = "Cancelar";
-            btnCancelar.classList.add("adm-btn");
+            btnCancelar.classList.add("button");
 
             tdAcciones.appendChild(btnGuardar);
+            tdAcciones.appendChild(br);
             tdAcciones.appendChild(btnCancelar);
 
             btnGuardar.addEventListener("click", function () {
@@ -568,6 +572,7 @@ async function cargarCSV(archivo, tbody) {
         });
 
         tdAcciones.appendChild(btnEditar);
+        tdAcciones.appendChild(br);
         tdAcciones.appendChild(btnEliminar);
         tr.appendChild(tdAcciones);
 

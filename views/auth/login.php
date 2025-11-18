@@ -3,11 +3,6 @@
     'metaDescription' => 'Formulario de inicio de sesión para alumnos y empresas',
 ]) ?>
 
-<?php $this->start('styles') ?>
-<link rel="stylesheet" href="/assets/css/common/global.css">
-<link rel="stylesheet" href="/assets/css/auth/login.css">
-<?php $this->stop() ?>
-
 <?php $this->start('login-register') ?>
 <section class="login-section">
     <h1>Iniciar sesión</h1>
@@ -27,15 +22,15 @@
     <form action="/index.php?menu=login" method="POST" class="login-form">
         <div class="form-group">
             <label for="nombre_usuario">Correo electrónico</label>
-            <input type="text" name="nombre_usuario" id="nombre_usuario">
+            <input type="email" name="nombre_usuario" id="nombre_usuario" required>
         </div>
 
         <div class="form-group">
             <label for="password">Contraseña</label>
-            <input type="password" name="password" id="password">
+            <input type="password" name="password" id="password" required>
         </div>
 
-        <button type="submit" class="button" id="loginBtn">Acceder</button>
+        <button type="submit" class="button">Acceder</button>
     </form>
 
     <p class="register-link">

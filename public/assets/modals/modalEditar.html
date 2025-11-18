@@ -1,73 +1,71 @@
-
-
 <button class="adm-close" id="cerrarEditar">×</button>
 
 <form id="form-editar-alumno">
-  <div class="adm-row">
-    <div class="adm-group">
+  <div class="form-row">
+    <div class="form-group">
       <label for="nombre">Nombre</label>
       <input type="text" name="nombre" id="nombre" value="{{nombre}}">
     </div>
 
-    <div class="adm-group">
+    <div class="form-group">
       <label for="apellido">Apellido/s</label>
       <input type="text" name="apellido" id="apellido" value="{{apellido}}">
     </div>
 
-    <div class="adm-group">
+    <div class="form-group">
       <label for="email">Correo electrónico</label>
       <input type="email" name="email" id="email" value="{{email}}">
     </div>
   </div>
 
-  <div class="adm-row">
-    <div class="adm-group">
+  <div class="form-row">
+    <div class="form-group">
       <label for="provincia">Provincia</label>
       <select name="provincia" id="provincia">
         <option value="">Selecciona una provincia</option>
       </select>
     </div>
 
-    <div class="adm-group">
+    <div class="form-group">
       <label for="localidad">Localidad</label>
       <select name="localidad" id="localidad">
         <option id="localidad_id" value="{{localidad_id}}"></option>
       </select>
     </div>
 
-    <div class="adm-group">
+    <div class="form-group">
       <label for="telefono">Teléfono</label>
       <input type="tel" name="telefono" id="telefono" value="{{telefono}}">
     </div>
   </div>
 
-  <div class="adm-row">
-    <div class="adm-group">
+  <div class="form-row">
+    <div class="form-group">
       <label for="direccion">Dirección</label>
       <input type="text" name="direccion" id="direccion" value="{{direccion}}">
     </div>
 
-    <div class="adm-group">
+    <div class="form-group">
       <label for="familia">Familia profesional</label>
       <select name="familia" id="familia">
         <option value="">Selecciona una familia</option>
       </select>
     </div>
 
-    <div class="adm-group">
+    <div class="form-group">
       <label for="ciclos">Ciclos</label>
       <select name="ciclos[]" id="ciclos" multiple></select>
     </div>
   </div>
 
-  <div class="adm-row">
-    <div class="adm-group">
+  <div class="form-row">
+    <div class="form-group">
       <label for="ciclosSeleccionados">Ciclos seleccionados</label>
       <select name="ciclosSeleccionados[]" id="ciclosSeleccionados" multiple></select>
     </div>
   </div>
 
-  <button type="button" id="guardarEditar" class="adm-btn adm-btn-primary">
+  <button type="button" id="guardarEditar" class="button">
     Guardar datos
   </button>
 

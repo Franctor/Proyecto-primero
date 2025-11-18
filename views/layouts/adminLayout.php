@@ -4,7 +4,7 @@
     <meta name="description" content="<?= $this->e($metaDescription ?? 'Panel Administrador') ?>">
 
     <link rel="stylesheet" href="/assets/css/admin/admin.css">
-    <link rel="stylesheet" href="/assets/css/common/global.css">
+    <link rel="stylesheet" href="/assets/css/final.css">
     <link rel="icon" href="/assets/imagenes/favicon.ico" type="image/x-icon">
     
     <?= $this->section('styles') ?>

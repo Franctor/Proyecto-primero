@@ -3,6 +3,6 @@
 </div>
 
 <nav class="adm-header-nav">
-    <a href="index.php" class="adm-link">Home</a>
-    <a href="index.php?menu=logout" class="adm-link adm-link-out">Logout</a>
+    <a href="index.php">Home</a>
+    <a href="index.php?menu=logout" id="logoutAdmin">Logout</a>
 </nav>

@@ -4,10 +4,7 @@
 ]); ?>
 
 <?php $this->start('styles') ?>
-<link rel="stylesheet" href="/assets/css/common/global.css">
-<link rel="stylesheet" href="/assets/css/common/header.css">
-<link rel="stylesheet" href="/assets/css/common/footer.css">
-<link rel="stylesheet" href="/assets/css/home/landing.css">
+<link rel="stylesheet" href="/assets/css/final.css">
 <?php $this->stop() ?>
 
 

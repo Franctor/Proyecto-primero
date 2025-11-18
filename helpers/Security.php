@@ -44,4 +44,6 @@ class Security
         // Guardar la contraseña
         return $password;
     }
+
+    
 }

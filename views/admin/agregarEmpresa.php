@@ -21,8 +21,8 @@ $this->start('scripts') ?>
     <form action="index.php?menu=adminPanel&accion=panelEmpresas" method="POST"">
         <input type="hidden" name="opcion" value="agregar">
 
-        <div class="adm-row">
-            <div class="adm-group">
+        <div class="form-row">
+            <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="text" id="email" name="email" value="<?= $this->e($old['email'] ?? '') ?>"
                     class="<?= !empty($errores['email'] ?? []) ? 'invalido' : '' ?>">
@@ -33,7 +33,7 @@ $this->start('scripts') ?>
                 <?php endif; ?>
             </div>
 
-            <div class="adm-group">
+            <div class="form-group">
                 <label for="nombre">Nombre de la Empresa:</label>
                 <input type="text" id="nombre" name="nombre" value="<?= $this->e($old['nombre'] ?? '') ?>"
                     class="<?= !empty($errores['nombre'] ?? []) ? 'invalido' : '' ?>">
@@ -45,8 +45,8 @@ $this->start('scripts') ?>
             </div>
         </div>
 
-        <div class="adm-row">
-            <div class="adm-group">
+        <div class="form-row">
+            <div class="form-group">
                 <label for="telefono">Teléfono de la empresa:</label>
                 <input type="text" id="telefono" name="telefono" value="<?= $this->e($old['telefono'] ?? '') ?>"
                     class="<?= !empty($errores['telefono'] ?? []) ? 'invalido' : '' ?>">
@@ -57,7 +57,7 @@ $this->start('scripts') ?>
                 <?php endif; ?>
             </div>
 
-            <div class="adm-group">
+            <div class="form-group">
                 <label for="direccion">Dirección:</label>
                 <input type="text" id="direccion" name="direccion" value="<?= $this->e($old['direccion'] ?? '') ?>"
                     class="<?= !empty($errores['direccion'] ?? []) ? 'invalido' : '' ?>">
@@ -69,8 +69,8 @@ $this->start('scripts') ?>
             </div>
         </div>
 
-        <div class="adm-row">
-            <div class="adm-group">
+        <div class="form-row">
+            <div class="form-group">
                 <label for="provincia">Provincia:</label>
                 <select id="provincia" name="provincia"
                     class="<?= !empty($errores['provincia'] ?? []) ? 'invalido' : '' ?>">
@@ -82,7 +82,7 @@ $this->start('scripts') ?>
                 <?php endif; ?>
             </div>
 
-            <div class="adm-group">
+            <div class="form-group">
                 <label for="localidad">Localidad:</label>
                 <select id="localidad" name="localidad"
                     class="<?= !empty($errores['localidad'] ?? []) ? 'invalido' : '' ?>">
@@ -95,8 +95,8 @@ $this->start('scripts') ?>
             </div>
         </div>
 
-        <div class="adm-row">
-            <div class="adm-group">
+        <div class="form-row">
+            <div class="form-group">
                 <label for="nombre_persona">Nombre de la persona de contacto:</label>
                 <input type="text" id="nombre_persona" name="nombre_persona"
                     value="<?= $this->e($old['nombre_persona'] ?? '') ?>"
@@ -107,7 +107,7 @@ $this->start('scripts') ?>
                     </span>
                 <?php endif; ?>
             </div>
-            <div class="adm-group">
+            <div class="form-group">
                 <label for="telefono_persona">Teléfono de la persona de contacto:</label>
                 <input type="text" id="telefono_persona" name="telefono_persona"
                     value="<?= $this->e($old['telefono_persona'] ?? '') ?>"
@@ -120,8 +120,8 @@ $this->start('scripts') ?>
             </div>
         </div>
 
-        <button type="submit" class="adm-btn-primary">Agregar Empresa</button>
+        <button type="submit" class="button">Agregar Empresa</button>
     </form><br>
-    <a href="index.php?menu=adminPanel&accion=panelEmpresas" class="adm-btn">Volver al panel de empresas</a>
+    <a href="index.php?menu=adminPanel&accion=panelEmpresas" class="button">Volver al panel de empresas</a>
 </section>
 <?php $this->stop() ?>

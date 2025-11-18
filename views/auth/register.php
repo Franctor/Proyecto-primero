@@ -3,11 +3,6 @@
     'metaDescription' => 'Formulario de registro para ' . $tipo,
 ]) ?>
 
-<?php $this->start('styles') ?>
-<link rel="stylesheet" href="/assets/css/common/global.css">
-<link rel="stylesheet" href="/assets/css/auth/register.css">
-<?php $this->stop() ?>
-
 <?php if ($tipo === 'alumno'): ?>
     <?php $this->start('scripts') ?>
     <script defer src="/assets/js/common/Modal.js"></script>

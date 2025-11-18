@@ -36,8 +36,8 @@ $this->layout('layouts/adminLayout', ['title' => 'Panel Admin'])
                 <h3 class="adm-subtitle">Gestión de Alumnos</h3>
 
                 <div id="listado">
-                    <button id="add" class="adm-btn">Añadir alumno</button>
-                    <button id="adds" class="adm-btn">Añadir varios</button>
+                    <button id="add" class="button">Añadir alumno</button>
+                    <button id="adds" class="button">Añadir varios</button>
 
                     <table id="tablaAlumno" class="adm-table editable ordenable">
                     </table>
@@ -49,11 +49,11 @@ $this->layout('layouts/adminLayout', ['title' => 'Panel Admin'])
                 <h3 class="adm-subtitle">Gestión de Empresas</h3>
 
 
-                <form method='get' action='index.php' class="adm-row">
+                <form method='get' action='index.php'>
                     <input type='hidden' name='menu' value='adminPanel'>
                     <input type='hidden' name='accion' value='panelEmpresas'>
                     <input type='hidden' name='opcion' value='agregar'>
-                    <button type='submit' class='adm-btn'>Agregar nueva empresa</button>
+                    <button type='submit' class='button'>Agregar nueva empresa</button>
                 </form>
 
                 <?php
@@ -90,7 +90,7 @@ $this->layout('layouts/adminLayout', ['title' => 'Panel Admin'])
                                 "<form method='post' action='index.php?menu=adminPanel&accion=panelEmpresas'>
                                     <input type='hidden' name='empresa_id' value='" . $this->e($empresa->getId()) . "'>
                                     <input type='hidden' name='opcion' value='verificar'>
-                                    <button type='submit' class='adm-link' onclick=\"return confirm('¿Estás seguro de que deseas verificar esta empresa?')\">Verificar empresa</button>
+                                    <button type='submit' class='button verificarEmpresa' onclick=\"return confirm('¿Estás seguro de que deseas verificar esta empresa?')\">Verificar empresa</button>
                                 </form>";
                         }
 
@@ -100,19 +100,19 @@ $this->layout('layouts/adminLayout', ['title' => 'Panel Admin'])
                                     <input type='hidden' name='accion' value='panelEmpresas'>
                                     <input type='hidden' name='empresa_id' value='" . $this->e($empresa->getId()) . "'>
                                     <input type='hidden' name='opcion' value='ver'>
-                                    <button type='submit' class='adm-link'>Ver ficha</button>
+                                    <button type='submit' class='button'>Ver ficha</button>
                                 </form>
                                 <form method='get' action='index.php'>
                                     <input type='hidden' name='menu' value='adminPanel'>
                                     <input type='hidden' name='accion' value='panelEmpresas'>
                                     <input type='hidden' name='empresa_id' value='" . $this->e($empresa->getId()) . "'>
                                     <input type='hidden' name='opcion' value='editar'>
-                                    <button type='submit' class='adm-link'>Editar</button>
+                                    <button type='submit' class='button'>Editar</button>
                                 </form>
                                 <form method='post' action='index.php?menu=adminPanel&accion=panelEmpresas'>
                                     <input type='hidden' name='empresa_id' value='" . $this->e($empresa->getId()) . "'>
                                     <input type='hidden' name='opcion' value='eliminar'>
-                                    <button type='submit' class='adm-link adm-link-out' onclick=\"return confirm('¿Estás seguro de que deseas eliminar esta empresa?')\">Eliminar</button>
+                                    <button type='submit' class='button eliminarEmpresa' onclick=\"return confirm('¿Estás seguro de que deseas eliminar esta empresa?')\">Eliminar</button>
                                 </form>
                             </div>
                         </td>

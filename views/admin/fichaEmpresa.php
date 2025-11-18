@@ -93,6 +93,6 @@ $this->start('scripts') ?>
         </table>
 
     </div>
-    <a href="index.php?menu=adminPanel&accion=panelEmpresas" class="adm-btn">Volver al panel de empresas</a>
+    <a href="index.php?menu=adminPanel&accion=panelEmpresas" class="button">Volver al panel de empresas</a>
 </section>
 <?php $this->stop() ?>

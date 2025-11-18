@@ -6,13 +6,13 @@
     <link rel="shortcut icon" href="/assets/imagenes/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/assets/imagenes/favicon.ico" type="image/x-icon">
 
-    <?= $this->section('styles') ?>
+    <link rel="stylesheet" href="/assets/css/final.css">
     <?= $this->section('scripts') ?>
 
     <title><?= $this->e($title ?? 'Mi sitio web') ?></title>
 </head>
 
-<body>
+<body class="auth-page">
     <main>
         <?= $this->section('login-register') ?>
     </main>

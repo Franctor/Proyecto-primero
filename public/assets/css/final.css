@@ -1378,7 +1378,7 @@ textarea {
   border-radius: var(--radius);
   border: 1px solid var(--border);
   margin-bottom: var(--space-4);
-  box-shadow: 0 2px 4px var(--shadow) ;
+  box-shadow: 0 2px 4px var(--shadow);
 }
 
 .dashboard-title {
@@ -1421,19 +1421,44 @@ textarea {
    Tarjeta de oferta 
 ----------------------------- */
 .oferta-card {
+  /* Tus estilos actuales */
   background: var(--white);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: var(--space-3);
   box-shadow: 0 2px 8px var(--shadow);
-  transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  max-height: 278px; 
+  overflow: hidden; /* Oculta el contenido que sobrepasa */
 }
 
+.card-body {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.card-body p {
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-height: 40px; 
+  overflow: hidden;
+}
+
+.oferta-card h2 {
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-height: 40px; 
+  overflow: hidden;
+}
+
+
+
 .oferta-card:hover {
-  transform: translateY(-5px);
   box-shadow: 0 4px 12px var(--shadow);
   border-color: var(--primary);
 }
@@ -1489,7 +1514,6 @@ textarea {
   font-weight: 600;
   font-size: 0.9rem;
   width: 100%;
-  transition: all 0.2s ease;
 }
 
 /* Editar */
@@ -1504,12 +1528,33 @@ textarea {
 
 /* Eliminar */
 .card-actions form:last-child button {
-  background-color: var(--white);
-  color: var(--error-text);
-  border: 1px solid var(--error-text);
+  background-color: var(--accent);
+  color: var(--white);
 }
 
 .card-actions form:last-child button:hover {
+  background-color: var(--error-text);
+  color: var(--white);
+}
+
+.eliminarTodas {
+  margin-top: var(--space-4);
+  text-align: center;
+}
+
+.eliminarTodas button {
+  cursor: pointer;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius);
+  border: none;
+  font-weight: 600;
+  font-size: 1rem;
+  background-color: var(--white);
+  color: var(--dark);
+  border: 2px solid var(--accent);
+}
+
+.eliminarTodas button:hover {
   background-color: var(--error-text);
   color: var(--white);
 }
@@ -1566,6 +1611,7 @@ textarea {
     flex-direction: column;
   }
 }
+
 /* ============================
    FORMULARIO DE AÑADIR OFERTA
    ============================ */
@@ -1602,8 +1648,8 @@ textarea {
 .oferta-form select {
   width: 100%;
 }
-*/
-.oferta-form select[multiple] {
+
+*/ .oferta-form select[multiple] {
   min-height: 120px;
   padding: var(--space-1);
 }

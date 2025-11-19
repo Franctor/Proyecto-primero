@@ -85,19 +85,56 @@ class OfertaService
         $oferta = $this->getOfertaById($ofertaId);
         if ($oferta) {
             $fecha_oferta = new DateTime('today');
-            $fecha_fiin_oferta = $data['fecha_fiin_oferta'];
+            $fecha_fiin_oferta = new DateTime($data['fecha_fiin_oferta']);
             $titulo = trim($data['titulo']);
             $descripcion = trim($data['descripcion']);
-            $ciclosSeleccionados = $data['ciclosSeleccionados'] ?? []; //ME HE QUEDADO POR AQUI, HAY QUE ACTUALIZAR LOS CICLOS ASOCIADOS Y HACER TRANSACTION
+            $ciclosSeleccionados = $data['ciclosSeleccionados'] ?? [];
 
             $oferta->setFechaInicio($fecha_oferta);
             $oferta->setFechaFin($fecha_fiin_oferta);
             $oferta->setTitulo($titulo);
             $oferta->setDescripcion($descripcion);
 
-            $resultado = $this->repoOferta->update($oferta);
+            $resultado = $this->updateOferta($oferta, $ciclosSeleccionados);
         }
         return $resultado;
+    }
+
+    public function updateOferta($oferta, $ciclosSeleccionados)
+    {
+        $ok = false;
+        try {
+            $conn = Connection::getConnection();
+            $conn->beginTransaction();
+
+            if ($oferta) {
+
+
+                // Actualizar la oferta
+                $oferta = $this->repoOferta->update($oferta, $conn);
+
+                // Actualizar los ciclos asociados
+                //Tener en cuenta las solicitudes existentes asociadas...
+                // Primero, eliminar las asociaciones existentes
+                $this->repoOferta->deleteOfertasCiclosByOfertaId($oferta->getId(), $conn);
+
+                // Luego, agregar las nuevas asociaciones
+                if (!empty($ciclosSeleccionados)) {
+                    foreach ($ciclosSeleccionados as $cicloId) {
+                        $this->repoOferta->saveOfertaCiclo($oferta->getId(), $cicloId, $conn);
+                    }
+                }
+
+                $conn->commit();
+                $ok = true;
+            }
+        } catch (Exception $e) {
+            if ($conn) {
+                $conn->rollBack();
+            }
+            error_log("Error al actualizar oferta: " . $e->getMessage());
+        }
+        return $ok;
     }
 
     public function eliminarOferta($ofertaId)
@@ -123,6 +160,72 @@ class OfertaService
                 $conn->rollBack();
             }
             error_log("Error al eliminar oferta: " . $e->getMessage());
+        }
+
+        return $ok;
+    }
+
+    public function eliminarOfertasPasadas($empresaId)
+    {
+        $ok = false;
+        try {
+            $conn = Connection::getConnection();
+            $conn->beginTransaction();
+
+            $ofertasPasadas = $this->repoOferta->findPastByEmpresaId($empresaId);
+
+            $solicitudService = new SolicitudService();
+
+            foreach ($ofertasPasadas as $oferta) {
+                $ofertaId = $oferta->getId();
+
+                $solicitudService->eliminarSolicitudesByOfertaId($ofertaId, $conn);
+
+                $this->repoOferta->deleteOfertasCiclosByOfertaId($ofertaId, $conn);
+
+                $this->repoOferta->delete($ofertaId, $conn);
+            }
+
+            $conn->commit();
+            $ok = true;
+        } catch (Exception $e) {
+            if ($conn) {
+                $conn->rollBack();
+            }
+            error_log("Error al eliminar ofertas pasadas: " . $e->getMessage());
+        }
+
+        return $ok;
+    }
+
+    public function eliminarOfertasActivas($empresaId)
+    {
+        $ok = false;
+        try {
+            $conn = Connection::getConnection();
+            $conn->beginTransaction();
+
+            $ofertasActivas = $this->repoOferta->findActiveByEmpresaId($empresaId);
+
+            $solicitudService = new SolicitudService();
+
+            foreach ($ofertasActivas as $oferta) {
+                $ofertaId = $oferta->getId();
+
+                $solicitudService->eliminarSolicitudesByOfertaId($ofertaId, $conn);
+
+                $this->repoOferta->deleteOfertasCiclosByOfertaId($ofertaId, $conn);
+
+                $this->repoOferta->delete($ofertaId, $conn);
+            }
+
+            $conn->commit();
+            $ok = true;
+        } catch (Exception $e) {
+            if ($conn) {
+                $conn->rollBack();
+            }
+            error_log("Error al eliminar ofertas activas: " . $e->getMessage());
         }
 
         return $ok;

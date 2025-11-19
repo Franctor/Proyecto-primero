@@ -17,8 +17,8 @@
 
                 <div class="card-body">
                     <p><strong>Descripción:</strong> <?= $this->e($oferta->getDescripcion()) ?></p>
-                    <p><strong>Fecha inicio:</strong> <?= $this->e($oferta->getFechaInicio()) ?></p>
-                    <p><strong>Fecha fin:</strong> <?= $this->e($oferta->getFechaFin()) ?></p>
+                    <p><strong>Fecha inicio:</strong> <?= $this->e($oferta->getFechaInicio()->format('d/m/Y')) ?></p>
+                    <p><strong>Fecha fin:</strong> <?= $this->e($oferta->getFechaFin()->format('d/m/Y')) ?></p>
                 </div>
 
                 <?php if ($accion === 'activas'): ?>
@@ -37,12 +37,33 @@
                             <button>Eliminar</button>
                         </form>
                     </div>
+                <?php else: ?>
+                    <div class="card-actions">
+                        <form action="index.php?menu=ofertas" method="POST"
+                            onsubmit="return confirm('¿Seguro que quieres eliminar esta oferta?');">
+                            <input type="hidden" name="accion" value="eliminarPasada">
+                            <input type="hidden" name="oferta_id" value="<?= $oferta->getId() ?>">
+                            <button>Eliminar</button>
+                        </form>
+                    </div>
                 <?php endif; ?>
-
             </article>
         <?php endforeach; ?>
 
     </div>
+    <?php if (!empty($ofertas) && $accion === 'pasadas'): ?>
+        <form action="index.php?menu=ofertas" method="POST" class="eliminarTodas"
+            onsubmit="return confirm('¿Seguro que quieres eliminar todas las ofertas pasadas?');">
+            <input type="hidden" name="accion" value="eliminarPasadas">
+            <button>Eliminar todas las ofertas pasadas</button>
+        </form>
+    <?php else: ?>
+        <form action="index.php?menu=ofertas" method="POST" class="eliminarTodas"
+            onsubmit="return confirm('¿Seguro que quieres eliminar todas las ofertas activas?');">
+            <input type="hidden" name="accion" value="eliminarActivas">
+            <button>Eliminar todas las ofertas activas</button>
+        </form>
+    <?php endif; ?>
 <?php endif; ?>
 
 <?php $this->end('ofertasEmpresa') ?>

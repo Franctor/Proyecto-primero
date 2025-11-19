@@ -29,11 +29,11 @@ class RepoOferta
 
             $stmt->bindValue(
                 ':fecha_oferta',
-                $fechaInicio instanceof \DateTime ? $fechaInicio->format('Y-m-d') : $fechaInicio
+                $fechaInicio instanceof DateTime ? $fechaInicio->format('Y-m-d') : $fechaInicio
             );
             $stmt->bindValue(
                 ':fecha_fin_oferta',
-                $fechaFin instanceof \DateTime ? $fechaFin->format('Y-m-d') : $fechaFin
+                $fechaFin instanceof DateTime ? $fechaFin->format('Y-m-d') : $fechaFin
             );
             $stmt->bindValue(':descripcion', $oferta->getDescripcion());
             $stmt->bindValue(':titulo', $oferta->getTitulo());
@@ -115,21 +115,32 @@ class RepoOferta
         return $ofertas;
     }
 
-    public function update($oferta)
+    public function update($oferta, $conn = null)
     {
         try {
-            $conn = Connection::getConnection();
+            if ($conn === null) {
+                $conn = Connection::getConnection();
+            }
             $stmt = $conn->prepare("
                 UPDATE oferta
                 SET fecha_oferta = :fecha_oferta,
-                    fecha_fiin_oferta = :fecha_fin_oferta,
+                    fecha_fiin_oferta = :fecha_fiin_oferta,
                     descripcion = :descripcion,
                     titulo = :titulo
                 WHERE id = :id
             ");
 
-            $stmt->bindValue(':fecha_oferta', $oferta->getFechaInicio());
-            $stmt->bindValue(':fecha_fin_oferta', $oferta->getFechaFin());
+            // Convertir DateTime a string en formato 'Y-m-d'
+            $fechaInicio = $oferta->getFechaInicio();
+            $fechaFin = $oferta->getFechaFin();
+            $stmt->bindValue(
+                ':fecha_oferta',
+                $fechaInicio instanceof DateTime ? $fechaInicio->format('Y-m-d') : $fechaInicio
+            );
+            $stmt->bindValue(
+                ':fecha_fiin_oferta',
+                $fechaFin instanceof DateTime ? $fechaFin->format('Y-m-d') : $fechaFin
+            );
             $stmt->bindValue(':descripcion', $oferta->getDescripcion());
             $stmt->bindValue(':titulo', $oferta->getTitulo());
             $stmt->bindValue(':id', $oferta->getId(), PDO::PARAM_INT);

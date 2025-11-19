@@ -17,9 +17,18 @@
 <body>
     <?= $this->insert('partials/header') ?>
 
-    <main>
-        <?= $this->section('body') ?>
-    </main>
+    <div class="dashboard-ofertas">
+
+        <aside class="dashboard-sidebar">
+            <?= $this->insert('partials/ofertasSidebar') ?>
+        </aside>
+
+        <main class="dashboard-main">
+            <?= $this->section('ofertasEmpresa') ?>
+        </main>
+
+    </div>
 
     <?= $this->insert('partials/footer') ?>
+
 </body>

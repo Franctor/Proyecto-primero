@@ -4,15 +4,21 @@ class Oferta {
     private $id;
     private $fecha_inicio;
     private $fecha_fin;
+    private $descripcion;
+    private $titulo;
     private $empresa;
     private $solicitudes;
     private $ciclos;
 
+    
+
     // Constructor
-    public function __construct($fecha_inicio, $fecha_fin, $empresa = null, $solicitudes = [], $ciclos = []) {
+    public function __construct($fecha_inicio, $fecha_fin, $descripcion, $titulo, $empresa = null, $solicitudes = [], $ciclos = []) {
         $this->id = null;
         $this->fecha_inicio = $fecha_inicio;
         $this->fecha_fin = $fecha_fin;
+        $this->descripcion = $descripcion;
+        $this->titulo = $titulo;
         $this->empresa = $empresa;
         $this->solicitudes = $solicitudes;
         $this->ciclos = $ciclos;
@@ -42,6 +48,12 @@ class Oferta {
     public function getCiclos() {
         return $this->ciclos;
     }
+    public function getTitulo() {
+        return $this->titulo;
+    }
+    public function getDescripcion() {
+        return $this->descripcion;
+    }
 
     // --- Setters ---
     public function setId($id) {
@@ -68,6 +80,13 @@ class Oferta {
         $this->ciclos = $ciclos;
     }
 
+    public function setTitulo($titulo) {
+        $this->titulo = $titulo;
+    }
+
+    public function setDescripcion($descripcion) {
+        $this->descripcion = $descripcion;
+    }
     // --- Métodos de gestión ---
     public function addSolicitud($solicitud) {
         $this->solicitudes[] = $solicitud;

@@ -1,6 +1,7 @@
 <?php
 namespace helpers;
 
+use DateTime;
 use repositories\RepoUsuario;
 use repositories\RepoAlumno;
 
@@ -8,7 +9,7 @@ class Validator
 {
     // ===================== Validaciones simples =====================
 
-    public function validarNombre($nombre)
+    private function validarNombre($nombre)
     {
         $errores = [];
         $nombre = trim($nombre);
@@ -22,7 +23,7 @@ class Validator
         return $errores;
     }
 
-    public function validarDireccion($direccion)
+    private function validarDireccion($direccion)
     {
         $errores = [];
         $direccion = trim($direccion);
@@ -36,7 +37,7 @@ class Validator
         return $errores;
     }
 
-    public function validarTelefono($telefono)
+    private function validarTelefono($telefono)
     {
         $errores = [];
         $telefono = trim($telefono);
@@ -64,7 +65,7 @@ class Validator
         return $errores;
     }
 
-    public function validarPassword($password)
+    private function validarPassword($password)
     {
         $errores = [];
 
@@ -94,7 +95,7 @@ class Validator
         return $errores;
     }
 
-    public function validarNumeroEntero($numero)
+    private function validarNumeroEntero($numero)
     {
         $errores = [];
         $numero = trim($numero);
@@ -106,7 +107,7 @@ class Validator
         return $errores;
     }
 
-    public function validarDescripcion($descripcion, $maxLength = 500)
+    private function validarDescripcion($descripcion, $maxLength = 500)
     {
         $errores = [];
         $descripcion = trim($descripcion);
@@ -120,7 +121,7 @@ class Validator
         return $errores;
     }
 
-    public function validarFoto($foto)
+    private function validarFoto($foto)
     {
         $errores = [];
         $tiposFoto = ['image/jpeg', 'image/png', 'image/webp'];
@@ -139,7 +140,7 @@ class Validator
         return $errores;
     }
 
-    public function validarCV($cv)
+    private function validarCV($cv)
     {
         $errores = [];
         $tiposCV = ['application/pdf', 'application/x-pdf'];
@@ -158,7 +159,7 @@ class Validator
         return $errores;
     }
 
-    public function validarArrayCiclos($ciclos)
+    private function validarArrayCiclos($ciclos)
     {
         $errores = [];
         $numerosVistos = [];
@@ -182,7 +183,7 @@ class Validator
         return $errores;
     }
 
-    public function validarLocalidad($localidadId)
+    private function validarLocalidad($localidadId)
     {
         $errores = [];
         $localidadId = trim($localidadId);
@@ -194,7 +195,7 @@ class Validator
         return $errores;
     }
 
-    public function validarProvincia($provinciaId)
+    private function validarProvincia($provinciaId)
     {
         $errores = [];
         $provinciaId = trim($provinciaId);
@@ -374,9 +375,9 @@ class Validator
         }
 
         // Nombre empresa
-        $erroresNombreEmpresa = $this->validarNombre($input['nombre_empresa'] ?? '');
+        $erroresNombreEmpresa = $this->validarNombre($input['nombre'] ?? '');
         if (!empty($erroresNombreEmpresa)) {
-            $errores['nombre_empresa'] = $erroresNombreEmpresa;
+            $errores['nombre'] = $erroresNombreEmpresa;
         }
 
         // Teléfono
@@ -501,7 +502,8 @@ class Validator
         return $errores;
     }
 
-    public function validarEmpresaAdminEditar($data, $nombreUsuario) {
+    public function validarEmpresaAdminEditar($data, $nombreUsuario)
+    {
         $errores = [];
         // Email
         $erroresEmail = $this->validarCorreoElectronico($data['email'] ?? '');
@@ -539,10 +541,87 @@ class Validator
             $errores['telefono_persona'] = $erroresTelefonoPersona;
         }
 
-        if(isset($data["email"]) && $data["email"] !== $nombreUsuario) {
+        if (isset($data["email"]) && $data["email"] !== $nombreUsuario) {
             if ($this->correoExiste($data['email'] ?? '')) {
                 $errores['repetido'][] = "El correo electrónico ya está registrado.";
             }
+        }
+
+        return $errores;
+    }
+
+    public function validarOferta($data)
+    {
+        $errores = [];
+
+        // Título
+        $erroresTitulo = $this->validarTitulo(trim($data['titulo'] ?? ''));
+        if (!empty($erroresTitulo)) {
+            $errores['titulo'] = $erroresTitulo;
+        }
+
+        // Descripción
+        $erroresDescripcion = $this->validarDescripcion(trim($data['descripcion'] ?? ''), 1000);
+        if (!empty($erroresDescripcion)) {
+            $errores['descripcion'] = $erroresDescripcion;
+        }
+
+        //fecha fin oferta
+        if (!isset($data['fecha_fiin_oferta']) || empty($data['fecha_fiin_oferta'])) {
+            $errores['fecha_fiin_oferta'][] = "La fecha de fin de oferta es obligatoria.";
+        } else {
+            $erroresFechaFinOferta = $this->fechaPosterior($data['fecha_fiin_oferta'] ?? '');
+            if (!empty($erroresFechaFinOferta)) {
+                $errores['fecha_fiin_oferta'] = $erroresFechaFinOferta;
+            }
+        }
+
+        // Ciclos seleccionados
+        $erroresCiclos = $this->validarCiclosSeleccionados($data['ciclosSeleccionados'] ?? []);
+        if (!empty($erroresCiclos)) {
+            $errores['ciclosSeleccionados'] = $erroresCiclos;
+        }
+
+        return $errores;
+    }
+
+
+    private function validarTitulo($titulo)
+    {
+        $errores = [];
+        $titulo = trim($titulo);
+
+        if (empty($titulo)) {
+            $errores[] = "El título no puede estar vacío.";
+        } elseif (strlen($titulo) < 5 || strlen($titulo) > 255) {
+            $errores[] = "El título debe tener entre 5 y 255 caracteres.";
+        }
+
+        return $errores;
+    }
+
+    private function fechaPosterior($fecha)
+    {
+        $errores = [];
+        try {
+            $fechaActual = new DateTime('today');
+            $fechaIngresada = new DateTime($fecha);
+
+            if ($fechaIngresada <= $fechaActual) {
+                $errores[] = "La fecha debe ser posterior a la fecha actual.";
+            }
+        } catch (\Exception $e) {
+            $errores[] = "El formato de la fecha es inválido.";
+        }
+        return $errores;
+    }
+
+    private function validarCiclosSeleccionados($ciclos)
+    {
+        $errores = [];
+
+        if (empty($ciclos)) {
+            $errores[] = "Debe seleccionar al menos un ciclo.";
         }
 
         return $errores;

@@ -5,10 +5,14 @@ use repositories\RepoCiclo;
 use helpers\Converter;
 class CicloService
 {
+    private $repoCiclo;
+    public function __construct()
+    {
+        $this->repoCiclo = new RepoCiclo();
+    }
     public function getCiclos()
     {
-        $repoCiclo = new RepoCiclo();
-        $ciclos = $repoCiclo->findAll(true);
+        $ciclos = $this->repoCiclo->findAll(true);
         if (!empty($ciclos)) {
             $converter = new Converter();
             $ciclos = $converter->convertirCiclosAJson($ciclos);
@@ -18,8 +22,7 @@ class CicloService
 
     public function getCiclo($idCiclo)
     {
-        $repoCiclo = new RepoCiclo();
-        $ciclo = $repoCiclo->findById($idCiclo, true);
+        $ciclo = $this->repoCiclo->findById($idCiclo, true);
         if ($ciclo) {
             $converter = new Converter();
             $ciclo = $converter->convertirCicloAJson($ciclo);

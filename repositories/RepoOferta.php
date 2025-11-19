@@ -1,6 +1,7 @@
 <?php
 namespace repositories;
 
+use DateTime;
 use PDO;
 use Exception;
 use models\Oferta;
@@ -10,18 +11,32 @@ use repositories\RepoSolicitud;
 use repositories\RepoCiclo;
 class RepoOferta
 {
-    public function save($oferta)
+    public function save($oferta, $conn = null)
     {
         try {
-            $conn = Connection::getConnection();
+            if ($conn === null) {
+                $conn = Connection::getConnection();
+            }
             $stmt = $conn->prepare("
-                INSERT INTO oferta 
-                (fecha_oferta, fecha_fiin_oferta, empresa_id)
-                VALUES (:fecha_oferta, :fecha_fin_oferta, :empresa_id)
-            ");
+            INSERT INTO oferta 
+            (fecha_oferta, fecha_fiin_oferta, descripcion, titulo, empresa_id)
+            VALUES (:fecha_oferta, :fecha_fin_oferta, :descripcion, :titulo, :empresa_id)
+        ");
 
-            $stmt->bindValue(':fecha_oferta', $oferta->getFechaInicio());
-            $stmt->bindValue(':fecha_fin_oferta', $oferta->getFechaFin());
+            // Convertir DateTime a string en formato 'Y-m-d'
+            $fechaInicio = $oferta->getFechaInicio();
+            $fechaFin = $oferta->getFechaFin();
+
+            $stmt->bindValue(
+                ':fecha_oferta',
+                $fechaInicio instanceof \DateTime ? $fechaInicio->format('Y-m-d') : $fechaInicio
+            );
+            $stmt->bindValue(
+                ':fecha_fin_oferta',
+                $fechaFin instanceof \DateTime ? $fechaFin->format('Y-m-d') : $fechaFin
+            );
+            $stmt->bindValue(':descripcion', $oferta->getDescripcion());
+            $stmt->bindValue(':titulo', $oferta->getTitulo());
             $stmt->bindValue(':empresa_id', $oferta->getEmpresa()->getId(), PDO::PARAM_INT);
 
             $stmt->execute();
@@ -32,6 +47,27 @@ class RepoOferta
         }
 
         return $oferta;
+    }
+
+    public function saveOfertaCiclo($ofertaId, $cicloId, $conn = null)
+    {
+        try {
+            if ($conn === null) {
+                $conn = Connection::getConnection();
+            }
+            $stmt = $conn->prepare("
+                INSERT INTO ofertas_ciclos 
+                (oferta_id, ciclo_id, required)
+                VALUES (:oferta_id, :ciclo_id, 1)
+            ");
+
+            $stmt->bindValue(':oferta_id', $ofertaId, PDO::PARAM_INT);
+            $stmt->bindValue(':ciclo_id', $cicloId, PDO::PARAM_INT);
+
+            $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Error al guardar oferta_ciclo: " . $e->getMessage());
+        }
     }
 
     public function findById($id, $loadEmpresa = false, $loadSolicitudes = false, $loadCiclos = false)
@@ -86,12 +122,16 @@ class RepoOferta
             $stmt = $conn->prepare("
                 UPDATE oferta
                 SET fecha_oferta = :fecha_oferta,
-                    fecha_fiin_oferta = :fecha_fin_oferta
+                    fecha_fiin_oferta = :fecha_fin_oferta,
+                    descripcion = :descripcion,
+                    titulo = :titulo
                 WHERE id = :id
             ");
 
             $stmt->bindValue(':fecha_oferta', $oferta->getFechaInicio());
             $stmt->bindValue(':fecha_fin_oferta', $oferta->getFechaFin());
+            $stmt->bindValue(':descripcion', $oferta->getDescripcion());
+            $stmt->bindValue(':titulo', $oferta->getTitulo());
             $stmt->bindValue(':id', $oferta->getId(), PDO::PARAM_INT);
 
             $stmt->execute();
@@ -103,12 +143,14 @@ class RepoOferta
         return $oferta;
     }
 
-    public function delete($id)
+    public function delete($id, $conn = null)
     {
         $result = false;
 
         try {
-            $conn = Connection::getConnection();
+            if ($conn === null) {
+                $conn = Connection::getConnection();
+            }
             $stmt = $conn->prepare("DELETE FROM oferta WHERE id = :id");
             $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $result = $stmt->execute();
@@ -132,6 +174,24 @@ class RepoOferta
             $result = $stmt->execute();
         } catch (Exception $e) {
             error_log("Error al eliminar ofertas por empresa ID: " . $e->getMessage());
+        }
+
+        return $result;
+    }
+
+    public function deleteOfertasCiclosByOfertaId($ofertaId, $conn = null)
+    {
+        $result = false;
+
+        try {
+            if ($conn === null) {
+                $conn = Connection::getConnection();
+            }
+            $stmt = $conn->prepare("DELETE FROM ofertas_ciclos WHERE oferta_id = :oferta_id");
+            $stmt->bindValue(':oferta_id', $ofertaId, PDO::PARAM_INT);
+            $result = $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Error al eliminar ofertas_ciclos por oferta ID: " . $e->getMessage());
         }
 
         return $result;
@@ -191,19 +251,71 @@ class RepoOferta
         return $ofertas;
     }
 
+    public function findActiveByEmpresaId($empresaId, $loadEmpresa = false, $loadSolicitudes = false, $loadCiclos = false)
+    {
+        $ofertas = [];
+
+        try {
+            $conn = Connection::getConnection();
+            $stmt = $conn->prepare("SELECT * FROM oferta WHERE empresa_id = :empresa_id AND fecha_fiin_oferta >= CURDATE() ORDER BY id DESC");
+            $stmt->bindValue(':empresa_id', $empresaId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $repoEmpresa = $loadEmpresa ? new RepoEmpresa() : null;
+            $repoSolicitud = $loadSolicitudes ? new RepoSolicitud() : null;
+            $repoCiclo = $loadCiclos ? new RepoCiclo() : null;
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $ofertas[] = $this->mapRowToOferta($row, $repoEmpresa, $repoSolicitud, $repoCiclo);
+            }
+        } catch (Exception $e) {
+            error_log("Error al obtener ofertas activas por empresa ID: " . $e->getMessage());
+        }
+
+        return $ofertas;
+    }
+
+    public function findPastByEmpresaId($empresaId, $loadEmpresa = false, $loadSolicitudes = false, $loadCiclos = false)
+    {
+        $ofertas = [];
+
+        try {
+            $conn = Connection::getConnection();
+            $stmt = $conn->prepare("SELECT * FROM oferta WHERE empresa_id = :empresa_id AND fecha_fiin_oferta < CURDATE() ORDER BY id DESC");
+            $stmt->bindValue(':empresa_id', $empresaId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $repoEmpresa = $loadEmpresa ? new RepoEmpresa() : null;
+            $repoSolicitud = $loadSolicitudes ? new RepoSolicitud() : null;
+            $repoCiclo = $loadCiclos ? new RepoCiclo() : null;
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $ofertas[] = $this->mapRowToOferta($row, $repoEmpresa, $repoSolicitud, $repoCiclo);
+            }
+        } catch (Exception $e) {
+            error_log("Error al obtener ofertas pasadas por empresa ID: " . $e->getMessage());
+        }
+
+        return $ofertas;
+    }
+
     /**
      * Mapea una fila de la base de datos a un objeto Oferta.
      */
     private function mapRowToOferta($row, $repoEmpresa = null, $repoSolicitud = null, $repoCiclo = null)
     {
         $empresa = null;
-        if ($repoEmpresa ) {
+        if ($repoEmpresa) {
             $empresa = $repoEmpresa->findById($row['empresa_id']);
         }
 
+        $fecha = new DateTime($row['fecha_oferta']);
+        $fecha_fin = new DateTime($row['fecha_fiin_oferta']);
         $oferta = new Oferta(
-            $row['fecha_oferta'],
-            $row['fecha_fiin_oferta'],
+            $fecha,
+            $fecha_fin,
+            $row['descripcion'],
+            $row['titulo'],
             $empresa
         );
         $oferta->setId($row['id']);

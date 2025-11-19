@@ -3,10 +3,7 @@
     'metaDescription' => 'Conecta el talento con las mejores empresas'
 ]); ?>
 
-<?php $this->start('styles') ?>
-<link rel="stylesheet" href="/assets/css/final.css">
-<?php $this->stop() ?>
-
+<?php $this->start('body') ?>
 
 <section class="hero">
     <div class="hero-content">
@@ -29,7 +26,6 @@
     </div>
 </section>
 
-<!-- El resto de tu código se mantiene igual -->
 <section class="empresas">
     <h2 class="section-title">Empresas que ya confían en nosotros</h2>
     <div class="empresas-grid">
@@ -118,3 +114,4 @@
     <p class="contact-text">¿Tienes dudas o sugerencias? Escríbenos y te ayudaremos lo antes posible.</p>
     <button aria-label="Ir a la página de contacto" class="button contact-button">Contacta</button>
 </section>
+<?php $this->end('body') ?>

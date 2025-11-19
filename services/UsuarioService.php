@@ -3,8 +3,13 @@ namespace services;
 use repositories\RepoUsuario;
 class UsuarioService
 {
-    public function getUserByNombreUsuario($nombre_usuario){
-        $repoUsuario = new RepoUsuario();
-        return $repoUsuario->findByNombreUsuario($nombre_usuario);
+    private $userRepo;
+    public function __construct()
+    {
+        $this->userRepo = new RepoUsuario();
+    }
+    public function getUserByNombreUsuario($nombre_usuario)
+    {
+        return $this->userRepo->findByNombreUsuario($nombre_usuario);
     }
 }

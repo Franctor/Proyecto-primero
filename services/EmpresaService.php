@@ -11,6 +11,10 @@ use models\Empresa;
 use Exception;
 class EmpresaService
 {
+    private $repoEmpresa;
+    public function __construct() {
+        $this->repoEmpresa = new RepoEmpresa();
+    }
     public function registrarEmpresa($inputs, $files = [])
     {
         // === Limpieza de datos ===
@@ -55,8 +59,8 @@ class EmpresaService
             $nombre_persona,
             $telefono_persona,
             $logoRuta,
-            0,
-            $descripcion
+            $descripcion,
+            0
         );
 
         // === Registrar en base de datos ===
@@ -74,7 +78,6 @@ class EmpresaService
             $conn->beginTransaction();
 
             $repoUsuario = new RepoUsuario();
-            $repoEmpresa = new RepoEmpresa();
 
             // === Guardar usuario ===
             $usuario = $repoUsuario->saveConConexion($usuario, $conn);
@@ -84,7 +87,7 @@ class EmpresaService
 
             // === Asignar usuario a la empresa y guardar ===
             $empresa->setUsuario($usuario);
-            $empresa = $repoEmpresa->saveConConexion($empresa, $conn);
+            $empresa = $this->repoEmpresa->save($empresa, $conn);
             if (!$empresa || !$empresa->getId()) {
                 throw new Exception("Error al guardar empresa");
             }
@@ -104,14 +107,12 @@ class EmpresaService
 
     public function obtenerTodasEmpresas()
     {
-        $repoEmpresa = new RepoEmpresa();
-        return $repoEmpresa->findAll();
+        return $this->repoEmpresa->findAll();
     }
 
     public function getEmpresaById($idEmpresa)
     {
-        $repoEmpresa = new RepoEmpresa();
-        return $repoEmpresa->findById($idEmpresa, true);
+        return $this->repoEmpresa->findById($idEmpresa, true);
     }
 
     public function eliminarEmpresa($empresaId)
@@ -122,13 +123,12 @@ class EmpresaService
             $conn = Connection::getConnection();
             $conn->beginTransaction();
 
-            $repoEmpresa = new RepoEmpresa();
             $repoUsuario = new RepoUsuario();
             $repoToken = new RepoToken();
             $repoOferta = new RepoOferta();
 
             // Obtener usuario asociado al alumno
-            $empresa = $repoEmpresa->findById($empresaId, true);
+            $empresa = $this->repoEmpresa->findById($empresaId, true);
             if (!$empresa) {
                 throw new Exception("Empresa no encontrada con ID $empresaId");
             }
@@ -138,7 +138,7 @@ class EmpresaService
             // Eliminar en orden lógico
             $repoToken->deleteByUsuarioId($usuarioId, $conn);
             $repoOferta->deleteByEmpresaId($empresaId, $conn);
-            $repoEmpresa->delete($empresaId, $conn);
+            $this->repoEmpresa->delete($empresaId, $conn);
             $repoUsuario->delete($usuarioId, $conn);
 
             $conn->commit();
@@ -161,8 +161,7 @@ class EmpresaService
     {
         $resultado = null;
 
-        $repoEmpresa = new RepoEmpresa();
-        $empresa = $repoEmpresa->findById($empresaId, true);
+        $empresa = $this->repoEmpresa->findById($empresaId, true);
 
         if ($empresa) {
             $usuario = $empresa->getUsuario();
@@ -206,8 +205,6 @@ class EmpresaService
             $conn->beginTransaction();
 
             $repoUsuario = new RepoUsuario();
-            $repoEmpresa = new RepoEmpresa();
-
             //Actualizar usuario
             $usuario = $repoUsuario->updateConConexion($usuario, $conn);
             if (!$usuario || !$usuario->getId()) {
@@ -216,7 +213,7 @@ class EmpresaService
 
             //Asignar usuario al alumno y actualizar
             $empresa->setUsuario($usuario);
-            $empresa = $repoEmpresa->update($empresa, $conn);
+            $empresa = $this->repoEmpresa->update($empresa, $conn);
             if (!$empresa || !$empresa->getId()) {
                 throw new Exception("Error al actualizar empresa");
             } 
@@ -232,5 +229,10 @@ class EmpresaService
         }
 
         return $resultado;
+    }
+
+    public function getEmpresaByUsuarioId($usuarioId)
+    {
+        return $this->repoEmpresa->findByUsuarioId($usuarioId,true,true);
     }
 }

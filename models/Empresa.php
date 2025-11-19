@@ -14,7 +14,7 @@ class Empresa
     private $usuario;
     private $ofertas;
 
-    public function __construct($nombre, $telefono, $direccion, $nombre_persona, $telefono_persona, $logo, $verificada=0, $descripcion, $usuario = null, $ofertas = [])
+    public function __construct($nombre, $telefono, $direccion, $nombre_persona, $telefono_persona, $logo, $descripcion, $verificada=0, $usuario = null, $ofertas = [])
     {
         $this->id = null;
         $this->nombre = $nombre;

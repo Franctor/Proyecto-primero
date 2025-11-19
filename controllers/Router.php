@@ -34,6 +34,10 @@ class Router
                     $controller = new AuthController($templates);
                     $controller->logout();
                     break;
+                case 'ofertas':
+                    $controller = new OfertaController($templates);
+                    $controller->ofertas();
+                    break;
                 default:
                     header('Location: /');
                     exit;

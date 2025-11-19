@@ -195,6 +195,8 @@ CREATE TABLE IF NOT EXISTS `mydb`.`oferta` (
   `fecha_oferta` DATETIME NOT NULL,
   `fecha_fiin_oferta` DATETIME NOT NULL,
   `empresa_id` INT NOT NULL,
+  `descripcion` VARCHAR(500) NOT NULL,
+  `titulo` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_oferta_empresa1_idx` (`empresa_id` ASC) VISIBLE,
   CONSTRAINT `fk_oferta_empresa1`

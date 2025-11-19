@@ -187,9 +187,9 @@
 
         <?php elseif ($tipo === 'empresa'): ?>
             <div class="form-group">
-                <label for="nombre_empresa">Nombre de la empresa</label>
-                <input type="text" name="nombre_empresa" id="nombre_empresa"
-                    value="<?= $this->e($_POST['nombre_empresa'] ?? '') ?>">
+                <label for="nombre">Nombre de la empresa</label>
+                <input type="text" name="nombre" id="nombre"
+                    value="<?= $this->e($_POST['nombre'] ?? '') ?>">
                 <?php if (!empty($errores['nombre_empresa'])): ?>
                     <p class="error"><?= implode('<br>', $errores['nombre_empresa']) ?></p>
                 <?php endif; ?>

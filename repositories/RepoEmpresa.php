@@ -10,10 +10,12 @@ use repositories\RepoOferta;
 
 class RepoEmpresa
 {
-    public function save($empresa)
+    public function save($empresa, $conn = null)
     {
         try {
-            $conn = Connection::getConnection();
+            if ($conn === null) {
+                $conn = Connection::getConnection();
+            }
             $stmt = $conn->prepare("
                 INSERT INTO empresa 
                 (nombre, telefono, direccion, nombre_persona, telefono_persona, logo, verificada, descripcion, usuario_id)
@@ -40,35 +42,8 @@ class RepoEmpresa
         return $empresa;
     }
 
-    public function saveConConexion($empresa, $conn)
-    {
-        try {
-            $stmt = $conn->prepare("
-                INSERT INTO empresa 
-                (nombre, telefono, direccion, nombre_persona, telefono_persona, logo, verificada, descripcion, usuario_id)
-                VALUES (:nombre, :telefono, :direccion, :nombre_persona, :telefono_persona, :logo, :verificada, :descripcion, :usuario_id)
-            ");
 
-            $stmt->bindValue(':nombre', $empresa->getNombre());
-            $stmt->bindValue(':telefono', $empresa->getTelefono());
-            $stmt->bindValue(':direccion', $empresa->getDireccion());
-            $stmt->bindValue(':nombre_persona', $empresa->getNombrePersona());
-            $stmt->bindValue(':telefono_persona', $empresa->getTelefonoPersona());
-            $stmt->bindValue(':logo', $empresa->getFoto());
-            $stmt->bindValue(':verificada', $empresa->getVerificada(), PDO::PARAM_INT);
-            $stmt->bindValue(':descripcion', $empresa->getDescripcion());
-            $stmt->bindValue(':usuario_id', $empresa->getUsuario() ? $empresa->getUsuario()->getId() : null, PDO::PARAM_INT);
 
-            $stmt->execute();
-            $empresa->setId($conn->lastInsertId());
-        } catch (Exception $e) {
-            error_log("Error al guardar empresa: " . $e->getMessage());
-            $empresa = null;
-        }
-
-        return $empresa;
-    }
-    
     public function findById($id, $loadUsuario = false, $loadOfertas = false)
     {
         $empresa = null;
@@ -82,7 +57,7 @@ class RepoEmpresa
 
             if ($row) {
                 $repoUsuario = $loadUsuario ? new RepoUsuario() : null;
-                $repoOferta  = $loadOfertas ? new RepoOferta()  : null;
+                $repoOferta = $loadOfertas ? new RepoOferta() : null;
 
                 $empresa = $this->mapRowToEmpresa($row, $repoUsuario, $repoOferta);
             }
@@ -106,7 +81,7 @@ class RepoEmpresa
 
             if ($row) {
                 $repoUsuario = new RepoUsuario();
-                $repoOferta  = $loadOfertas ? new RepoOferta()  : null;
+                $repoOferta = $loadOfertas ? new RepoOferta() : null;
 
                 $empresa = $this->mapRowToEmpresa($row, $repoUsuario, $repoOferta);
             }
@@ -125,7 +100,7 @@ class RepoEmpresa
             $stmt = $conn->query("SELECT * FROM empresa ORDER BY id DESC");
 
             $repoUsuario = $loadUsuario ? new RepoUsuario() : null;
-            $repoOferta  = $loadOfertas ? new RepoOferta()  : null;
+            $repoOferta = $loadOfertas ? new RepoOferta() : null;
 
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $empresas[] = $this->mapRowToEmpresa($row, $repoUsuario, $repoOferta);
@@ -137,6 +112,29 @@ class RepoEmpresa
         return $empresas;
     }
 
+    public function findByUsuarioId($usuarioId, $loadUsuario = false, $loadOfertas = false)
+    {
+        $empresa = null;
+
+        try {
+            $conn = Connection::getConnection();
+            $stmt = $conn->prepare("SELECT * FROM empresa WHERE usuario_id = :usuario_id");
+            $stmt->bindValue(':usuario_id', $usuarioId, PDO::PARAM_INT);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($row) {
+                $repoUsuario = $loadUsuario ? new RepoUsuario() : null;
+                $repoOferta = $loadOfertas ? new RepoOferta() : null;
+
+                $empresa = $this->mapRowToEmpresa($row, $repoUsuario, $repoOferta);
+            }
+        } catch (Exception $e) {
+            error_log("Error al buscar empresa por usuario ID: " . $e->getMessage());
+        }
+
+        return $empresa;
+    }
     public function update($empresa, $conn = null)
     {
         try {
@@ -199,7 +197,7 @@ class RepoEmpresa
     private function mapRowToEmpresa($row, $repoUsuario = null, $repoOferta = null)
     {
         $usuario = null;
-        if ($repoUsuario ) {
+        if ($repoUsuario) {
             $usuario = $repoUsuario->findById($row['usuario_id']);
         }
 
@@ -210,8 +208,8 @@ class RepoEmpresa
             $row['nombre_persona'],
             $row['telefono_persona'],
             $row['logo'],
-            $row['verificada'],
             $row['descripcion'],
+            $row['verificada'],
             $usuario
         );
         $empresa->setId($row['id']);

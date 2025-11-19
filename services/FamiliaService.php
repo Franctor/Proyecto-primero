@@ -4,10 +4,14 @@ use repositories\RepoFamilia;
 use helpers\Converter;
 class FamiliaService
 {
+    private $repoFamilia;
+    public function __construct()
+    {
+        $this->repoFamilia = new RepoFamilia();
+    }
     public function getFamilias()
     {
-        $repoFamilia = new RepoFamilia();
-        $familias = $repoFamilia->findAll(true);
+        $familias = $this->repoFamilia->findAll(true);
         if (!empty($familias)) {
             $converter = new Converter();
             $familias = $converter->convertirFamiliasAJson($familias);
@@ -17,8 +21,7 @@ class FamiliaService
 
     public function getFamilia($idFamilia)
     {
-        $repoFamilia = new RepoFamilia();
-        $familia = $repoFamilia->findById($idFamilia, true);
+        $familia = $this->repoFamilia->findById($idFamilia, true);
         if ($familia) {
             $converter = new Converter();
             $familia = $converter->convertirFamiliaAJson($familia);

@@ -13,6 +13,10 @@ use models\Alumno;
 use Exception;
 class AlumnoService
 {
+    private $repoAlumno;
+    public function __construct() {
+        $this->repoAlumno = new RepoAlumno();
+    }
     public function createAlumno($data, $files)
     {
         $nombre = ucfirst(trim($data['nombre']));
@@ -86,7 +90,6 @@ class AlumnoService
             $conn->beginTransaction();
 
             $repoUsuario = new RepoUsuario();
-            $repoAlumno = new RepoAlumno();
 
             //Guardar usuario
             $usuario = $repoUsuario->saveConConexion($usuario, $conn);
@@ -96,7 +99,7 @@ class AlumnoService
 
             //Asignar usuario al alumno y guardar
             $alumno->setUsuario($usuario);
-            $alumno = $repoAlumno->save($alumno, $conn);
+            $alumno = $this->repoAlumno->save($alumno, $conn);
             if (!$alumno || !$alumno->getId()) {
                 throw new Exception("Error al guardar alumno");
             }
@@ -131,13 +134,12 @@ class AlumnoService
             $conn = Connection::getConnection();
             $conn->beginTransaction();
 
-            $repoAlumno = new RepoAlumno();
             $repoUsuario = new RepoUsuario();
             $repoToken = new RepoToken();
             $repoSolicitud = new RepoSolicitud();
 
             // Obtener usuario asociado al alumno
-            $alumno = $repoAlumno->findById($alumnoId, true);
+            $alumno = $this->repoAlumno->findById($alumnoId, true);
             if (!$alumno) {
                 throw new Exception("Alumno no encontrado con ID $alumnoId");
             }
@@ -147,8 +149,8 @@ class AlumnoService
             // Eliminar en orden lógico
             $repoToken->deleteByUsuarioId($usuarioId, $conn);
             $repoSolicitud->deleteByAlumnoId($alumnoId, $conn);
-            $repoAlumno->deleteCiclosByAlumnoId($alumnoId, $conn);
-            $repoAlumno->delete($alumnoId, $conn);
+            $this->repoAlumno->deleteCiclosByAlumnoId($alumnoId, $conn);
+            $this->repoAlumno->delete($alumnoId, $conn);
             $repoUsuario->delete($usuarioId, $conn);
 
             $conn->commit();
@@ -173,8 +175,7 @@ class AlumnoService
 
     public function getAlumnos()
     {
-        $repoAlumno = new RepoAlumno();
-        $alumnos = $repoAlumno->findAll(true,);
+        $alumnos = $this->repoAlumno->findAll(true);
         if ($alumnos) {
             $converter = new Converter();
             $alumnos = $converter->convertirAlumnosAJson($alumnos);
@@ -184,8 +185,7 @@ class AlumnoService
 
     public function getAlumno($id)
     {
-        $repoAlumno = new RepoAlumno();
-        $alumno = $repoAlumno->findById($id, true,false,true);
+        $alumno = $this->repoAlumno->findById($id, true,false,true);
         if ($alumno) {
             $converter = new Converter();
             $alumno = $converter->convertirAlumnoAJson($alumno);
@@ -197,8 +197,7 @@ class AlumnoService
     {
         $resultado = null;
 
-        $repoAlumno = new RepoAlumno();
-        $alumno = $repoAlumno->findById($id, true);
+        $alumno = $this->repoAlumno->findById($id, true);
 
         if ($alumno) {
             $usuario = $alumno->getUsuario();
@@ -270,7 +269,6 @@ class AlumnoService
             $conn->beginTransaction();
 
             $repoUsuario = new RepoUsuario();
-            $repoAlumno = new RepoAlumno();
 
             //Actualizar usuario
             $usuario = $repoUsuario->updateConConexion($usuario, $conn);
@@ -280,14 +278,14 @@ class AlumnoService
 
             //Asignar usuario al alumno y actualizar
             $alumno->setUsuario($usuario);
-            $alumno = $repoAlumno->update($alumno, $conn);
+            $alumno = $this->repoAlumno->update($alumno, $conn);
             if (!$alumno || !$alumno->getId()) {
                 throw new Exception("Error al actualizar alumno");
             }
             // Update ciclos del alumno
             if (!empty($ciclos)) {
                 $repoCiclo = new RepoCiclo();
-                $repoAlumno->deleteCiclosByAlumnoId($alumno->getId(), $conn);
+                $this->repoAlumno->deleteCiclosByAlumnoId($alumno->getId(), $conn);
                 foreach ($ciclos as $cicloId) {   
                     if(!$repoCiclo->saveCicloAlumnoConConexion($alumno->getId(), $cicloId, $conn)) {
                         throw new Exception("Error al guardar ciclo-alumno");

@@ -100,7 +100,7 @@ class AuthController
                     if (empty($errores)) {
                         $empresaService = new EmpresaService();
                         $empresaService->registrarEmpresa($inputs, $files);
-                        header('Location: /index.php?menu=login');
+                        header('Location: /index.php?menu=login&registro=exito');
                         exit;
                     }
                 }

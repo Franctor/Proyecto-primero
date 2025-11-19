@@ -12,9 +12,15 @@
 
     <nav class="header-nav">
         <ul class="header-menu">
+        <?php if (helpers\Session::get('tipo') === 'admin'): ?>
+            <li class="header-item"><a href="/index.php?menu=adminPanel&accion=panelSolicitudes" class="header-link">Solicitudes</a></li>
+            <li class="header-item"><a href="/index.php?menu=adminPanel&accion=panelOfertas" class="header-link">Ofertas</a></li>
+            <li class="header-item"><a href="/index.php?menu=notificaciones" class="header-link">Notificaciones</a></li>
+        <?php else: ?>
             <li class="header-item"><a href="/index.php?menu=solicitudes" class="header-link">Solicitudes</a></li>
             <li class="header-item"><a href="/index.php?menu=ofertas" class="header-link">Ofertas</a></li>
             <li class="header-item"><a href="/index.php?menu=notificaciones" class="header-link">Notificaciones</a></li>
+        <?php endif; ?>
         </ul>
     </nav>
 

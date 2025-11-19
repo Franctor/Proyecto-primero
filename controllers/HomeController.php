@@ -9,6 +9,6 @@ class HomeController
         $this->templates = $templates;
     }
     public function landingPage() {
-        echo $this->templates->render('landing');
+        echo $this->templates->render('home/landing');
     }
 }

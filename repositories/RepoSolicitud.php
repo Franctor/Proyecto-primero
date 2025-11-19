@@ -146,6 +146,24 @@ class RepoSolicitud
         return $result;
     }
 
+    public function deleteByOfertaId($ofertaId, $conn = null)
+    {
+        $result = false;
+
+        try {
+            if ($conn === null) {
+                $conn = Connection::getConnection();
+            }
+            $stmt = $conn->prepare("DELETE FROM solicitud WHERE oferta_id = :oferta_id");
+            $stmt->bindValue(':oferta_id', $ofertaId, PDO::PARAM_INT);
+            $result = $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Error al eliminar solicitudes por ID de oferta: " . $e->getMessage());
+        }
+
+        return $result;
+    }
+
     public function deleteByAlumnoId($alumnoId, $conn = null)
     {
         $result = false;

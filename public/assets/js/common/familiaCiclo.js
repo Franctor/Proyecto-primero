@@ -98,3 +98,13 @@ function cargarSelectCiclo(selectCiclo, familia, nombreCicloSeleccionado = '') {
         selectCiclo.appendChild(option);
     });
 }
+
+// Seleccionar automáticamente todos los ciclos antes de enviar el formulario
+document.querySelector('.oferta-form').addEventListener('submit', function(e) {
+    const ciclosSelect = document.getElementById('ciclosSeleccionados');
+    
+    // Marcar todas las opciones como selected
+    for (let i = 0; i < ciclosSelect.options.length; i++) {
+        ciclosSelect.options[i].selected = true;
+    }
+});

@@ -48,7 +48,6 @@ $this->start('scripts') ?>
                         $basePath = dirname($_SERVER['DOCUMENT_ROOT']);
                         $foto = $empresa->getFoto();
 
-                        // Intentar varias extensiones si la que viene no existe
                         $posibles = [
                             $foto,
                             str_replace('.png', '.webp', $foto),
@@ -61,18 +60,17 @@ $this->start('scripts') ?>
 
                         foreach ($posibles as $archivo) {
                             $ruta = $basePath . '/' . $archivo;
-                            if (file_exists($ruta)) {
+                            if (file_exists($ruta) && $rutaLogo === null) {
                                 $rutaLogo = $ruta;
-                                break;
                             }
                         }
 
                         if ($rutaLogo) {
                             $tipo = mime_content_type($rutaLogo);
                             $logoData = base64_encode(file_get_contents($rutaLogo));
-                            echo '<img id="logo" src="data:' . $tipo . ';base64,' . $logoData . '" alt="Logo">';
+                            echo '<img class="logo" src="data:' . $tipo . ';base64,' . $logoData . '" alt="Logo">';
                         } else {
-                            echo '<span class="adm-empty">No hay logo disponible</span>';
+                            echo '<i>No hay logo disponible</i>';
                         }
                         ?>
                     </td>
@@ -94,5 +92,10 @@ $this->start('scripts') ?>
 
     </div>
     <a href="index.php?menu=adminPanel&accion=panelEmpresas" class="button">Volver al panel de empresas</a>
+    <form action="index.php?menu=adminPanel&accion=panelEmpresas" method="POST">
+        <input type="hidden" name="opcion" value="generarPDF">
+        <input type="hidden" name="empresa_id" value="<?= $this->e($empresa->getId()) ?>">
+        <button type="submit" class="button">Generar PDF</button>
+    </form>
 </section>
 <?php $this->stop() ?>

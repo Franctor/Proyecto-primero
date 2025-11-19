@@ -29,4 +29,9 @@ class CicloService
         }
         return $ciclo;
     }
+
+    public function getAllCiclosSinFamilia()
+    {
+        return $this->repoCiclo->findAll();
+    }
 }

@@ -1432,8 +1432,9 @@ textarea {
   height: 100%;
   width: 100%;
   box-sizing: border-box;
-  max-height: 278px; 
-  overflow: hidden; /* Oculta el contenido que sobrepasa */
+  max-height: 278px;
+  overflow: hidden;
+  /* Oculta el contenido que sobrepasa */
 }
 
 .card-body {
@@ -1445,14 +1446,14 @@ textarea {
 .card-body p {
   overflow-wrap: break-word;
   word-break: break-word;
-  max-height: 40px; 
+  max-height: 40px;
   overflow: hidden;
 }
 
 .oferta-card h2 {
   overflow-wrap: break-word;
   word-break: break-word;
-  max-height: 40px; 
+  max-height: 40px;
   overflow: hidden;
 }
 
@@ -1700,5 +1701,405 @@ textarea {
 
   .dashboard-main h1 {
     font-size: 1.5em;
+  }
+}
+
+/* ----------------------------
+   Ofertas Alumno
+----------------------------- */
+.ofertas-alumnos-main {
+  padding: var(--space-4);
+  background: var(--light);
+  min-height: 100vh;
+}
+
+.filtros form {
+  margin-bottom: var(--space-4);
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.filtros label {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.ofertas-alumnos-section .card-actions .aplicar {
+  background-color: var(--ok);
+}
+
+.ofertas-alumnos-section .card-actions .aplicar:hover {
+  background-color: var(--green);
+}
+
+.ofertas-alumnos-section .oferta-detalles-card {
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  margin: 0 auto var(--space-4);
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.oferta-detalles-card h2 {
+  margin: 0 0 var(--space-2);
+  font-size: 1.6rem;
+  color: var(--primary);
+  font-weight: 600;
+  line-height: 1.3;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--space-1);
+}
+
+.oferta-detalles-card .card-body p {
+  margin: var(--space-1) 0;
+  color: var(--text);
+  font-size: 1.1em;
+  line-height: 1.5;
+}
+
+/* ----------------------------
+   Solicitudes Alumno
+----------------------------- */
+.solicitudes-main {
+  padding: var(--space-4);
+  background: var(--light);
+  min-height: 90vh;
+}
+
+.ficha-solicitud {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  margin-bottom: var(--space-3);
+  box-shadow: 0 2px 8px var(--shadow);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.datos-solicitud h2 {
+  color: var(--primary);
+  margin-bottom: var(--space-2);
+  font-size: 1.5em;
+  border-bottom: 2px solid var(--primary);
+  padding-bottom: var(--space-1);
+}
+
+.datos-solicitud p {
+  margin-bottom: var(--space-2);
+  line-height: 1.6;
+}
+
+.datos-solicitud strong {
+  color: var(--text);
+  min-width: 140px;
+  display: inline-block;
+}
+
+.datos-empresa {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 2px solid var(--border);
+}
+
+.datos-empresa h3 {
+  color: var(--primary);
+  margin-bottom: var(--space-3);
+  font-size: 1.3em;
+}
+
+.datos-empresa>div {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+}
+
+.datos-empresa img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-1);
+  background: var(--white);
+}
+
+.datos-empresa>div>div:last-child {
+  flex: 1;
+}
+
+.datos-empresa>div>div:last-child p {
+  margin-bottom: var(--space-2);
+  display: flex;
+}
+
+.datos-empresa strong {
+  color: var(--text);
+  min-width: 100px;
+  display: inline-block;
+}
+
+.ficha-solicitud-footer {
+  text-align: center;
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+.ficha-solicitud-footer button {
+  padding: var(--space-2) var(--space-4);
+  background: var(--accent);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.ficha-solicitud-footer button:hover {
+  background: var(--error-text);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .solicitudes-main {
+    padding: var(--space-2);
+  }
+
+  .ficha-solicitud {
+    padding: var(--space-3);
+  }
+
+  .datos-empresa>div {
+    flex-direction: column;
+    gap: var(--space-3);
+    text-align: center;
+  }
+
+  .datos-empresa img {
+    align-self: center;
+  }
+
+  .datos-solicitud strong,
+  .datos-empresa strong {
+    min-width: auto;
+    display: block;
+    margin-bottom: var(--space-1);
+  }
+
+  .datos-empresa>div>div:last-child p {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* ----------------------------
+   Mis Solicitudes - Alumno
+----------------------------- */
+.solicitudes-alumno-section {
+  padding: var(--space-4);
+  background: var(--light);
+  min-height: 90vh;
+}
+
+.solicitudes-alumno-section h1 {
+  color: var(--text);
+  margin-bottom: var(--space-4);
+  text-align: center;
+  font-size: 2em;
+  border-bottom: 2px solid var(--primary);
+  padding-bottom: var(--space-2);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: var(--space-3);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Estado cuando hay tarjetas - elimina los estilos de flex */
+#cards-grid:not(:empty) {
+  display: grid;
+  /* Quita flex: 1, align-items y justify-content */
+}
+
+.solicitud-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  box-shadow: 0 2px 8px var(--shadow);
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  /* Cambia de 100% a auto */
+  min-height: 200px;
+  /* Altura mínima en lugar de 100% */
+}
+
+.solicitud-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow);
+  border-color: var(--primary);
+}
+
+.solicitud-card h2 {
+  color: var(--primary);
+  margin-bottom: var(--space-2);
+  font-size: 1.4em;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--space-1);
+  word-wrap: break-word;
+}
+
+.card-body {
+  flex: 1;
+  margin-bottom: var(--space-3);
+}
+
+.card-body p {
+  margin-bottom: var(--space-2);
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.card-body strong {
+  color: var(--text);
+  display: inline-block;
+  min-width: 120px;
+}
+
+.card-action {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.card-action .btn {
+  padding: var(--space-1) var(--space-2);
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9em;
+  flex: 1;
+  text-align: center;
+}
+
+.card-action .btn:first-child {
+  background: var(--primary);
+  color: var(--white);
+}
+
+.card-action .btn:first-child:hover {
+  background: var(--primary-dark);
+}
+
+.card-action .btn:last-child {
+  background: var(--accent);
+  color: var(--white);
+}
+
+.card-action .btn:last-child:hover {
+  background: var(--error-text);
+}
+
+/* ----------------------------
+   Estado Vacío - Mis Solicitudes
+----------------------------- */
+.solicitudes-alumno-section>p {
+  text-align: center;
+  color: var(--text-light);
+  font-size: 1.2em;
+  line-height: 1.6;
+  padding: var(--space-4);
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  max-width: 500px;
+  margin: 2rem auto;
+  /* Margen superior e inferior */
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.solicitudes-alumno-section>p a {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border: 2px solid var(--primary);
+  border-radius: var(--radius);
+}
+
+.solicitudes-alumno-section>p a:hover {
+  background: var(--primary);
+  color: var(--white);
+  text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .solicitudes-alumno-section {
+    padding: var(--space-2);
+  }
+
+  .solicitudes-alumno-section h1 {
+    font-size: 1.6em;
+    margin-bottom: var(--space-3);
+  }
+
+  #cards-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
+
+  .card-action {
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .card-body strong {
+    min-width: 100px;
+  }
+
+  .solicitudes-alumno-section>p {
+    font-size: 1.1em;
+    padding: var(--space-3);
+    margin: 1rem auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .solicitud-card {
+    padding: var(--space-2);
+  }
+
+  .solicitudes-alumno-section h1 {
+    font-size: 1.4em;
+  }
+
+  .solicitudes-alumno-section>p {
+    font-size: 1em;
+    padding: var(--space-2);
+  }
+
+  .solicitudes-alumno-section>p a {
+    padding: var(--space-1) var(--space-2);
+    font-size: 0.9em;
   }
 }

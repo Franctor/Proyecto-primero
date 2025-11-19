@@ -6,6 +6,7 @@ use helpers\Validator;
 use League\Plates\Engine;
 use services\EmpresaService;
 use services\MailService;
+use services\PdfService;
 
 class AdminController
 {
@@ -160,6 +161,19 @@ class AdminController
                                 }
                                 header('Location: index.php?menu=adminPanel&accion=panelEmpresas');
                                 exit;
+                            case 'generarPDF':
+                                $empresaId = $_POST['empresa_id'] ?? null;
+                                if ($empresaId) {
+                                    $empresa = $empresaService->getEmpresaById($empresaId);
+                                    if ($empresa) {
+                                        $pdfService = new PdfService();
+                                        $html = $this->templates->render('admin/fichaEmpresaPdf', [
+                                            'empresa' => $empresa
+                                        ]);
+                                        $pdfService->generarPDF($html, "empresa_{$empresaId}.pdf");
+                                    }
+                                }
+                                break;
                         }
                     }
 

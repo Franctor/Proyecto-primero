@@ -4,6 +4,8 @@ use helpers\Session;
 use helpers\Validator;
 use League\Plates\Engine;
 use services\OfertaService;
+use services\SolicitudService;
+use services\CicloService;
 class OfertaController
 {
     private $templates;
@@ -21,7 +23,7 @@ class OfertaController
         if (Session::get('tipo') === 'empresa') {
             $this->manejoEmpresa();
         } else if (Session::get('tipo') === 'alumno') {
-            //Mostrar ofertas para alumno dependiendo de sus grados (no implementado)
+            $this->manejoAlumno();
         }
 
     }
@@ -71,7 +73,6 @@ class OfertaController
                                 header('Location: index.php?menu=ofertas&accion=activas');
                                 exit;
                             } else {
-                                // Mostrar formulario con errores
                                 echo $this->templates->render('ofertas/editarOferta', [
                                     'errores' => $errores,
                                     'old' => $data
@@ -191,4 +192,80 @@ class OfertaController
             echo $this->templates->render('ofertas/ofertasEmpresa', ['accion' => 'activas', 'ofertas' => $ofertasActivas]);
         }
     }
+
+
+    private function manejoAlumno()
+    {
+        $renderPanel = true;
+        $alumnoId = Session::get('perfil')->getId();
+        $ofertaService = new OfertaService();
+        $solicitudService = new SolicitudService();
+
+        // --- POST: aplicar/desaplicar
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'], $_POST['oferta_id'])) {
+            $ofertaId = $_POST['oferta_id'];
+            if ($_POST['accion'] === 'solicitar') {
+                $solicitudService->aplicarOferta($ofertaId, $alumnoId);
+            } elseif ($_POST['accion'] === 'desaplicar') {
+                $solicitudService->desaplicarOferta($_POST['solicitud_id']);
+            }
+
+            // --- Redirigir a la misma página conservando filtros 
+            $url = "index.php?menu=ofertas";
+            if (isset($_POST['ordenFecha']) && $_POST['ordenFecha'] !== '') {
+                $url .= "&ordenFecha=" . $_POST['ordenFecha'];
+            }
+            if (isset($_POST['ciclo']) && $_POST['ciclo'] !== '') {
+                $url .= "&ciclo=" . $_POST['ciclo'];
+            }
+
+            header("Location: $url");
+            exit;
+        }
+
+        // --- GET: filtros
+        $filtros = [];
+        $filtros['ordenFecha'] = $_GET['ordenFecha'] ?? 'asc'; // por defecto ascendente
+        if (isset($_GET['ciclo']) && is_numeric($_GET['ciclo'])) {
+            $filtros['ciclo'] = (int) $_GET['ciclo'];
+        }
+
+        // --- GET: ver detalles oferta
+        if (
+            isset($_GET['oferta_id'])
+            && is_numeric($_GET['oferta_id'])
+            && isset($_GET['accion'])
+            && $_GET['accion'] === 'verDetalles'
+        ) {
+            $ofertaId = (int) $_GET['oferta_id'];
+            $oferta = $ofertaService->getOfertaById($ofertaId);
+            if ($oferta) {
+                echo $this->templates->render('ofertas/verOferta', [
+                    'oferta' => $oferta
+                ]);
+                $renderPanel = false;
+            }
+        }
+
+        // --- Obtener ofertas filtradas
+        $ofertas = $ofertaService->getOfertasPorAlumno($alumnoId, $filtros);
+
+        // --- Ofertas ya aplicadas
+        $aplicadas = $ofertaService->getOfertasAplicadas($alumnoId);
+
+        // --- Ciclos disponibles para filtro
+        $cicloService = new CicloService();
+        $ciclos = $cicloService->getAllCiclosSinFamilia();
+
+        if ($renderPanel) {
+            echo $this->templates->render('ofertas/ofertasAlumno', [
+                'ofertas' => $ofertas,
+                'aplicadas' => $aplicadas,
+                'ciclos' => $ciclos,
+                'filtros' => $filtros
+            ]);
+        }
+    }
+
+
 }

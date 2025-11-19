@@ -3,6 +3,7 @@
 namespace API;
 
 use Exception;
+use helpers\Session;
 use helpers\Converter;
 use helpers\Validator;
 use services\AlumnoService;
@@ -25,8 +26,10 @@ if ($method === 'POST' && isset($input['_method'])) {
 try {
     switch ($method) {
         case 'GET':
-            // Lógica para manejar las solicitudes GET
-            if ($idAlumno !== null) {
+            // Si viene ?me=true, obtener el alumno de la sesión
+            if (isset($_GET['me']) && $_GET['me'] === 'true') {
+                getAlumnoActual($alumnoService);
+            } elseif ($idAlumno !== null) {
                 getAlumno($idAlumno, $alumnoService);
             } else {
                 getAlumnos($alumnoService);
@@ -144,5 +147,21 @@ function deleteAlumno($idAlumno, $alumnoService)
     } else {
         http_response_code(404);
         echo json_encode(['error' => 'Alumno no encontrado']);
+    }
+}
+
+function getAlumnoActual($alumnoService) {
+    if (Session::isLogged()) {
+        $alumnoId = Session::get('perfil')->getId();
+        $alumno = $alumnoService->getAlumno($alumnoId);
+        if ($alumno != null) {
+            echo json_encode($alumno);
+        } else {
+            http_response_code(404);
+            echo json_encode(['error'=> 'Alumno no encontrado']);
+        }
+    }else {
+        http_response_code(404);
+        echo json_encode(['error'=> 'No autenticado']);
     }
 }

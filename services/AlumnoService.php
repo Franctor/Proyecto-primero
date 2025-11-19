@@ -183,14 +183,21 @@ class AlumnoService
         return $alumnos;
     }
 
+    //Para uso en json
     public function getAlumno($id)
     {
-        $alumno = $this->repoAlumno->findById($id, true,false,true);
+        $alumno = $this->repoAlumno->findById($id, true, false ,true);
         if ($alumno) {
             $converter = new Converter();
             $alumno = $converter->convertirAlumnoAJson($alumno);
         }
         return $alumno;
+    }
+
+    //Para uso interno
+    function getAlumnoById($id)
+    {
+        return $this->repoAlumno->findById($id, true,false,true);
     }
 
     public function updateAlumno($id, $data, $files)

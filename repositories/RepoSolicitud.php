@@ -1,6 +1,7 @@
 <?php
 namespace repositories;
 
+use DateTime;
 use PDO;
 use Exception;
 use models\Solicitud;
@@ -19,7 +20,11 @@ class RepoSolicitud
                 VALUES (:fecha_solicitud, :finalizado, :alumno_id, :oferta_id)
             ");
 
-            $stmt->bindValue(':fecha_solicitud', $solicitud->getFechaSolicitud());
+            $fechaSolicitud = $solicitud->getFechaSolicitud();
+            $stmt->bindValue(
+                ':fecha_solicitud',
+                $fechaSolicitud instanceof DateTime ? $fechaSolicitud->format('Y-m-d') : $fechaSolicitud
+            );
             $stmt->bindValue(':finalizado', $solicitud->getFinalizado());
             $stmt->bindValue(':alumno_id', $solicitud->getAlumno() ? $solicitud->getAlumno()->getId() : null, PDO::PARAM_INT);
             $stmt->bindValue(':oferta_id', $solicitud->getOferta() ? $solicitud->getOferta()->getId() : null, PDO::PARAM_INT);
@@ -98,6 +103,29 @@ class RepoSolicitud
             }
         } catch (Exception $e) {
             error_log("Error al buscar todas las solicitudes: " . $e->getMessage());
+        }
+
+        return $solicitudes;
+    }
+
+    public function findByOfertaId($ofertaId, $loadAlumno = false, $loadOferta = false)
+    {
+        $solicitudes = [];
+
+        try {
+            $conn = Connection::getConnection();
+            $stmt = $conn->prepare("SELECT * FROM solicitud WHERE oferta_id = :oferta_id");
+            $stmt->bindValue(':oferta_id', $ofertaId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $repoAlumno = $loadAlumno ? new RepoAlumno() : null;
+            $repoOferta = $loadOferta ? new RepoOferta() : null;
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $solicitudes[] = $this->mapRowToSolicitud($row, $repoAlumno, $repoOferta);
+            }
+        } catch (Exception $e) {
+            error_log("Error al buscar solicitudes por ID de oferta: " . $e->getMessage());
         }
 
         return $solicitudes;
@@ -190,16 +218,20 @@ class RepoSolicitud
         $alumno = null;
         $oferta = null;
 
+        $fechaSolicitud = null;
+        if (!empty($row['fecha_solicitud'])) {
+            $fechaSolicitud = new DateTime($row['fecha_solicitud']);
+        }
         if ($repoAlumno) {
             $alumno = $repoAlumno->findById($row['alumno_id']);
         }
 
         if ($repoOferta) {
-            $oferta = $repoOferta->findById($row['oferta_id']);
+            $oferta = $repoOferta->findById($row['oferta_id'], true, false, false);
         }
 
         $solicitud = new Solicitud(
-            $row['fecha_solicitud'],
+            $fechaSolicitud,
             $row['finalizado'],
             $alumno,
             $oferta

@@ -22,7 +22,7 @@ class Converter
     public function convertirAlumnosAJson($alumnos)
     {
         $alumnosArray = [];
-        
+
         foreach ($alumnos as $alumno) {
             $alumnosArray[] = $this->convertirAlumnoAJson($alumno);
         }
@@ -42,7 +42,7 @@ class Converter
     function convertirCiclosAJson($ciclos)
     {
         $ciclosArray = [];
-        
+
         foreach ($ciclos as $ciclo) {
             $ciclosArray[] = $this->convertirCicloAJson($ciclo);
         }
@@ -62,10 +62,64 @@ class Converter
     public function convertirFamiliasAJson($familias)
     {
         $familiasArray = [];
-        
+
         foreach ($familias as $familia) {
             $familiasArray[] = $this->convertirFamiliaAJson($familia);
         }
         return $familiasArray;
+    }
+
+    public function convertirSolicitudesAJson($solicitudes)
+    {
+        $solicitudesArray = [];
+
+        foreach ($solicitudes as $solicitud) {
+            $solicitudesArray[] = $this->convertirSolicitudAJson($solicitud);
+        }
+        return $solicitudesArray;
+    }
+
+    public function convertirSolicitudAJson($solicitud)
+    {
+        $solicitudArray = [
+            'id' => $solicitud->getId(),
+            'fecha_solicitud' => $this->formatearFecha($solicitud->getFechaSolicitud()),
+            'oferta' => $this->convertirOfertaAJson($solicitud->getOferta())
+        ];
+        return $solicitudArray;
+    }
+
+    public function convertirOfertaAJson($oferta)
+    {
+        $ofertaArray = [
+            'id' => $oferta->getId(),
+            'titulo' => $oferta->getTitulo(),
+            'descripcion' => $oferta->getDescripcion(),
+            'fecha_inicio' => $this->formatearFecha($oferta->getFechaInicio()),
+            'fecha_fin' => $this->formatearFecha($oferta->getFechaFin()),
+            'empresa' => $this->convertirEmpresaAJson($oferta->getEmpresa())
+        ];
+        return $ofertaArray;
+    }
+
+    public function convertirEmpresaAJson($empresa)
+    {
+        $empresaArray = [
+            'id' => $empresa->getId(),
+            'nombre' => $empresa->getNombre(),
+            'descripcion' => $empresa->getDescripcion(),
+            'direccion' => $empresa->getDireccion(),
+            'telefono' => $empresa->getTelefono(),
+            'logo' => $empresa->getFoto64()
+        ];
+        return $empresaArray;
+    }
+
+    private function formatearFecha($fecha)
+    {
+        if ($fecha instanceof \DateTimeInterface) {
+            return $fecha->format('d/m/Y');
+        }
+        return $fecha;
     }
 }

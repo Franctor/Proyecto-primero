@@ -230,5 +230,15 @@ class OfertaService
 
         return $ok;
     }
+
+    public function getOfertasPorAlumno($alumnoId, $filtros = [])
+    {
+        return $this->repoOferta->findOfertasByAlumnoId($alumnoId, $filtros);
+    }
+
+    public function getOfertasAplicadas($alumnoId)
+    {
+        return $this->repoOferta->findAppliedOfertasByAlumnoId($alumnoId);
+    }
 }
 

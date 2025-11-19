@@ -58,6 +58,22 @@ class Empresa
     {
         return $this->logo;
     }
+
+    public function getFoto64()
+    {
+        $foto = null;
+        // Verificar si el archivo existe
+        if (file_exists(__DIR__ . '/../' . $this->getFoto())) {
+            // Leer el contenido binario de la imagen
+            $contenidoImagen = file_get_contents(__DIR__ . '/../' . $this->getFoto());
+
+            // Codificar el contenido a base64
+            $foto = base64_encode($contenidoImagen);
+        }
+
+        return $foto; 
+    }
+
     public function getVerificada()
     {
         return $this->verificada;

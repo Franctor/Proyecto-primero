@@ -115,6 +115,79 @@ class RepoOferta
         return $ofertas;
     }
 
+    public function findOfertasByAlumnoId($alumnoId, $filtros = [])
+    {
+        $ofertas = [];
+
+        try {
+            $conn = Connection::getConnection();
+            $query = "
+            SELECT DISTINCT o.*
+            FROM oferta o
+            INNER JOIN ofertas_ciclos oc ON o.id = oc.oferta_id
+            INNER JOIN alumnos_ciclos ac ON oc.ciclo_id = ac.ciclo_id
+            WHERE ac.alumno_id = :alumno_id
+            AND o.fecha_fiin_oferta >= CURDATE()
+        ";
+
+            if (isset($filtros['ciclo']) && is_numeric($filtros['ciclo'])) {
+                $query .= " AND oc.ciclo_id = :ciclo_id";
+            }
+
+
+            $orden = (isset($filtros['ordenFecha']) && strtoupper($filtros['ordenFecha']) === 'DESC') ? 'DESC' : 'ASC';
+            $query .= " ORDER BY o.fecha_oferta $orden";
+
+            $stmt = $conn->prepare($query);
+            $stmt->bindValue(':alumno_id', $alumnoId, PDO::PARAM_INT);
+            if (isset($filtros['ciclo']) && is_numeric($filtros['ciclo'])) {
+                $stmt->bindValue(':ciclo_id', $filtros['ciclo'], PDO::PARAM_INT);
+            }
+
+            $stmt->execute();
+
+            $repoEmpresa = new RepoEmpresa();
+            $repoSolicitud = new RepoSolicitud();
+            $repoCiclo = new RepoCiclo();
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $ofertas[] = $this->mapRowToOferta($row, $repoEmpresa, $repoSolicitud, $repoCiclo);
+            }
+
+        } catch (Exception $e) {
+            error_log("Error al obtener ofertas por alumno: " . $e->getMessage());
+        }
+
+        return $ofertas;
+    }
+
+    public function findAppliedOfertasByAlumnoId($alumnoId)
+    {
+        $aplicadas = [];
+
+        try {
+            $conn = Connection::getConnection();
+            $query = "
+            SELECT o.id as oferta_id, s.id as solicitud_id
+            FROM oferta o
+            INNER JOIN solicitud s ON o.id = s.oferta_id
+            WHERE s.alumno_id = :alumno_id
+        ";
+
+            $stmt = $conn->prepare($query);
+            $stmt->bindValue(':alumno_id', $alumnoId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $aplicadas[(int) $row['oferta_id']] = (int) $row['solicitud_id'];
+            }
+        } catch (Exception $e) {
+            error_log("Error al obtener ofertas aplicadas: " . $e->getMessage());
+        }
+
+        return $aplicadas;
+    }
+
     public function update($oferta, $conn = null)
     {
         try {

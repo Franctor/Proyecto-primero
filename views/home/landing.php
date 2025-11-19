@@ -16,10 +16,19 @@
                     Empleo</a>
                 <a href="/index.php?menu=register&tipo=empresa" class="button hero-button-empresa">Soy Empresa - Publica una
                     Oferta</a>
+            <?php elseif (helpers\Session::get('tipo') === 'admin'): ?>
+                <div class="hero-buttons-logged">
+                    <a href="/index.php?menu=adminPanel&accion=panelSolicitudes" class="button hero-button-alumno">Ver
+                        Solicitudes</a>
+                    <a href="/index.php?menu=adminPanel&accion=panelOfertas" class="button hero-button-empresa">Ver
+                        Ofertas</a>
+                </div>
             <?php else: ?>
                 <div class="hero-buttons-logged">
-                    <a href="/index.php?menu=solicitudes" class="button hero-button-alumno">Ver Solicitudes</a>
-                    <a href="/index.php?menu=ofertas" class="button hero-button-empresa">Ver Ofertas</a>
+                    <a href="/index.php?menu=solicitudes" class="button hero-button-alumno">Ver
+                        Solicitudes</a>
+                    <a href="/index.php?menu=ofertas" class="button hero-button-empresa">Ver
+                        Ofertas</a>
                 </div>
             <?php endif; ?>
         </div>

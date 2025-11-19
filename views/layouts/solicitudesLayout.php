@@ -17,8 +17,8 @@
 <body>
     <?= $this->insert('partials/header') ?>
 
-    <main class="ofertas-alumnos-main">
-        <?= $this->section('ofertasAlumno') ?>
+    <main class="solicitudes-main">
+        <?= $this->section('solicitudes') ?>
     </main>
 
     <?= $this->insert('partials/footer') ?>

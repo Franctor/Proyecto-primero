@@ -1,6 +1,7 @@
 <?php
 namespace controllers;
 
+use controllers\SolicitudController;
 use Controllers\HomeController;
 use League\Plates\Engine;
 use controllers\AuthController;
@@ -37,6 +38,10 @@ class Router
                 case 'ofertas':
                     $controller = new OfertaController($templates);
                     $controller->ofertas();
+                    break;
+                case 'solicitudes':
+                    $controller = new SolicitudController($templates);
+                    $controller->solicitudes();
                     break;
                 default:
                     header('Location: /');

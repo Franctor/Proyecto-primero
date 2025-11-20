@@ -1213,7 +1213,7 @@ textarea {
 }
 
 .invalido {
-  border-color: var(--error-text) !important;
+  border-color: var(--error-text);
 }
 
 .eliminarEmpresa {
@@ -1650,7 +1650,7 @@ textarea {
   width: 100%;
 }
 
-*/ .oferta-form select[multiple] {
+.oferta-form select[multiple] {
   min-height: 120px;
   padding: var(--space-1);
 }
@@ -2031,7 +2031,6 @@ textarea {
   border: 1px solid var(--border);
   max-width: 500px;
   margin: 2rem auto;
-  /* Margen superior e inferior */
   box-shadow: 0 2px 8px var(--shadow);
 }
 
@@ -2050,6 +2049,86 @@ textarea {
   background: var(--primary);
   color: var(--white);
   text-decoration: none;
+}
+
+.oferta-expirada {
+  background-color: var(--error-light);
+  border-color: var(--error-text);
+}
+
+.oferta-card .card-action button {
+  padding: var(--space-1) var(--space-2);
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9em;
+  flex: 1;
+  text-align: center;
+  background-color: var(--primary);
+  color: var(--white);
+}
+
+.oferta-card .card-action button:hover {
+  background-color: var(--primary-dark);
+}
+
+.ficha-solicitud table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--white);
+  border: 1px solid var(--border);
+  margin-top: 20px;
+
+}
+
+.ficha-solicitud th,
+.ficha-solicitud td {
+  padding: var(--space-2);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.ficha-solicitud th {
+  background: var(--light);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.ficha-solicitud td:last-child {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: center;
+  align-items: center;
+}
+
+.dislike img{
+  max-width: 16px;
+  max-height: 16px;
+}
+.like img{
+  max-width: 16px;
+  max-height: 16px;
+}
+
+.ficha-solicitud td button {
+  padding: var(--space-1) var(--space-2);
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9em;
+  background-color: var(--white);
+}
+
+.ficha-solicitud td button:last-child {
+  background-color: var(--accent);
+  color: var(--white);
+}
+
+.ficha-solicitud td button:last-child:hover {
+  background-color: var(--error-text);
+  color: var(--white);
 }
 
 /* Responsive */

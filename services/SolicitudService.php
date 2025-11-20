@@ -45,12 +45,22 @@ class SolicitudService
     //METODOS PARA API
     public function getSolicitudByIdAPI($solicitudId)
     {
-        return $this->repoSolicitud->findById($solicitudId,false,true);
+        return $this->repoSolicitud->findById($solicitudId,true,true);
     }
 
     public function getSolicitudesByAlumnoIdAPI($alumnoId)
     {
         return $this->repoSolicitud->findByAlumnoId($alumnoId, false, true);
+    }
+
+    public function getSolicitudesByOfertaId($ofertaId)
+    {
+        return $this->repoSolicitud->findByOfertaId($ofertaId, true, true);
+    }
+
+    public function updateSolicitud(Solicitud $solicitud)
+    {
+        return $this->repoSolicitud->update($solicitud);
     }
 
 

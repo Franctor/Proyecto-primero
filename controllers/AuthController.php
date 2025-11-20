@@ -67,7 +67,6 @@ class AuthController
 
                         if (Session::isLogged()) {
                             header('Location: /index.php');
-                            exit;
                         } else {
                             $error = 'Tu cuenta no está activa. Por favor, verifique su correo u espere a que un administrador la active.';
                         }
@@ -101,17 +100,14 @@ class AuthController
                         $empresaService = new EmpresaService();
                         $empresaService->registrarEmpresa($inputs, $files);
                         header('Location: /index.php?menu=login&registro=exito');
-                        exit;
                     }
                 }
                 echo $this->templates->render('auth/register', ['tipo' => $tipo, 'errores' => $errores ?? []]);
             } else {
                 header('Location: /index.php');
-                exit;
             }
         } else {
             header('Location: /index.php');
-            exit;
         }
     }
 
@@ -121,6 +117,5 @@ class AuthController
         $tokenService->deleteToken(Session::get('usuario_id'));
         Session::logout();
         header('Location: /index.php');
-        exit;
     }
 }

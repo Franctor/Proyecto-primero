@@ -12,9 +12,7 @@ if (file_exists($path) && is_file($path)) {
     if ($info) {
         header('Content-Type: ' . $info['mime']);
         readfile($path);
-        exit;
     }
 }
 
 http_response_code(404);
-echo 'Imagen no encontrada';

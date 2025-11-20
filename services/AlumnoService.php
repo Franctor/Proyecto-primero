@@ -14,7 +14,8 @@ use Exception;
 class AlumnoService
 {
     private $repoAlumno;
-    public function __construct() {
+    public function __construct()
+    {
         $this->repoAlumno = new RepoAlumno();
     }
     public function createAlumno($data, $files)
@@ -26,7 +27,7 @@ class AlumnoService
         $nombre_usuario = trim($data['email']);
         $password = isset($data['password']) ? Security::hashPassword(trim($data['password'])) : Security::generatePassword();
         $localidad_id = trim($data['localidad']);
-        $activo = isset($data['activo']) ? (int)$data['activo'] : 0;
+        $activo = isset($data['activo']) ? (int) $data['activo'] : 0;
         // Incluir los ciclos del usuario
         $ciclos = isset($data['ciclosSeleccionados']) ? $data['ciclosSeleccionados'] : [];
         // === Manejo de archivos ===
@@ -37,14 +38,14 @@ class AlumnoService
         $carpetaFotos = __DIR__ . '/../storage/foto_perfil/';
         $carpetaCVs = __DIR__ . '/../storage/cv/';
 
-        
+
         // Guardar foto si viene
         if (isset($files['foto-perfil']) && $files['foto-perfil']['error'] === UPLOAD_ERR_OK) {
             $nombreArchivo = $nombre_usuario . '.png';
             $destino = $carpetaFotos . $nombreArchivo;
             move_uploaded_file($files['foto-perfil']['tmp_name'], $destino);
             $fotoRuta = 'storage/foto_perfil/' . $nombreArchivo; // ruta relativa
-        }else {
+        } else {
             $fotoRuta = 'storage/foto_perfil/default.png'; // ruta por defecto
         }
 
@@ -55,7 +56,7 @@ class AlumnoService
             $destino = $carpetaCVs . $nombreArchivo;
             move_uploaded_file($files['cv']['tmp_name'], $destino);
             $cvRuta = 'storage/cv/' . $nombreArchivo; // ruta relativa
-        }else {
+        } else {
             $cvRuta = 'storage/cv/default.pdf'; // ruta por defecto
         }
 
@@ -104,11 +105,11 @@ class AlumnoService
                 throw new Exception("Error al guardar alumno");
             }
 
-             // Guardar ciclos del alumno
+            // Guardar ciclos del alumno
             if (!empty($ciclos)) {
                 $repoCiclo = new RepoCiclo();
-                foreach ($ciclos as $cicloId) {   
-                    if(!$repoCiclo->saveCicloAlumnoConConexion($alumno->getId(), $cicloId, $conn)) {
+                foreach ($ciclos as $cicloId) {
+                    if (!$repoCiclo->saveCicloAlumnoConConexion($alumno->getId(), $cicloId, $conn)) {
                         throw new Exception("Error al guardar ciclo-alumno");
                     }
                 }
@@ -186,7 +187,7 @@ class AlumnoService
     //Para uso en json
     public function getAlumno($id)
     {
-        $alumno = $this->repoAlumno->findById($id, true, false ,true);
+        $alumno = $this->repoAlumno->findById($id, true, false, true);
         if ($alumno) {
             $converter = new Converter();
             $alumno = $converter->convertirAlumnoAJson($alumno);
@@ -197,7 +198,7 @@ class AlumnoService
     //Para uso interno
     function getAlumnoById($id)
     {
-        return $this->repoAlumno->findById($id, true,false,true);
+        return $this->repoAlumno->findById($id, true, false, true);
     }
 
     public function updateAlumno($id, $data, $files)
@@ -215,7 +216,9 @@ class AlumnoService
                 $telefono = isset($data['telefono']) ? trim($data['telefono']) : $alumno->getTelefono();
                 $direccion = isset($data['direccion']) ? trim($data['direccion']) : $alumno->getDireccion();
                 $nombre_usuario = isset($data['email']) ? trim($data['email']) : $usuario->getNombreUsuario();
-                $password = isset($data['password']) && $data['password'] !== '' ? $data['password'] : $usuario->getPassword();
+                if (isset($data['password']) && trim($data['password']) !== '') {
+                    $usuario->setPassword(Security::hashPassword(trim($data['password'])));
+                }
                 $localidad_id = isset($data['localidad']) ? trim($data['localidad']) : $usuario->getLocalidadId();
                 $ciclos = isset($data['ciclosSeleccionados']) ? $data['ciclosSeleccionados'] : [];
 
@@ -252,9 +255,7 @@ class AlumnoService
 
                 $usuario->setNombreUsuario($nombre_usuario);
                 $usuario->setLocalidadId($localidad_id);
-                if ($password) {
-                    $usuario->setPassword($password);
-                }
+
 
                 $alumno->setUsuario($usuario);
 
@@ -293,8 +294,8 @@ class AlumnoService
             if (!empty($ciclos)) {
                 $repoCiclo = new RepoCiclo();
                 $this->repoAlumno->deleteCiclosByAlumnoId($alumno->getId(), $conn);
-                foreach ($ciclos as $cicloId) {   
-                    if(!$repoCiclo->saveCicloAlumnoConConexion($alumno->getId(), $cicloId, $conn)) {
+                foreach ($ciclos as $cicloId) {
+                    if (!$repoCiclo->saveCicloAlumnoConConexion($alumno->getId(), $cicloId, $conn)) {
                         throw new Exception("Error al guardar ciclo-alumno");
                     }
                 }

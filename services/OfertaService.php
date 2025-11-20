@@ -240,5 +240,19 @@ class OfertaService
     {
         return $this->repoOferta->findAppliedOfertasByAlumnoId($alumnoId);
     }
+
+    public function getOfertasByEmpresaIdAPI($empresaId)
+    {
+        $ofertas = $this->repoOferta->findByEmpresaId($empresaId);
+        if(!empty($ofertas)){
+            $solicitudService = new SolicitudService();
+            foreach($ofertas as $oferta){
+                $solicitudes = $solicitudService->getSolicitudesByOfertaId($oferta->getId());
+                $oferta->setSolicitudes($solicitudes);
+            }
+        }
+
+        return $ofertas;
+    }
 }
 

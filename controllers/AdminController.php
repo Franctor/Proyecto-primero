@@ -21,7 +21,7 @@ class AdminController
     {
         if (!(Session::isLogged() && Session::get('rol') === 1)) {
             header('Location: index.php');
-            exit;
+            
         }
 
         if (!isset($_GET['accion'])) {
@@ -58,7 +58,7 @@ class AdminController
                                         // No hay errores -> guardar y redirigir
                                         if ($empresaService->registrarEmpresa($data) != null) {
                                             header('Location: index.php?menu=adminPanel&accion=panelEmpresas');
-                                            exit;
+                                            
                                         }
                                     } else {
                                         // Sí hay errores -> mostrar el formulario de nuevo
@@ -112,7 +112,7 @@ class AdminController
                                                 );
                                             }
                                             header('Location: index.php?menu=adminPanel&accion=panelEmpresas');
-                                            exit;
+                                            
                                         } else {
                                             // Sí hay errores -> mostrar el formulario de nuevo
                                             echo $this->formularioEditarEmpresa($empresa, $errores, $data);
@@ -130,7 +130,7 @@ class AdminController
                                     $empresaService->eliminarEmpresa($empresaId);
                                 }
                                 header('Location: index.php?menu=adminPanel&accion=panelEmpresas');
-                                exit;
+                                break;
                             case 'verificar':
                                 $empresaId = $_POST['empresa_id'] ?? null;
                                 if ($empresaId) {
@@ -160,7 +160,7 @@ class AdminController
                                     }
                                 }
                                 header('Location: index.php?menu=adminPanel&accion=panelEmpresas');
-                                exit;
+                                break;
                             case 'generarPDF':
                                 $empresaId = $_POST['empresa_id'] ?? null;
                                 if ($empresaId) {

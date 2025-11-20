@@ -26,7 +26,7 @@ class Solicitud
     {
         return $this->fecha_solicitud;
     }
-    public function getFinalizado()
+    public function getEstado()
     {
         return $this->finalizado;
     }
@@ -47,7 +47,7 @@ class Solicitud
     {
         $this->fecha_solicitud = $fecha_solicitud;
     }
-    public function setFinalizado($finalizado)
+    public function setEstado($finalizado)
     {
         $this->finalizado = $finalizado;
     }

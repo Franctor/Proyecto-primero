@@ -45,7 +45,7 @@ class Router
                     break;
                 default:
                     header('Location: /');
-                    exit;
+                    break;
             }
         } else {
             $controller = new HomeController($templates);

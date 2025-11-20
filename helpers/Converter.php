@@ -122,4 +122,55 @@ class Converter
         }
         return $fecha;
     }
+
+    public function convertirOfertasAJson($ofertas)
+    {
+        $ofertasArray = [];
+
+        foreach ($ofertas as $oferta) {
+            $ofertasArray[] = $this->convertirOfertaAJsonDos($oferta);
+        }
+        return $ofertasArray;
+    }
+
+    public function convertirOfertaAJsonDos($oferta)
+    {
+        $ofertaArray = [
+            'id' => $oferta->getId(),
+            'titulo' => $oferta->getTitulo(),
+            'descripcion' => $oferta->getDescripcion(),
+            'fecha_inicio' => $this->formatearFecha($oferta->getFechaInicio()),
+            'fecha_fin' => $this->formatearFecha($oferta->getFechaFin()),
+            'solicitudes'=> $oferta->getSolicitudes() ? $this->convertirSolicitudesAJsonDos($oferta->getSolicitudes()) : 'false'
+        ];
+        return $ofertaArray;
+    }
+
+    public function convertirSolicitudesAJsonDos($solicitudes)
+    {
+        $solicitudesArray = [];
+
+        foreach ($solicitudes as $solicitud) {
+            $solicitudesArray[] = [
+                'id' => $solicitud->getId(),
+                'fecha_solicitud' => $this->formatearFecha($solicitud->getFechaSolicitud()),
+                'estado' => $solicitud->getEstado(),
+                'alumno'=> $solicitud->getAlumno() ? $this->convertirAlumnoAJsonDos($solicitud->getAlumno()) : 'false'
+            ];
+        }
+        return $solicitudesArray;
+    }
+
+    public function convertirAlumnoAJsonDos($alumno)
+    {
+        $alumnoArray = [
+            'id' => $alumno->getId(),
+            'nombre' => $alumno->getNombre(),
+            'apellido' => $alumno->getApellido(),
+            'telefono' => $alumno->getTelefono(),
+            'direccion' => $alumno->getDireccion(),
+            'foto' => $alumno->getFoto64()
+        ];
+        return $alumnoArray;
+    }
 }

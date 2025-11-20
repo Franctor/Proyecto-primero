@@ -34,6 +34,15 @@ try {
             }
             break;
 
+        case 'PUT':
+            // Lógica para manejar las solicitudes DELETE
+            if ($idSolicitud !== null) {
+                updateSolicitud($idSolicitud, $solicitudService);
+            } else {
+                http_response_code(400);
+                echo json_encode(['error' => 'ID de solicitud requerido para eliminar']);
+            }
+            break;
         case 'DELETE':
             // Lógica para manejar las solicitudes DELETE
             if ($idSolicitud !== null) {
@@ -103,6 +112,29 @@ function getSolicitudesAlumno($idAlumno, $solicitudService)
     } else {
         http_response_code(404);
         echo json_encode(['success'=> 'false']);;
+    }
+}
+
+function updateSolicitud($id, $solicitudService) 
+{
+    $solicitud = $solicitudService->getSolicitudByIdAPI($id);
+    if ($solicitud !== null) {
+        if (isset($_POST['estado'])) {
+            $nuevoEstado = intval($_POST['estado']);
+            $solicitud->setEstado($nuevoEstado);
+            $updateResult = $solicitudService->updateSolicitud($solicitud);
+            if($updateResult) {
+                $respuesta = ['success'=> true, 'estado'=> $updateResult->getEstado()];
+                http_response_code(200);
+                echo json_encode($respuesta);
+            } else {
+                http_response_code(500);
+                echo json_encode(['error' => 'Error al actualizar la solicitud']);
+            }
+        }
+    }else {
+        http_response_code(404);
+        echo json_encode(['error' => 'Solicitud no encontrada']);
     }
 }
 

@@ -14,7 +14,6 @@ class SolicitudController
     {
         if (!(Session::isLogged())) {
             header('Location: index.php?menu=login');
-            exit;
         }
         if (Session::get('tipo') === 'empresa') {
             $this->manejoEmpresa();

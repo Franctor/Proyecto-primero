@@ -25,7 +25,7 @@ class RepoSolicitud
                 ':fecha_solicitud',
                 $fechaSolicitud instanceof DateTime ? $fechaSolicitud->format('Y-m-d') : $fechaSolicitud
             );
-            $stmt->bindValue(':finalizado', $solicitud->getFinalizado());
+            $stmt->bindValue(':finalizado', $solicitud->getEstado());
             $stmt->bindValue(':alumno_id', $solicitud->getAlumno() ? $solicitud->getAlumno()->getId() : null, PDO::PARAM_INT);
             $stmt->bindValue(':oferta_id', $solicitud->getOferta() ? $solicitud->getOferta()->getId() : null, PDO::PARAM_INT);
 
@@ -143,9 +143,12 @@ class RepoSolicitud
                     oferta_id = :oferta_id
                 WHERE id = :id
             ");
-
-            $stmt->bindValue(':fecha_solicitud', $solicitud->getFechaSolicitud());
-            $stmt->bindValue(':finalizado', $solicitud->getFinalizado());
+            $fechaSolicitud = $solicitud->getFechaSolicitud();
+            $stmt->bindValue(
+                ':fecha_solicitud',
+                $fechaSolicitud instanceof DateTime ? $fechaSolicitud->format('Y-m-d') : $fechaSolicitud
+            );
+            $stmt->bindValue(':finalizado', $solicitud->getEstado());
             $stmt->bindValue(':alumno_id', $solicitud->getAlumno() ? $solicitud->getAlumno()->getId() : null, PDO::PARAM_INT);
             $stmt->bindValue(':oferta_id', $solicitud->getOferta() ? $solicitud->getOferta()->getId() : null, PDO::PARAM_INT);
             $stmt->bindValue(':id', $solicitud->getId(), PDO::PARAM_INT);

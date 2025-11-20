@@ -34,4 +34,8 @@ class CicloService
     {
         return $this->repoCiclo->findAll();
     }
+
+    public function getCiclosAlumno($alumnoId) {
+        return $this->repoCiclo->findByAlumnoId($alumnoId);
+    }
 }

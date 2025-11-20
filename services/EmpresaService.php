@@ -1,6 +1,8 @@
 <?php
 namespace services;
+use helpers\Converter;
 use helpers\Security;
+use helpers\Validator;
 use repositories\Connection;
 use repositories\RepoUsuario;
 use repositories\RepoEmpresa;
@@ -234,5 +236,13 @@ class EmpresaService
     public function getEmpresaByUsuarioId($usuarioId)
     {
         return $this->repoEmpresa->findByUsuarioId($usuarioId,true,true);
+    }
+
+    public function getEmpresa($empresaId)
+    {
+        $empresa = $this->repoEmpresa->findById($empresaId, true);
+        $converter = new Converter();
+        $empresa = $converter->convertirEmpresaAJson($empresa);
+        return $empresa;
     }
 }

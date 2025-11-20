@@ -18,7 +18,7 @@ class OfertaController
     {
         if (!(Session::isLogged())) {
             header('Location: index.php?menu=login');
-            exit;
+            
         }
         if (Session::get('tipo') === 'empresa') {
             $this->manejoEmpresa();
@@ -53,7 +53,6 @@ class OfertaController
                         if (empty($errores)) {
                             if ($ofertaService->crearOferta($data, Session::get('perfil')->getId())) {
                                 header('Location: index.php?menu=ofertas&accion=activas');
-                                exit;
                             }
                         } else {
                             echo $this->formularioAgregarOferta($errores, $data);
@@ -71,7 +70,7 @@ class OfertaController
                             if (empty($errores)) {
                                 $ofertaService->editarOferta($ofertaId, $data);
                                 header('Location: index.php?menu=ofertas&accion=activas');
-                                exit;
+                                
                             } else {
                                 echo $this->templates->render('ofertas/editarOferta', [
                                     'errores' => $errores,
@@ -89,7 +88,7 @@ class OfertaController
                     }
                     $renderPanel = false;
                     header('Location: index.php?menu=ofertas&accion=activas');
-                    exit;
+                    break;
                 case 'eliminarPasada':
                     $ofertaId = $_POST['oferta_id'] ?? null;
                     if ($ofertaId) {
@@ -97,7 +96,7 @@ class OfertaController
                     }
                     $renderPanel = false;
                     header('Location: index.php?menu=ofertas&accion=pasadas');
-                    exit;
+                    break;
                 case 'eliminarPasadas':
                     $empresaId = Session::get('perfil')->getId();
                     if ($empresaId) {
@@ -105,7 +104,7 @@ class OfertaController
                     }
                     $renderPanel = false;
                     header('Location: index.php?menu=ofertas&accion=pasadas');
-                    exit;
+                    break;
                 case 'eliminarActivas':
                     $empresaId = Session::get('perfil')->getId();
                     if ($empresaId) {
@@ -113,7 +112,7 @@ class OfertaController
                     }
                     $renderPanel = false;
                     header('Location: index.php?menu=ofertas&accion=activas');
-                    exit;
+                    break;
             }
         }
 
@@ -220,7 +219,7 @@ class OfertaController
             }
 
             header("Location: $url");
-            exit;
+            
         }
 
         // --- GET: filtros
@@ -255,7 +254,7 @@ class OfertaController
 
         // --- Ciclos disponibles para filtro
         $cicloService = new CicloService();
-        $ciclos = $cicloService->getAllCiclosSinFamilia();
+        $ciclos = $cicloService->getCiclosAlumno($alumnoId);
 
         if ($renderPanel) {
             echo $this->templates->render('ofertas/ofertasAlumno', [

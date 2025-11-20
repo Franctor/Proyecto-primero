@@ -1,3 +1,41 @@
+/* =============================================
+   HOJA DE ESTILOS - EmplyOn
+   =============================================
+
+   ÍNDICE:
+   1. VARIABLES CSS (tokens)
+   2. RESET Y ESTILOS BASE
+   3. HEADER Y NAVEGACIÓN
+   4. COMPONENTES DE BOTONES
+   5. SECCIÓN HERO (Portada)
+   6. SECCIÓN EMPRESAS
+   7. SECCIÓN FUNCIONAMIENTO
+   8. SECCIÓN VENTAJAS
+   9. SECCIÓN CONTACTO
+   10. FOOTER
+   11. PÁGINAS DE AUTENTICACIÓN
+   12. COMPONENTES DE FORMULARIOS
+   13. MÓODALES Y FOTOS
+   14. PANEL DE ADMINISTRACIÓN
+   15. DASHBOARD DE EMPRESAS
+   16. GESTIÓN DE OFERTAS
+   17. PANEL DE ALUMNOS
+   18. GESTIÓN DE SOLICITUDES
+   19. MEDIA QUERIES (Responsive)
+
+   Desarrollado por: EmplyOn Team
+   Versión: 1.0
+   Última actualización: 20/11/2025
+   ============================================= */
+
+/* =============================================
+   1. VARIABLES CSS (tokens)
+   =============================================
+   
+   Sistema de diseño basado en variables CSS para
+   mantener consistencia en colores, espaciados y tipografía.
+   ============================================= */
+
 :root {
   --primary: #2A73CC;
   --primary-dark: #1E5AA3;
@@ -28,6 +66,14 @@
   --space-4: 2em;
 }
 
+/* =============================================
+   2. RESET Y ESTILOS BASE
+   =============================================
+   
+   Normalización de estilos y configuración base
+   para garantizar consistencia cross-browser.
+   ============================================= */
+
 * {
   margin: 0;
   padding: 0;
@@ -40,7 +86,13 @@ body {
   line-height: 1.5;
 }
 
-/* HEADER */
+/* =============================================
+   3. HEADER Y NAVEGACIÓN
+   =============================================
+   
+   Componente de cabecera con navegación principal,
+   logo y menú de usuario.
+   ============================================= */
 header {
   display: flex;
   justify-content: space-between;
@@ -139,7 +191,13 @@ header {
   background: var(--light);
 }
 
-/* BOTONES */
+/* =============================================
+   4. COMPONENTES DE BOTONES
+   =============================================
+   
+   Sistema de botones reutilizables con variantes
+   para diferentes contextos y acciones.
+   ============================================= */
 .button {
   display: inline-block;
   padding: 0.75em 1.5em;
@@ -186,7 +244,13 @@ header {
   color: var(--dark);
 }
 
-/* HERO SECTION */
+/* =============================================
+   5. SECCIÓN HERO (Portada)
+   =============================================
+   
+   Sección principal de la página de inicio con
+   llamada a la acción y fondo atractivo.
+   ============================================= */
 .hero {
   padding: var(--space-4) var(--space-2);
   text-align: center;
@@ -240,7 +304,13 @@ header {
   flex-wrap: wrap;
 }
 
-/* EMPRESAS SECTION */
+/* =============================================
+   6. SECCIÓN EMPRESAS
+   =============================================
+   
+   Muestra de empresas colaboradoras en formato
+   de grid con tarjetas informativas.
+   ============================================= */
 .empresas {
   padding: var(--space-4) var(--space-2);
   text-align: center;
@@ -307,7 +377,13 @@ header {
   margin-top: var(--space-3);
 }
 
-/* FUNCIONAMIENTO SECTION */
+/* =============================================
+   7. SECCIÓN FUNCIONAMIENTO
+   =============================================
+   
+   Explicación del proceso en pasos numerados
+   con diseño de tarjetas.
+   ============================================= */
 .funcionamiento {
   padding: var(--space-4) var(--space-2);
   background: var(--light);
@@ -353,7 +429,13 @@ header {
   font-size: 0.95em;
 }
 
-/* VENTAJAS SECTION */
+/* =============================================
+   8. SECCIÓN VENTAJAS
+   =============================================
+   
+   Listado de beneficios con diseño de tarjetas
+   y listas con viñetas personalizadas.
+   ============================================= */
 .ventajas {
   padding: var(--space-4) var(--space-2);
   text-align: center;
@@ -405,7 +487,13 @@ header {
   font-size: 1.2em;
 }
 
-/* CONTACT SECTION */
+/* =============================================
+   9. SECCIÓN CONTACTO
+   =============================================
+   
+   Llamada a la acción final con enlace de contacto
+   y diseño centrado.
+   ============================================= */
 .contact {
   padding: var(--space-4) var(--space-2);
   text-align: center;
@@ -433,7 +521,13 @@ header {
   background: var(--primary-dark);
 }
 
-/* FOOTER */
+/* =============================================
+   10. FOOTER
+   =============================================
+   
+   Pie de página con enlaces, logo e información
+   de copyright.
+   ============================================= */
 footer {
   background: var(--dark);
   color: var(--white);
@@ -485,90 +579,12 @@ footer {
   font-size: 0.9em;
 }
 
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .hamburger {
-    display: flex;
-  }
-
-  .header-nav {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background: var(--white);
-    border-bottom: 1px solid var(--border);
-    padding: var(--space-2);
-    display: none;
-  }
-
-  .header-nav ul {
-    flex-direction: column;
-    gap: var(--space-1);
-  }
-
-  .menu-toggle:checked~.header-nav {
-    display: block;
-  }
-
-  .hero-buttons {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .hero-button-alumno,
-  .hero-button-empresa {
-    width: 100%;
-    max-width: 300px;
-  }
-
-  .footer-content {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .footer-links {
-    width: 100%;
-  }
-
-  .hero {
-    min-height: 400px;
-    background-position: center 30%;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero-title {
-    font-size: 2em;
-  }
-
-  .section-title {
-    font-size: 1.6em;
-  }
-
-  .empresas-grid,
-  .pasos,
-  .ventajas-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .hero {
-    padding: var(--space-3) var(--space-1);
-    min-height: 350px;
-  }
-
-  .header-logo img {
-    height: 3em;
-  }
-
-  .empresa-logo-container img {
-    max-height: 80px;
-  }
-
-}
-
 /* =============================================
-   ESTILOS PARA PÁGINAS DE AUTENTICACIÓN 
+   11. PÁGINAS DE AUTENTICACIÓN
+   =============================================
+   
+   Estilos específicos para login y registro
+   con diseño de tarjetas centradas.
    ============================================= */
 
 .auth-page {
@@ -597,7 +613,14 @@ footer {
   font-size: 1.8em;
 }
 
-/* Alertas */
+
+/* =============================================
+   12. COMPONENTES DE FORMULARIOS
+   =============================================
+   
+   Estilos para elementos de formulario reutilizables
+   en toda la aplicación.
+   ============================================= */
 .alert {
   padding: var(--space-2);
   border-radius: var(--radius);
@@ -685,26 +708,6 @@ footer {
   border-top: 1px solid var(--border);
   padding-top: var(--space-3);
 }
-
-/* Responsive para auth */
-@media (max-width: 480px) {
-  .auth-page {
-    background: var(--white);
-    padding: var(--space-1);
-    align-items: flex-start;
-  }
-
-  .login-section {
-    box-shadow: none;
-    border: none;
-    padding: var(--space-3);
-    margin-top: var(--space-3);
-  }
-}
-
-/* =============================================
-   ESTILOS PARA FORMULARIOS DE AUTENTICACIÓN 
-   ============================================= */
 
 .auth-page {
   background: var(--light);
@@ -853,6 +856,13 @@ textarea {
   color: var(--text-light);
 }
 
+/* =============================================
+   13. MODALES Y FOTOS
+   =============================================
+   
+   Estilos para el sistema de captura de fotos
+   con vista previa y controles.
+   ============================================= */
 /* Botón tomar foto */
 #tomarFoto {
   width: 100%;
@@ -876,36 +886,6 @@ textarea {
   color: var(--error-text);
   font-size: 0.8em;
   margin-top: var(--space-1);
-}
-
-/* Responsive para auth */
-@media (max-width: 768px) {
-  .form-row {
-    grid-template-columns: 1fr;
-    gap: var(--space-2);
-  }
-
-  .register-section {
-    margin: var(--space-2);
-    padding: var(--space-3);
-  }
-}
-
-@media (max-width: 480px) {
-  .auth-page {
-    padding: var(--space-1);
-  }
-
-  .register-section {
-    border: none;
-    margin: var(--space-1);
-    padding: var(--space-2);
-  }
-
-  .password-requirements ul {
-    flex-direction: column;
-    gap: var(--space-1);
-  }
 }
 
 .velo {
@@ -934,10 +914,6 @@ textarea {
   overflow: auto;
   display: none;
 }
-
-/* =============================================
-   ESTILOS PARA CÁMARA Y MODAL DE FOTO
-   ============================================= */
 
 #video,
 #canvas {
@@ -1034,7 +1010,11 @@ textarea {
 }
 
 /* =============================================
-   ESTILOS DEL PANEL DE ADMINISTRACIÓN
+   14. PANEL DE ADMINISTRACIÓN
+   =============================================
+   
+   Interfaz de administración con sidebar y
+   áreas de gestión de contenido.
    ============================================= */
 
 /* Estructura principal */
@@ -1259,39 +1239,13 @@ textarea {
   color: var(--error-text);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .adm-container {
-    flex-direction: column;
-  }
-
-  .adm-sidebar {
-    width: 100%;
-  }
-
-  .adm-menu {
-    flex-direction: row;
-    overflow-x: auto;
-  }
-
-  .adm-main {
-    padding: var(--space-2);
-  }
-
-  .adm-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-2);
-  }
-
-  .adm-header-nav {
-    margin-top: var(--space-1);
-  }
-}
-
-/* ============================
-   DASHBOARD OFERTAS (EMPRESA)
-   ============================ */
+/* =============================================
+   15. DASHBOARD DE EMPRESAS
+   =============================================
+   
+   Panel de control para empresas con sidebar
+   de navegación y gestión de ofertas.
+   ============================================= */
 
 .dashboard-ofertas {
   display: flex;
@@ -1408,9 +1362,13 @@ textarea {
   margin-bottom: var(--space-2);
 }
 
-/* ----------------------------
-   GRID de tarjetas
------------------------------ */
+/* =============================================
+   16. GESTIÓN DE OFERTAS
+   =============================================
+   
+   Sistema de tarjetas y formularios para
+   la gestión de ofertas de prácticas.
+   ============================================= */
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -1421,7 +1379,6 @@ textarea {
    Tarjeta de oferta 
 ----------------------------- */
 .oferta-card {
-  /* Tus estilos actuales */
   background: var(--white);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -1434,7 +1391,6 @@ textarea {
   box-sizing: border-box;
   max-height: 278px;
   overflow: hidden;
-  /* Oculta el contenido que sobrepasa */
 }
 
 .card-body {
@@ -1456,8 +1412,6 @@ textarea {
   max-height: 40px;
   overflow: hidden;
 }
-
-
 
 .oferta-card:hover {
   box-shadow: 0 4px 12px var(--shadow);
@@ -1493,9 +1447,6 @@ textarea {
   font-weight: 600;
 }
 
-/* ----------------------------
-   ACCIONES MEJORADAS
------------------------------ */
 .card-actions {
   margin-top: auto;
   display: flex;
@@ -1558,59 +1509,6 @@ textarea {
 .eliminarTodas button:hover {
   background-color: var(--error-text);
   color: var(--white);
-}
-
-/* ----------------------------
-   RESPONSIVE
------------------------------ */
-@media (max-width: 1024px) {
-  .dashboard-ofertas {
-    flex-direction: column;
-  }
-
-  .dashboard-sidebar {
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .sidebar-menu {
-    flex-direction: row;
-    overflow-x: auto;
-    padding-bottom: var(--space-1);
-  }
-
-  .sidebar-menu a {
-    white-space: nowrap;
-  }
-
-  .dashboard-main {
-    padding: var(--space-3);
-  }
-}
-
-@media (max-width: 768px) {
-  .cards-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .dashboard-header {
-    padding: var(--space-2) var(--space-3);
-  }
-
-  .dashboard-title {
-    font-size: 1.5em;
-  }
-}
-
-@media (max-width: 480px) {
-  .dashboard-main {
-    padding: var(--space-2);
-  }
-
-  .card-actions {
-    flex-direction: column;
-  }
 }
 
 /* ============================
@@ -1686,27 +1584,13 @@ textarea {
   font-size: 1.1em;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .oferta-form {
-    padding: var(--space-3);
-  }
-}
-
-@media (max-width: 480px) {
-  .oferta-form {
-    padding: var(--space-2);
-    border: none;
-  }
-
-  .dashboard-main h1 {
-    font-size: 1.5em;
-  }
-}
-
-/* ----------------------------
-   Ofertas Alumno
------------------------------ */
+/* =============================================
+   17. PANEL DE ALUMNOS
+   =============================================
+   
+   Vistas específicas para alumnos con
+   gestión de ofertas y solicitudes.
+   ============================================= */
 .ofertas-alumnos-main {
   padding: var(--space-4);
   background: var(--light);
@@ -1762,9 +1646,13 @@ textarea {
   line-height: 1.5;
 }
 
-/* ----------------------------
-   Solicitudes Alumno
------------------------------ */
+/* =============================================
+   18. GESTIÓN DE SOLICITUDES
+   =============================================
+   
+   Sistema completo para gestión y visualización
+   de solicitudes de prácticas.
+   ============================================= */
 .solicitudes-main {
   padding: var(--space-4);
   background: var(--light);
@@ -1867,39 +1755,6 @@ textarea {
   background: var(--error-text);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .solicitudes-main {
-    padding: var(--space-2);
-  }
-
-  .ficha-solicitud {
-    padding: var(--space-3);
-  }
-
-  .datos-empresa>div {
-    flex-direction: column;
-    gap: var(--space-3);
-    text-align: center;
-  }
-
-  .datos-empresa img {
-    align-self: center;
-  }
-
-  .datos-solicitud strong,
-  .datos-empresa strong {
-    min-width: auto;
-    display: block;
-    margin-bottom: var(--space-1);
-  }
-
-  .datos-empresa>div>div:last-child p {
-    flex-direction: column;
-    text-align: center;
-  }
-}
-
 /* ----------------------------
    Mis Solicitudes - Alumno
 ----------------------------- */
@@ -1929,10 +1784,8 @@ textarea {
   margin: 0 auto;
 }
 
-/* Estado cuando hay tarjetas - elimina los estilos de flex */
 #cards-grid:not(:empty) {
   display: grid;
-  /* Quita flex: 1, align-items y justify-content */
 }
 
 .solicitud-card {
@@ -1944,9 +1797,7 @@ textarea {
   display: flex;
   flex-direction: column;
   height: auto;
-  /* Cambia de 100% a auto */
   min-height: 200px;
-  /* Altura mínima en lugar de 100% */
 }
 
 .solicitud-card:hover {
@@ -2102,11 +1953,12 @@ textarea {
   align-items: center;
 }
 
-.dislike img{
+.dislike img {
   max-width: 16px;
   max-height: 16px;
 }
-.like img{
+
+.like img {
   max-width: 16px;
   max-height: 16px;
 }
@@ -2131,8 +1983,173 @@ textarea {
   color: var(--white);
 }
 
-/* Responsive */
+/* =============================================
+   19. MEDIA QUERIES (Responsive)
+   =============================================
+   
+   Adaptaciones para diferentes tamaños de pantalla
+   y dispositivos móviles.
+   ============================================= */
+
+@media (max-width: 1024px) {
+  .dashboard-ofertas {
+    flex-direction: column;
+  }
+
+  .dashboard-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-menu {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: var(--space-1);
+  }
+
+  .sidebar-menu a {
+    white-space: nowrap;
+  }
+
+  .dashboard-main {
+    padding: var(--space-3);
+  }
+}
+
 @media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .header-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: var(--space-2);
+    display: none;
+  }
+
+  .header-nav ul {
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .menu-toggle:checked~.header-nav {
+    display: block;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-button-alumno,
+  .hero-button-empresa {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-links {
+    width: 100%;
+  }
+
+  .hero {
+    min-height: 400px;
+    background-position: center 30%;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
+
+  .register-section {
+    margin: var(--space-2);
+    padding: var(--space-3);
+  }
+
+  .adm-container {
+    flex-direction: column;
+  }
+
+  .adm-sidebar {
+    width: 100%;
+  }
+
+  .adm-menu {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .adm-main {
+    padding: var(--space-2);
+  }
+
+  .adm-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+
+  .adm-header-nav {
+    margin-top: var(--space-1);
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-header {
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .dashboard-title {
+    font-size: 1.5em;
+  }
+
+  .oferta-form {
+    padding: var(--space-3);
+  }
+
+  .solicitudes-main {
+    padding: var(--space-2);
+  }
+
+  .ficha-solicitud {
+    padding: var(--space-3);
+  }
+
+  .datos-empresa>div {
+    flex-direction: column;
+    gap: var(--space-3);
+    text-align: center;
+  }
+
+  .datos-empresa img {
+    align-self: center;
+  }
+
+  .datos-solicitud strong,
+  .datos-empresa strong {
+    min-width: auto;
+    display: block;
+    margin-bottom: var(--space-1);
+  }
+
+  .datos-empresa>div>div:last-child p {
+    flex-direction: column;
+    text-align: center;
+  }
+
   .solicitudes-alumno-section {
     padding: var(--space-2);
   }
@@ -2164,6 +2181,78 @@ textarea {
 }
 
 @media (max-width: 480px) {
+  .hero-title {
+    font-size: 2em;
+  }
+
+  .section-title {
+    font-size: 1.6em;
+  }
+
+  .empresas-grid,
+  .pasos,
+  .ventajas-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    padding: var(--space-3) var(--space-1);
+    min-height: 350px;
+  }
+
+  .header-logo img {
+    height: 3em;
+  }
+
+  .empresa-logo-container img {
+    max-height: 80px;
+  }
+
+  .auth-page {
+    background: var(--white);
+    padding: var(--space-1);
+    align-items: flex-start;
+  }
+
+  .login-section {
+    box-shadow: none;
+    border: none;
+    padding: var(--space-3);
+    margin-top: var(--space-3);
+  }
+
+  .auth-page {
+    padding: var(--space-1);
+  }
+
+  .register-section {
+    border: none;
+    margin: var(--space-1);
+    padding: var(--space-2);
+  }
+
+  .password-requirements ul {
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .dashboard-main {
+    padding: var(--space-2);
+  }
+
+  .card-actions {
+    flex-direction: column;
+  }
+
+  .oferta-form {
+    padding: var(--space-2);
+    border: none;
+  }
+
+  .dashboard-main h1 {
+    font-size: 1.5em;
+  }
+
   .solicitud-card {
     padding: var(--space-2);
   }
